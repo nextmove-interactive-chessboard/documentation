@@ -1,7 +1,3 @@
-## Latex Template für Diplomarbeiten an der HTL Anichstraße
-
-### Überblick über die Dateien und Verzeichnisse
-```
 ├── content
 │   ├── abstract.tex            Hier kommen das deutsche und englische Abstract rein
 │   ├── einleitung.tex          Grundsätzliches zur gesamten Arbeit, auch indiv. Aufteilung der Arbeiten
@@ -24,22 +20,3 @@
 │   ├── preamble.tex            Hier kommen die ganzen imports hin
 │   ├── title_thesis_htlinn.tex Das Titelblatt, hier werden die Infos von main.tex eingebaut
 │   └── typographic_settings.texHier sollte man wenig ändern müssen
-```
-## Anpassungen
-
-### Einseitige Ansicht
-
-In der Datei template/preamble.tex ist für die *documentclass* ganz oben ein Parameter *twoside = true* zu finden. Setzt man diesen auf *false* wechselt die Einrückung nicht bei jeder Seite sondern bleibt gleich  
-
-### Ändern der Zitierweise
-
-Möchte man z.B. auf IEEE-Zitierung umstellen (d.h. eine Literaturstelle wird mit [1], [2], [3] referenziert) muss man in *main.tex* folgende Zeilen auskommentieren und die 2 unteren hinzufügen
-
-```latex
-%\usepackage{natbib} %
-%\bibliographystyle{agsm}
-\usepackage{cite}
-\bibliographystyle{IEEEtran}
-```
-
-Man muss allerdings vorher alle bereits von Latex erzeugten Dateien löschen.
