@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Benutzereingabe</title>
+	<link rel="stylesheet" href="styles.css" />
+    <!--<script type="module" src="https://pyscript.net/releases/2025.8.1/core.js"></script>-->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+	<noscript>
+		Please enable JavaScript to view this website.	
+	</noscript>
+
+
+	<div class="Benutzereingabe">
+
+		<div class="card">
+			<h3>Benutzereingabe</h3>
+			Geben Sie hier ihre Benutzerdaten ein
+
+			<div class="avatar" id="avatar">—</div>
+
+			<div class="input-wrap">
+				<input type="text" id="username" placeholder="username" maxlength="24" autocomplete="off">
+				<!--<button id="saveBtn">Los!</button--> 
+				<button id="saveBtn" onclick="register_user()">OK</button>
+			</div class="input-wrap">
+			
+			<!--<form action="/action_page.php">
+				<label for="uname">username: </label>
+				<input id="b" type="text" id="uname" name="uname"><br><br>
+				<button id="saveBtn" onclick="document.location='weiterleitung.html'" value="OK">OK</button>
+				<input id="b" type="button" onclick="alert('Schachbrett hat keine Internetverbindung')" value="Zurück">
+				<div id="toast" class="toast">Gespeichert!</div>
+			</form>-->
+		</div class="card">
+		<div id="toast" class="toast">Gespeichert!</div>
+
+	<script>
+
+		const STORAGE_KEY = 'demo_username_v3';
+		const usernameInput = document.getElementById('username');
+		const saveBtn = document.getElementById('saveBtn');
+		const avatar = document.getElementById('avatar');
+		const toast = document.getElementById('toast');
+
+		function sanitize(name) {
+		return name.replace(/\s+/g, ' ').trim();
+		}
+
+		function initialsFrom(name) {
+		if (!name) return '—';
+		return name[0].toUpperCase();
+		}
+
+		function updateAvatar(name) {
+		avatar.textContent = initialsFrom(name);
+		}
+
+		function showToast(msg) {
+		toast.textContent = msg;
+		toast.style.opacity = 1;
+		setTimeout(() => (toast.style.opacity = 0), 1500);
+		}
+
+		function saveName() {
+		const name = sanitize(usernameInput.value);
+		if (!name) {
+			alert('Bitte gib einen gültigen Namen ein.');
+			return;
+		}
+		localStorage.setItem(STORAGE_KEY, name);
+		updateAvatar(name);
+		showToast('Gespeichert!');
+		setTimeout(() => {
+			window.location.href = 'weiterleitung.html';
+		}, 1000);
+
+		fetch("http://localhost:5000/register", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({
+					username: document.getElementById("username").value
+				})
+			})
+			.then(response => response.json())
+			.then(data => alert(data.message))
+
+		}
+
+		// Inline-Button ruft register_user() auf (vermeidet doppelte Listener)
+		function register_user() {
+			saveName();
+		}
+
+		// Enter-Taste weiterhin möglich
+		usernameInput.addEventListener('keydown', e => {
+			if (e.key === 'Enter') saveName();
+		});
+
+		/*const saved = localStorage.getItem(STORAGE_KEY);
+		if (saved) {
+		usernameInput.value = saved;
+		updateAvatar(saved);
+		}*/
+
+
+
+	</script>
+	</div class="Benutzereingabe">
+</body>
+</html>
