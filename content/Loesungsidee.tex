@@ -4,13 +4,35 @@
 
 \subsection{Bauteilauswahl}
 
+\subsubsection{Computer}
+
+Bei der Auswahl des Rechners für das Schachbrett ist entscheidend, dass dieser über ausreichende Rechenleistung zur zuverlässigen Verarbeitung der Sensordaten verfügt und gleichzeitig energieeffizient arbeitet. Zudem sollte er kompakt, kostengünstig und gut in das Gesamtsystem integrierbar sein. Ein Rechner welcher mittels Python programmierbar ist, wäre für Maximilian Koch die bevorzugte Lösung.
+
+\subsubsection{Sensoren}
+Bei der Auswahl der Sensoren für das Schachbrett stellen Kosten, Zuverlässigkeit und Praktikabilität die drei Hauptauswahlkriterien dar, anhand derer die zur Verfügung stehenden Methoden bewertet wurden. Die Kosten sind unter anderem ein wichtiges Auswahlkriterium, da für das Schachbrett insgesamt 64 Einheiten benötigt werden. Die Zuverlässigkeit ist ein weiterer zentraler Punkt, da fehlerhafte Erkennungen zu falschen Spielzuständen und somit zu einem fehlerhaften Spielablauf führen können. Als letztes Kriterium wird die Praktikabilität betrachtet, da die gewählte Methode die optische Anzeige des Schachbretts möglichst wenig bis gar nicht einschränken darf, um ein gutes Spielerlebnis zu gewährleisten.
+
 \subsection{Schaltungsentwicklung}
 
-\subsection{Platinendesign}
+Bei der Schaltungsentwicklung geht es darum die 64 Einheiten effizient zu verschalten, um die Anzahl der benötigten Pins zu verringern, da auf dem Rechner keine 64 einzelnen Pins zur Verfügung stehen werden. Zusätzlich sollen die Signale auch das richtige Logiklevel, für den verwendedten Microcontroller oder Einplatinenpc, haben. Möglichkeiten die Pins zu reduzieren wäre eine Zeilen-Spalten Matrix, welche die benötigten Pins von 64 auf 16 begrenzen würde. Diese Lösung würde einen guten Kompromiss zwischen technischer Komplexität und Programmierbarkeit der Hardware ermöglichen. 
+
+\subsection{Platinendesign - PCB}
+
+Das Platine muss so designed werden, dass Anschlüsse für die Recheneinheit, Sensorik und elektronische Bauteile ihren Zweck erfüllen und physisch an der richtigen Stelle sind. Die Anschlüsse sollen über der Recheneinheit platziert werden um lange Verbindugnsleitung zu verhindern. Die Sensoren, für die Figuren Erkennung, müssen sich genau an den zuvor berechneten Stellen befinden, damit beim zusammenbau von Gehäuse und Elektronik die Sensor Positionen mit den Feldposition übereinstimmen. 
 
 \subsection{Gehäusefertigung}
 
+Bei der Gehäusefertigung sollen folgende Punkte erfüllt werden:
+\begin{itemize}
+\item Einbindung der Bedienelemente
+\item Kühlung und Lüftungskonzept
+\item Handlichkeit 
+\item technischen Elemente der Spiellogik vor dem Nutzer verstecken
+\item sichere Befestigungen für die internen Bauteile
+\end{itemize}
+
 \subsection{Stromversorgung}
+
+Das System, für die Stromversorgung, soll es dem Nutzer einfach machen das Schachbrett zu nutzen. Ein USB-C Ladeanschluss über den der Nutzer ohne technisches Verständnis das Schachbrett nutzen kann wurde dafür ausgewählt. Für die technische Umsetzung muss bei dieser Methode jedoch eine Ladelogik für einen internen Akku und Umschaltlogik zwischen Akku und Netzteil-Betrieb entwickelt werden. 
 
 
 \section{Software}
