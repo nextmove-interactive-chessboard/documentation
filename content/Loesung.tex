@@ -6,10 +6,9 @@
 
 \subsubsection{Computer}
 
-Für die Diplomarbeit sind 2 verschiedene Rechner in Frage gekommen. 
-
+Für die Diplomarbeit wurden mehrere Rechner in betracht gezogen, jedoch wurde die Entscheidung zwischen den folgenden beiden getroffen aus dem Grund, dass beide sofort zur Verfügung standen:
 \begin{itemize}
-\item \textbf{Raspberry Pi 5:} Der Raspberry pi 5 verfügt über einen Quad-Core ARM Cortex-A76 Prozessor wodurch genug Rechenleistung bereitgestellt ist. Zusätzlich bietet dieser genug Schnittstellen um mit einer einfach 8x8 Matrix die Schaltung zu entwickeln. Ein weiterer Punkt ist die gute Dokumentation, möglichen Librarys und die Programmiermöglichkeit mittels Pyhton welche für Diplomant Maximilian Koch bevorzugt ist.
+\item \textbf{Raspberry Pi 5:} Der Raspberry pi 5 verfügt über einen Quad-Core ARM Cortex-A76 Prozessor wodurch genug Rechenleistung bereitgestellt ist. Zusätzlich bietet dieser genug Schnittstellen um mit einer einfach 8x8 Matrix die Schaltung zu entwickeln. Ein weiterer Punkt ist die gute Dokumentation, möglichen Librarys und die Programmiermöglichkeit mittels Pyhton welche, für Diplomant Maximilian Koch, bevorzugt ist.
 Die Nachteile des Raspberry Pi sind zum einen den bnötigten Platz welchen dieser benötigt, die Anschaffungskosten für einen und der höhere Stromverbrauch.\\
 
 \item \textbf{ESP32-S3:} Der ESP32-S3 verfügt über einen Dual-Core-Xtensa-LX7 Prozsessor welcher für das auslesen der Matrix genug Rechenleistung bereitstellen könnte. Für den ESP32-S3 spricht auch seine kompakte Größe, seine geringe Leisutngsaufnahme und die geringen Anschaffungskosten.
@@ -21,7 +20,158 @@ Die Entscheidung fiel auf den Raspberry Pi 5, da dieser bereits verfügbar war u
 
 \subsubsection{Sensoren}
 
+Bei der Auswahl der Sensoren, die zur Erkennung der Spielfiguren sind, wurden mehrere Optionen in betracht gezogen:
+
+\begin{itemize}
+\item \textbf{Hall-Sensoren:} 
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|p{4cm}|p{7cm}|}
+\hline
+\textbf{Merkmal} & \textbf{Beschreibung} \\
+\hline
+Technologie & Digitaler Hall-Effekt-Sensor \\
+\hline
+Beispielbauteil & A3144 (Digitaler Sensor) \\
+\hline
+Betriebsspannung & 4,5 V – 24 V  QUELLE!!!\\
+\hline
+Ausgang & Digital (Open-Collector) \\
+\hline
+Funktionsprinzip & Erkennung eines Magnetfeldes durch Hall-Effekt \\
+\hline
+Vorteile & Kontaktlos, verschleißfrei, hohe Lebensdauer, unempfindlich gegen Staub und Licht \\
+\hline
+Nachteile & Magnet in jeder Figur erforderlich \\
+\hline
+Kostenbewertung & Gering \\
+\hline
+Zuverlässigkeit & Sehr hoch, geringe Fehleranfälligkeit \\
+\hline
+Praktikabilität & Sehr hoch, klein, einfache Beschaltung \\
+\hline
+\end{tabular}
+\caption{Bewertung der Hall-Sensoren zur Figurenerkennung}
+\label{tab:hall}
+\end{table}
+
+\item \textbf{NFC/RFID:} 
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|p{4cm}|p{7cm}|}
+\hline
+\textbf{Merkmal} & \textbf{Beschreibung} \\
+\hline
+Technologie & NFC / HF-RFID \\
+\hline
+Beispielbauteile & PN532 oder MFRC522 (Reader), NTAG213 (Tag) \\
+\hline
+Betriebsspannung & Typ. 3{,}3\,V – 5\,V (modulabhängig) \\
+\hline
+Ausgang / Schnittstelle & I\textsuperscript{2}C / SPI / UART \\
+\hline
+Funktionsprinzip & Kontaktlose Identifikation einer Figur über eindeutige Tag-ID \\
+\hline
+Vorteile & Eindeutige Figurenidentifikation möglich, kontaktlos \\
+\hline
+Nachteile & Höherer Hardware- und Softwareaufwand, Metalle können Reader beeinflussen \\
+\hline
+Kostenbewertung & Mittel bis hoch \\
+\hline
+Zuverlässigkeit & Sehr hoch  \\
+\hline
+Praktikabilität & Mittel; Integration auf 64 Feldern erfordert Multiplexing \\
+\hline
+\end{tabular}
+\caption{Bewertung von NFC/RFID zur Figurenerkennung}
+\label{tab:nfc}
+\end{table}
+\newpage
+\item \textbf{Optische Sensoren:} 
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|p{4cm}|p{7cm}|}
+\hline
+\textbf{Merkmal} & \textbf{Beschreibung} \\
+\hline
+Technologie & Infrarot-Reflexionssensor \\
+\hline
+Beispielbauteile & TCRT5000 oder CNY70 \\
+\hline
+Betriebsspannung & Typ. 5\,V \\
+\hline
+Ausgang / Schnittstelle & Analog oder digital (je nach Beschaltung) \\
+\hline
+Funktionsprinzip & IR-LED sendet Licht; Phototransistor misst reflektiertes Signal \\
+\hline
+Vorteile & Keine Magnete oder Tags erforderlich, direkte Objekterkennung \\
+\hline
+Nachteile & Empfindlich gegenüber Fremdlicht und Verschmutzung \\
+\hline
+Kostenbewertung & Mittel \\
+\hline
+Zuverlässigkeit & Mittel; abhängig von Lichtverhältnissen, Oberflächenbeschaffenheit und Kalibrierung. \\
+\hline
+Praktikabilität & Mittel; exakte Ausrichtung und ggf. Kalibrierung pro Feld erforderlich. \\
+\hline
+\end{tabular}
+\caption{Bewertung optischer Sensoren zur Figurenerkennung}
+\label{tab:optisch}
+\end{table}
+\end {itemize}
+
+Nach dem Vergleich der untersuchten Sensortechnologien wurde der digitale Hall-Sensor als bevorzugte Lösung ausgewählt. 
+Er bietet eine sehr hohe Zuverlässigkeit durch kontaktlose und verschleißfreie Arbeitsweise bei gleichzeitig geringem Kosten- 
+und Integrationsaufwand. 
+
+Optische Sensoren weisen eine erhöhte Empfindlichkeit gegenüber Umgebungslicht, Verschmutzung und Kalibrierungsabweichungen auf, 
+wodurch die Langzeitstabilität beeinträchtigt werden kann. NFC/RFID-Systeme ermöglichen zwar eine eindeutige Identifikation 
+jeder Figur, verursachen jedoch einen deutlich höheren Hardware- und Softwareaufwand, insbesondere bei der Umsetzung 
+auf 64 Spielfeldern.
+
+Unter Berücksichtigung der Anforderungen an Kosten, Zuverlässigkeit, Integrationsaufwand und Systemkomplexität 
+stellt der Hall-Sensor die technisch und wirtschaftlich sinnvollste Lösung für das elektronische Schachbrett dar.
+
 \subsection{Schaltungsentwicklung}
+
+Bei der Entwicklung der Verschaltungslogik muss damit begonnen werden, wie ein einzelner Sensor korrekt ohne Fehler ausgelesen werden kann. Wichtig ist auch, dass der Raspberry pi mit einem Logikpegel von 3,3V arbeitet und die Hall-Sensoren laut Datenblatt eine Spannung von mindestens 4,5V benötigen. Falls die Sensoren nicht mit 3,3V Versorgungsspannung funktionieren muss hier ein Logic-Level-Shifter verwedent werden
+
+Beschaltung des A3144:
+
+Der Hall-Sensor verfügt über jeweils einen VCC, GND und OUT pin.
+Der Sensor schaltet den Ausgang nur dann auf LOW, (Open-Collector) wenn der Südpol von einem Magneten in Reichweite ist. 
+
+Die Ausgänge vom Sensor und Verschaltung dieser sehen wie folgt aus:
+
+\begin{figure}[H]
+	\centering
+	
+	\begin{minipage}{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{figures/nahaufnahme_a3144}
+		\caption{Nahaufnahme des A3144}
+		\label{bild:nahaufnahme_a3144}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{figures/Verschaltung}
+		\caption{Verschaltung des A3144}
+		\label{bild:verschaltung}
+	\end{minipage}
+	
+\end{figure}
+Wichtige Punkte zu beachten für die Matrix sind:
+\begin{itemize}
+	\item Leistungsaufnahme der Sensoren
+	\item Schaltzeiten um Fehler zu verhindern
+	\item Störsicherheit
+\end{itemize}
 
 \subsection{Platinendesign}
 
