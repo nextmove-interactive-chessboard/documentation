@@ -131,7 +131,7 @@ und Integrationsaufwand.
 
 Optische Sensoren weisen eine erhöhte Empfindlichkeit gegenüber Umgebungslicht, Verschmutzung und Kalibrierungsabweichungen auf, 
 wodurch die Langzeitstabilität beeinträchtigt werden kann. NFC/RFID-Systeme ermöglichen zwar eine eindeutige Identifikation 
-jeder Figur, verursachen jedoch einen deutlich höheren Hardware- und Softwareaufwand, insbesondere bei der Umsetzung 
+jeder Figur, verursachen jedoch einen deutlich höheren Hardwareaufwand, insbesondere bei der Umsetzung 
 auf 64 Spielfeldern.
 
 Unter Berücksichtigung der Anforderungen an Kosten, Zuverlässigkeit, Integrationsaufwand und Systemkomplexität 
@@ -166,6 +166,54 @@ Die Ausgänge vom Sensor und Verschaltung dieser sehen wie folgt aus:
 	\end{minipage}
 	
 \end{figure}
+
+\subsubsection{Pull-Up Widerstandsberechnung}
+
+Der A3144 besitzt einen Open-Collector-Ausgang, weshalb ein externer Pull-Up-Widerstand erforderlich ist, um im HIGH-Zustand eine definierte Ausgangsspannung zu erzeugen. Die Dimensionierung erfolgt auf Grundlage des Ohmschen Gesetzes. Der Widerstand bestimmt dabei den Strom im LOW-Zustand sowie die Schaltgeschwindigkeit des Signals. Die Berechnung erfolgt mit
+
+\[
+R_{PU} = \frac{V_{CC} - V_{CE(sat)}}{I_{LOW}}
+\]
+
+wobei \(V_{CC}\) die Versorgungsspannung, \(V_{CE(sat)}\) die Sättigungsspannung des Transistors (Datenblatt \(0{,}4\,V\)) und \(I_{LOW}\) der gewünschte Strom im eingeschalteten Zustand ist. Für \(V_{CC} = 3{,}3\,V\) und \(I_{LOW} = 1\,mA\) ergibt sich
+
+\[
+R_{PU} = \frac{3{,}3\,V - 0{,}2\,V}{0{,}001\,A} = 2{,}9\,k\Omega
+\]
+
+Als geeigneter Normwert wird \(3{,}3\,k\Omega\) gewählt. Ein kleinerer Widerstand erhöht den Strom und verbessert die Schaltgeschwindigkeit, während ein größerer Widerstand den Stromverbrauch reduziert, jedoch Slangsamere Signalflanken bringt.
+
+Die Schaltgeschwindigkeit hängt vom Pull-Up-Widerstand ab, da dieser zusammen mit der parasitären Leitungskapazität \( C \) eine RC-Zeitkonstante bildet. Beim Übergang von LOW nach HIGH wird die Leitung über den Widerstand aufgeladen, wobei die Anstiegszeit durch die Zeitkonstante 
+
+\[
+\tau = R \cdot C
+\]
+
+bestimmt wird. Die Spannung steigt dabei exponentiell nach
+
+\[
+U(t) = U_{CC} \left(1 - e^{-\frac{t}{RC}} \right)
+\]
+
+an. Ein größerer Widerstand führt zu einer größeren Zeitkonstante \( \tau \) und somit zu einem langsameren Spannungsanstieg, während ein kleinerer Widerstand eine kleinere Zeitkonstante und damit eine schnellere Schaltflanke bewirkt.
+
+\subsubsection{Schaltungsaufbau}
+
+Um die korrekte Verdrahtung zu testen wurde von Diplomant Maximilian Koch ein Pyhton Programm geschrieben welches unter ``Bildverwis'' zu sehen ist. Der Output von diesem Programm ist unter ``Bildverweis'' zu sehen.
+
+Aufbau auf einem Steckbrett zur Inbetriebnahme der Sensoren:
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/einzel.png}
+    \caption{Einzelbeschaltung}
+    \label{fig:einzel}
+\end{figure}
+
+rotes Jumper-Kabel 		-> Signal \newline
+blaues Jumper Kabel mittig	-> GND \newline
+blaues Jumper Kabel rechts	-> VCC \newline
+
 Wichtige Punkte zu beachten für die Matrix sind:
 \begin{itemize}
 	\item Leistungsaufnahme der Sensoren
