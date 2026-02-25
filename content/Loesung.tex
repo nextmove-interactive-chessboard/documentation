@@ -214,12 +214,37 @@ rotes Jumper-Kabel 		-> Signal \newline
 blaues Jumper Kabel mittig	-> GND \newline
 blaues Jumper Kabel rechts	-> VCC \newline
 
+
+\subsubsection{Matrixentwicklung}
 Wichtige Punkte zu beachten für die Matrix sind:
 \begin{itemize}
 	\item Leistungsaufnahme der Sensoren
 	\item Schaltzeiten um Fehler zu verhindern
 	\item Störsicherheit
 \end{itemize}
+
+\paragraph{Leistungsaufnahme}
+
+Der gewählte A3144 Hall-Effekt Sensor benötigt typischerweise 4,4mA bis zu maximal 9 mA ``Quelle''. Bei acht parallel angeschlossenen Sensoren ergibt sich so ein Strombedarf von ca. 35 mA bis maximal 72 mA. Ein GPIO Pin des Raspberry Pi ist allerdings nur für ungefähr 16 mA fähig ``Quelle''. Deshalb wird für die Versorgung der Sensoren ein MOSFET als Schalter benötigt. \newline
+
+\paragraph{Schaltzeiten}
+
+Um für zuverlässige Auslesungen der Matrix zu sorgen müssen Anstiegs und Abfallzeiten der Signalleitungen als auch die Schaltzeiten der MOSFETS beachtet werden um überlappende Signale zu verhindern.
+Dafür wird gesorgt indem Diplomant Maximilian Koch ein entsprechendes Delay im Code zur Auslesung der Matrix implementiert. \newline
+
+\paragraph{Störsicherheit}
+
+Die Matrix sollte so konzipiert und umgesetzt werden, dass zum einen keine Fehlerhaften Signale auf den Leitungen vorkommen. Diese Fälle wurden schon in den Punkten ``Querverweis'' und ``Querverweis'' gelöst, sodass diese nicht auftreten. Zum Schutz der GPIO Pins sind noch Gatewiderstände notwendig. Diese variieren je nach Gatekapazität von MOSFET zu MOSFET. Um das Gate auf LOW zu halten, wenn der GPIO PIN noch kein Signal sendet wurde auch am Gate des Mosfets ein 100kOhm Gate-Pulldown Widerstand eingebaut. Zuätzlich sollte die Matrix aber auch so umgesetzt werden, dass der Spieler auf dem Brett die Figuren bewegen kann, ohne darauf achten zu müssen, große Bewegungen um Felder zu machen, welche er nicht bespielen will.  
+
+\vfill
+\newpage
+
+\subsubsection{Prototypenaufbau}
+
+Bei der Erstellung des Prototypen in Form einer 2x2 Matrix wurden als MOSFETs 2 IRLZ44 N-Kanal verwendet, da diese bereits zur Verfügung standen. Diese sind jedoch nicht perfekt da bei einer Gate-Spannung von 3,3V Der $R_{\mathrm{DSon}}$ noch nicht minimal klein ist, allerdings ist es für die Testung ausreichend und durch die geringe Last von maximal ca. 30mW ist Wärmeentstehung durch den Widerstand auch nicht problematisch.
+
+
+
 
 \subsection{Platinendesign}
 
