@@ -1,10 +1,35 @@
 \section{Software}
 
-\subsection{Magneterkennung}
 
-\subsection{Matrixauslesung}
+
+\subsection{Steuerung einer 2x2 Matrix}
+
+
+\subsection{Rotary encoder}
+
 
 \subsection {Entwicklung eines Menüs}
+Ein benutzerfreundliches Menü, welches zu Beginn des einschaltens erscheint, ist essenziell für ein gutes Spielerlebnis. Eine erste Überlegung, wie die Struktur dieses Spielmenüs aussehen soll, war wie folgt aufgebaut:
+Startet man das Schachbrett, wird auf einem Display, welches sich auf dem Schachbrett befindet, angezeigt, dass sich der Benutzer zwischen  \glqq Offlinespiel\grqq{} oder \glqq Onlinespiel\grqq{} entscheiden kann. 
+
+
+\subsubsection{\glqq Offlinespiel\grqq{}}
+Wählt man ersteres, so gelangt man in ein Untermenü, in dem man die Wahl zwischen \glqq Spieler vs. Spieler\grqq{} und \glqq Spieler vs. COM\grqq{} hat.
+\glqq Spieler vs. Spieler\glqq{} steht dafür, dass man gegen einen Gegenüber Schach spielen kann, ganz ohne Einmischung eines Schachcomputers. Im Falle der Entscheidung auf diese Möglichkeit, startet das Spiel sofort. Die Auswahl \glqq Spieler vs. COM\glqq{} hingegen erlaubt es, noch vor dem Beginn des Spiels zwischen eine von drei Schwierigkeitsstufen — Leicht, Mittel oder Schwer — zu wählen, welche der Schachcomputer haben soll. Die Stufen unterscheiden sich davon, wie lange der Schachcomputer Zeit lässt um einen optimalen Zug zu berechnen. EINGEHEN AUF SCHACHCOMPUTER??
+Nachdem man eine Schwierigkeitsstufe gewählt hat, geht nun das Spiel los und der Nutzer kann spielen.
+
+
+\subsubsection{\glqq Onlinespiel\glqq{}}
+Entscheided man sich anstelle des Einzelspiels für das Onlinespiel, erscheint ein Untermenü, in dem man aufgefordert wird, sich entwerder einzulogen oder einen neuen account zu registrieren. Ersteres geht davon aus, dass der Benutzer schon über ein Bentzerkonto verfügt und deshalb nur noch den NFC-Chip an das Lesegerät auf dem Schachbrett legen soll, damit der Benutzer in der Datenbank verglichen werden kann. Kann kein bereits bestehender Nutzer dem NFC-Chip zugeordnet werden, so wird man infolgedessen aufgefordert, sich zu registrieren. Beim registrieren wird ein neuer Eintrag in der Datenbank erstellt, und der Benutzer kann fortfahren.
+Im Falle des Onlinespiels kann man als Spieler nur gegen einen Schachcomputer spielen und im Anschluss daran seine Partie auf der Website analysieren.
+
+
+\subsubsection{Verknüpfen von Menü und Encoder}
+
+\subsection{Die Restrukturierung}
+UPDATE NACH RESTRUCTUNING
+Startet man das Schachbrett, wird auf einem Display, welches sich auf dem Schachbrett befindet, angezeigt, dass sich der Benutzer zwischen \glqq Login\glqq{} oder \glqq Registrieren\glqq{} entscheiden kann. Ersteres geht davon aus, dass der Benutzer schon über ein Bentzerkonto verfügt und deshalb nur noch den NFC-Chip an das Lesegerät auf dem Schachbrett legen soll, damit der Benutzer in der Datenbank verglichen werden kann. Kann kein bereits bestehender Nutzer dem NFC-Chip zugeordnet werden, wird man aufgefordert, sich zu registrieren. Beim registrieren wird ein neuer Eintrag in der Datenbank gemacht, und der Benutzer kann fortfahren.
+
 
 \subsection{Spiellogik}
 
