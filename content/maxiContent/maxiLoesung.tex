@@ -1,3 +1,4 @@
+\graphicspath{ {figures/} }
 \section{Software}
 Ein smartes Schachbrett vor sich zu haben ist an sich gut. Wenn sich jedoch auf diesem keine Software befindet, dann ist dessen Nutzung aber wenig vielversprechend. Ein Kernfeature ist das spielen gegen einen Schachcomputer
 
@@ -14,13 +15,29 @@ Zur Auswahl des passenden Eingabegeräts, kamen einige Vorschläge auf:
 	\item Über einen Rotary encoder, wie er zum Beispiel in Autos verbaut ist
 \end{itemize}
 
-Die schlussendliche Wahl fiel dann auf den Rotary encoder, da er eine gute Mischung aus modernität und funktionalität bietet. Bei dem Modell, welches im Schachbrett verbaut wurde, handelt es sich um den [MODELL EINFÜGEN]. Dieser ist der mit unter am weitesten verbreiteste seiner Art und die Einbindung mit dem Raspberry Pi 5 ist dank der gpiozero library auch praktisch.
-[BILD VON ENCODER + BILD MIT PINS UND PINOUT]
+Die schlussendliche Wahl fiel dann auf den Rotary encoder, da er eine gute Mischung aus modernität und funktionalität bietet. Bei dem Modell, welches im Schachbrett verbaut wurde, handelt es sich um den KY-040. Dieser ist der mit unter am weitesten verbreiteste seiner Art und die Einbindung mit dem Raspberry Pi 5 ist dank der gpiozero library auch praktisch.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=6cm]{ky-040}
+	\caption{KY-040 Rotary Encoder}
+	\label{fig:ky040}
+\end{figure}
+%%https://www.elektronik-kompendium.de/sites/praxis/bauteil_ky040-drehschalter.htm
 
 \subsubsection{Funktionsweise eines Rotary encoders}
-Die Art, wie solch ein Encoder funktionert, ist für viele auf den ersten Blick vielleicht nicht ganz verständlich. 
+Die Art, wie solch ein Inkrementalgeber funktionert, ist für viele auf den ersten Blick vielleicht nicht ganz verständlich und wird wahrscheinlich mit der Funktionweise eines Potentiometers verwechselt. Allerdings handelt es sich hier um einen kodierten Drehschalter. Der Hauptunterschied, welcher bei Bedienung schnell auffällt ist, dass sich dieses Bauteil, im Vergleich zum klassischen Potentiometer, \glqq unendlich lange\grqq{} drehen lässt. Jeder Drehpunkt kann taktil erfühlt werden.
+Ein Inkrementalgeber hat zwei Ausgangssignale, A und B, welche bei Drehung ein periodisches Rechtecksignal ausgeben.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=6cm]{rotaryencoder_workings}
+	\caption{Funktionsweise eines Inkrementalgebers}
+	\label{fig:funkt}
+\end{figure}
+https://www.build-electronic-circuits.com/rotary-encoders/
 
-\subsubsection{Code für [MODELL EINFÜGEN]}
+Je nachdem, ob A oder B zuerst mit einer Zone Kontakt macht, wird eine Drehung in bzw. gegen die Uhrzeigerrichtung erkannt.
+
+\subsubsection{Code für KY-040}
 Der erste code sollte die Funktionalität sicherstellen und eine Vertrautheit mit dem Bauteil und dessen handling ermöglichen.
 Auf der Dokumentationsseite von gpiozero findet sich unter Kapitel 2.21 \glqq Rotary encoder\grqq{} ein einfaches Beispiel, welches — nach richtigem Konfigurieren der Pins — sofort gestartet werden kann.
 
@@ -42,7 +59,7 @@ def change_hue():
     led.color = Color(h=hue, s=1, v=1)
 
 def show_color():
-    print(f'Hue {led.color.hue.deg:.1f}° = {led.color.html}')
+
 
 def stop_script():
     print('Exiting')
@@ -56,7 +73,7 @@ print('Hold the button to exit')
 btn.when_held = stop_script
 done.wait()
 \end{lstlisting}
-
+    %%print(f'Hue {led.color.hue.deg:.1f}° = {led.color.html}')
 
 
 \subsection {Entwicklung eines Menüs}
@@ -84,10 +101,18 @@ Wird das Schachbrett gestartet, wird auf einem Display, welches sich auf dem Sch
 
 \subsection{Steuerung einer 2x2 Matrix}
 
+
 \subsection{Spiellogik}
 
 \subsubsection{Das Einzelspiel (Spieler gegen Computer)}
 
 \subsubsection{Der Mehrspieler (Spieler gegen Spieler)}
 
+
 \subsection{Einbindung des Spielererkennung}
+
+
+\subsection{Die Datenübertragung}
+
+
+
