@@ -1,88 +1,13 @@
 \chapter{Lösungsidee}
 
-\section{Hardware}
-
-\subsection{Bauteilauswahl}
-
-\subsubsection{Computer}
-
-Bei der Auswahl des Rechners für das Schachbrett ist entscheidend, dass dieser über ausreichende Rechenleistung zur zuverlässigen Verarbeitung der Sensordaten verfügt und gleichzeitig energieeffizient arbeitet. Zudem sollte er kompakt, kostengünstig und gut in das Gesamtsystem integrierbar sein. Ein Rechner welcher mittels Python programmierbar ist, wäre für Maximilian Koch die bevorzugte Lösung.
-
-\subsubsection{Sensoren}
-Bei der Auswahl der Sensoren für das Schachbrett stellen Kosten, Zuverlässigkeit und Praktikabilität die drei Hauptauswahlkriterien dar, anhand derer die zur Verfügung stehenden Methoden bewertet wurden. Die Kosten sind unter anderem ein wichtiges Auswahlkriterium, da für das Schachbrett insgesamt 64 Einheiten benötigt werden. Die Zuverlässigkeit ist ein weiterer zentraler Punkt, da fehlerhafte Erkennungen zu falschen Spielzuständen und somit zu einem fehlerhaften Spielablauf führen können. Als letztes Kriterium wird die Praktikabilität betrachtet, da die gewählte Methode die optische Anzeige des Schachbretts möglichst wenig bis gar nicht einschränken darf, um ein gutes Spielerlebnis zu gewährleisten.
-
-\subsection{Schaltungsentwicklung}
-
-Bei der Schaltungsentwicklung geht es darum die 64 Einheiten effizient zu verschalten, um die Anzahl der benötigten Pins zu verringern, da auf dem Rechner keine 64 einzelnen Pins zur Verfügung stehen werden. Zusätzlich sollen die Signale auch das richtige Logiklevel, für den verwendedten Microcontroller oder Einplatinenpc, haben. Möglichkeiten die Pins zu reduzieren wäre eine Zeilen-Spalten Matrix, welche die benötigten Pins von 64 auf 16 begrenzen würde. Diese Lösung würde einen guten Kompromiss zwischen technischer Komplexität und Programmierbarkeit der Hardware ermöglichen. 
-
-\subsection{Platinendesign - PCB}
-
-Das Platine muss so designed werden, dass Anschlüsse für die Recheneinheit, Sensorik und elektronische Bauteile ihren Zweck erfüllen und physisch an der richtigen Stelle sind. Die Anschlüsse sollen über der Recheneinheit platziert werden um lange Verbindugnsleitung zu verhindern. Die Sensoren, für die Figuren Erkennung, müssen sich genau an den zuvor berechneten Stellen befinden, damit beim zusammenbau von Gehäuse und Elektronik die Sensor Positionen mit den Feldposition übereinstimmen. 
-
-\subsection{Gehäusefertigung}
-
-Bei der Gehäusefertigung sollen folgende Punkte erfüllt werden:
-\begin{itemize}
-\item Einbindung der Bedienelemente
-\item Kühlung und Lüftungskonzept
-\item Handlichkeit 
-\item technischen Elemente der Spiellogik vor dem Nutzer verstecken
-\item sichere Befestigungen für die internen Bauteile
-\end{itemize}
-
-\subsection{Stromversorgung}
-
-Das System, für die Stromversorgung, soll es dem Nutzer einfach machen das Schachbrett zu nutzen. Ein USB-C Ladeanschluss über den der Nutzer ohne technisches Verständnis das Schachbrett nutzen kann wurde dafür ausgewählt. Für die technische Umsetzung muss bei dieser Methode jedoch eine Ladelogik für einen internen Akku und Umschaltlogik zwischen Akku und Netzteil-Betrieb entwickelt werden. 
+%% Christian section
+\input{content/chrisContent/chrisLoesungsidee}
 
 
-\section{Software}
-
-\subsection{Magneterkennung}
-
-\subsection{Matrixauslesung}
-
-\subsection {Entwicklung eines Menüs}
-
-\subsection{Spiellogik}
-
-\subsubsection{Das Einzelspiel (Spieler gegen Computer)}
-
-\subsubsection{Der Mehrspieler (Spieler gegen Spieler)}
-
-\subsection{Einbindung des Spielererkennung}
+%% Maximilian section
+\input{content/maxiContent/maxiLoesungsidee}
 
 
 \newpage
-
-\section{Webinterface}
-
-\subsection{Auswahl der Komponenten}
-
-\subsubsection{Programmiersprachen}
-Es stand am Anfang die Wahl zwischen PyScript und JavaScript. PyScript ist ein Tool, um Python in eine Web-Anwendung einzubinden, jedoch steht es noch in den Startlöchern und ist damit noch zu unprofessionell und unzuverlässig. Wäre PyScript weiter entwickelt , wäre es eine interessante Alternative zu JavaScript gewesen, da Python schon in den letzten Jahren gelernt wurde und JavaScript nicht. 
-
-\subsubsection{WebTools für den Server}
-Hier steht die Auswahl zwischen den Webservern Nginx und Apache im Vordergrund. Nginx ist die modernere und leistungsfähigere Variante von den beiden. Auch wenn momentan noch nicht viele Spieler gleichzeitig spielen, kann das in Zukunft vorkommen. Dafür ist ein leistungsfähiger und schneller Webserver wie Nginx essenziell.  Dazu wurde der Anwendungsserver uWSGi verwendet, da er sehr gut mit Nginx und Flask zusammenarbeitet. 
-
-Das Web-Framework Flask wurde gewählt, da es fast leer startet und man selbst wählen kann, welche Bibliotheken man nutzt. Das führt dazu, dass weniger Arbeitsspeicher verwendet wird, was auf einem Debian-Server wichtig ist. Weiters braucht man durch die mit HTML und JavaScript geschriebene Website nur eine API, die JSON-Daten sendet und empfängt, und Flask ist genau darauf spezialisiert. Außerdem ist Flask sehr ähnlich zu Python, weshalb es leicht verständlich ist, es ist egal welche Datenbank man wählt und es arbeitet sehr nahe mit uWSGI und Nginx zusammen. 
-
-\subsubsection{Server}
-Es wurde ein Debian Server von der Schule verwendet. Er wird mit ssh konfiguriert. 
-
-\subsubsection{Datenbank}
-Die Wahl zwischen MariaDB und MySQL war nicht schwer. Das liegt daran, dass MariaDB eine modifizierte und damit modernere Version von MySQL ist. 
-
-\subsection{Website}
-Das Ziel der Website ist es:
-\begin{itemize}
-\item einen Benutzer anlegen zu können, 
-\item online Schach spielen zu können 
-\item und die bereits gespielten Spiele analysieren zu können
-\end{itemize}
-
-\subsection{Datenbank}
-Die Datenbank speichert alle wichtigen Daten. Das sind die Benutzernamen mit Ausgabe des NFC-Sensors, Schachzüge und Spiele. 
-
-\subsection{Server}
-Der Server verbindet die Website, Datenbank und den Raspberry Pi des Schachbretts miteinander und sorgt für eine reibungsfreie Kommunikation. 
-
+%% Christina section
+\input{content/christinaContent/christinaLoesungsidee}
