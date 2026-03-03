@@ -42,7 +42,7 @@ def change_hue():
     led.color = Color(h=hue, s=1, v=1)
 
 def show_color():
-    print(f'Hue {led.color.hue.deg:.1f}° = {led.color.html}')
+   
 
 def stop_script():
     print('Exiting')
@@ -56,7 +56,7 @@ print('Hold the button to exit')
 btn.when_held = stop_script
 done.wait()
 \end{lstlisting}
-
+ %%print(f'Hue {led.color.hue.deg:.1f}° = {led.color.html}')
 
 
 \subsection {Entwicklung eines Menüs}

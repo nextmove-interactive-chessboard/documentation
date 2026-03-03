@@ -1,18 +1,4 @@
-% Nur Footer für deinen Teil:
-\ofoot*{Christoph Schwaninger}
-
-% Kapitel-Startseiten sollen NICHT "plain" sein:
-\makeatletter
-\let\origchapter\chapter
-\renewcommand{\chapter}{%
-  \@ifstar{\origchapter*}{\@dblarg\chapter@nostar}%
-}
-\newcommand{\chapter@nostar}[2][]{%
-  \origchapter[#1]{#2}%
-  \thispagestyle{scrheadings}% <-- erzwingt Header auch auf der Kapitel-Startseite
-}
-\makeatother
-
+\renewcommand{\myauthor}{Christoph Schwaninger}
 \subsection{Bauteilauswahl}
 
 \subsubsection{Computer}
@@ -189,7 +175,7 @@ R_{PU} = \frac{V_{CC} - V_{CE(sat)}}{I_{LOW}}
 wobei \(V_{CC}\) die Versorgungsspannung, \(V_{CE(sat)}\) die Sättigungsspannung des Transistors (Datenblatt \(0{,}4\,V\)) und \(I_{LOW}\) der gewünschte Strom im eingeschalteten Zustand ist. Für \(V_{CC} = 3{,}3\,V\) und \(I_{LOW} = 1\,mA\) ergibt sich
 
 \[
-R_{PU} = \frac{3{,}3\,V - 0{,}2\,V}{0{,}001\,A} = 2{,}9\,k\Omega
+R_{PU} = \frac{3{,}3\,V - 0{,}4\,V}{0{,}001\,A} = 2{,}9\,k\Omega
 \]
 
 Als geeigneter Normwert wird \(3{,}3\,k\Omega\) gewählt. Ein kleinerer Widerstand erhöht den Strom und verbessert die Schaltgeschwindigkeit, während ein größerer Widerstand den Stromverbrauch reduziert, jedoch Slangsamere Signalflanken bringt.
@@ -264,7 +250,7 @@ A3144 Hall-Sensor & 4 & Digitale Hall-Effekt Sensoren \\ \hline
 IRLZ44N MOSFET & 2 & N-Kanal Logic-Level MOSFET \\ \hline
 Gate-Pulldown Widerstand & 2 & 100 k$\Omega$ \\ \hline
 Gate-Widerstand & 2 & 220 $\Omega$ \\ \hline
-Pull-Up Widerstand & 2 & 3,3 k$\Omega$ \\ \hline
+Pull-Up Widerstand & 2 & 4,7 k$\Omega$ \\ \hline
 \end{tabular}
 \caption{Verwendete elektronische Bauteile}
 \label{tab:bauteile}
@@ -282,7 +268,7 @@ Pull-Up Widerstand & 2 & 3,3 k$\Omega$ \\ \hline
 
 \begin{minipage}{0.45\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{figures/PlatinenPrototyp2.jpg}
+    \includegraphics[width=7cm]{figures/PlatinenPrototyp2.jpg}
     \caption{Schaltplan der aufgebauten Schaltung}
     \label{fig:schaltplan}
 \end{minipage}
@@ -310,12 +296,41 @@ Die Entwicklung des Schaltplans sowie das Layout der Leiterplatte wurden mit der
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\paperwidth]{figures/8x8Matrix.png}
+\includegraphics[width=1\textwidth]{figures/8x8Matrix.png}
 \caption{8x8 LED-Matrix}
 \label{fig:8x8matrix}
 \end{figure}
 
 Der Schaltplan ist so aufgebaut, dass rechts die Ausgänge vom Raspberry Pi sind welche die Zeilen aktiv ein und ausschalten. Unten sind die Anschlüsse für die Raspberry Pi Eingänge welche an den Signalleitungen der A3144 Sensoren hängen. 
+
+
+\subsubsection{Altium Platinendesign}
+
+Von diesem Schaltplan wurde nun ein 4-Lagiges PCB erstellt welches die Konstruktionsdatei für JLCPCB bereitstellen soll. Wichtig ist, dass die Felder und Anschlüsse so platziert werden wie diese berechnet wurden damit die Platine anschließend ins Gehäuse passt. 
+
+Das Schachbrett besteht aus jeweils 64 Quadraten mit einer Seitenlänge von jeweils $28\,\mathrm{mm}$. Zwischen jeweils zwei benachbarten Feldern liegt ein Abstand von $2\,\mathrm{mm}$, sodass pro Reihe $7$ Zwischenräume entstehen. Die Gesamtlänge einer Seite berechnet sich daher aus $8 \cdot 28\,\mathrm{mm} + 7 \cdot 2\,\mathrm{mm} = 238\,\mathrm{mm}$. Da das Schachbrett quadratisch ist, beträgt auch die andere Seitenlänge $238\,\mathrm{mm}$. Wichtig noch zu beachten ist, dass der erste Sensor  $14\,\mathrm{mm}$ vom Rand entfernt platziert werden muss.
+
+\begin{figure}[H]
+    \centering
+    % Hier wird das Bild aus dem Ordner "figures" geladen
+    \includegraphics[width=0.72\textwidth]{figures/AltiumPCB.png}
+    
+    \caption{Geroutete Platine bereit für die Fertigung}
+    \label{fig:altium_pcb}
+\end{figure}
+
+Um diese Platine Final zu bestellen wurde ein Finaler Designrulecheck für ein 4-lagiges JLC PCB gemacht (Designrules ``Quelle'') und erfolgreich mit null Errors durchgeführt und somit war die Platinenerstellung erledigt. 
+
+\begin{figure}[H]
+    \centering
+    % Hier wird das JPEG-Bild geladen
+    \includegraphics[width=0.8\textwidth, angle=90]{figures/JLCPCBPlatine.jpg}
+    
+    \caption{Unbestückte Platine}
+    \label{fig:jlcpcb_platine}
+\end{figure}
+
+Die Platine wurde aus Kostengründen unbestückt bestellt und selbst bestückt. 
 
 \subsection{Gehäusefertigung}
 
