@@ -2,6 +2,21 @@
 
 \section{Hardware}
 
+% Nur Footer für deinen Teil:
+\ofoot*{Christoph Schwaninger}
+
+% Kapitel-Startseiten sollen NICHT "plain" sein:
+\makeatletter
+\let\origchapter\chapter
+\renewcommand{\chapter}{%
+  \@ifstar{\origchapter*}{\@dblarg\chapter@nostar}%
+}
+\newcommand{\chapter@nostar}[2][]{%
+  \origchapter[#1]{#2}%
+  \thispagestyle{scrheadings}% <-- erzwingt Header auch auf der Kapitel-Startseite
+}
+\makeatother
+
 \subsection{Bauteilauswahl}
 
 \subsubsection{Computer}
@@ -131,7 +146,7 @@ und Integrationsaufwand.
 
 Optische Sensoren weisen eine erhöhte Empfindlichkeit gegenüber Umgebungslicht, Verschmutzung und Kalibrierungsabweichungen auf, 
 wodurch die Langzeitstabilität beeinträchtigt werden kann. NFC/RFID-Systeme ermöglichen zwar eine eindeutige Identifikation 
-jeder Figur, verursachen jedoch einen deutlich höheren Hardware- und Softwareaufwand, insbesondere bei der Umsetzung 
+jeder Figur, verursachen jedoch einen deutlich höheren Hardwareaufwand, insbesondere bei der Umsetzung 
 auf 64 Spielfeldern.
 
 Unter Berücksichtigung der Anforderungen an Kosten, Zuverlässigkeit, Integrationsaufwand und Systemkomplexität 
@@ -166,6 +181,56 @@ Die Ausgänge vom Sensor und Verschaltung dieser sehen wie folgt aus:
 	\end{minipage}
 	
 \end{figure}
+
+\subsubsection{Pull-Up Widerstandsberechnung}
+
+Der A3144 besitzt einen Open-Collector-Ausgang, weshalb ein externer Pull-Up-Widerstand erforderlich ist, um im HIGH-Zustand eine definierte Ausgangsspannung zu erzeugen. Die Dimensionierung erfolgt auf Grundlage des Ohmschen Gesetzes. Der Widerstand bestimmt dabei den Strom im LOW-Zustand sowie die Schaltgeschwindigkeit des Signals. Die Berechnung erfolgt mit
+
+\[
+R_{PU} = \frac{V_{CC} - V_{CE(sat)}}{I_{LOW}}
+\]
+
+wobei \(V_{CC}\) die Versorgungsspannung, \(V_{CE(sat)}\) die Sättigungsspannung des Transistors (Datenblatt \(0{,}4\,V\)) und \(I_{LOW}\) der gewünschte Strom im eingeschalteten Zustand ist. Für \(V_{CC} = 3{,}3\,V\) und \(I_{LOW} = 1\,mA\) ergibt sich
+
+\[
+R_{PU} = \frac{3{,}3\,V - 0{,}2\,V}{0{,}001\,A} = 2{,}9\,k\Omega
+\]
+
+Als geeigneter Normwert wird \(3{,}3\,k\Omega\) gewählt. Ein kleinerer Widerstand erhöht den Strom und verbessert die Schaltgeschwindigkeit, während ein größerer Widerstand den Stromverbrauch reduziert, jedoch Slangsamere Signalflanken bringt.
+
+Die Schaltgeschwindigkeit hängt vom Pull-Up-Widerstand ab, da dieser zusammen mit der parasitären Leitungskapazität \( C \) eine RC-Zeitkonstante bildet. Beim Übergang von LOW nach HIGH wird die Leitung über den Widerstand aufgeladen, wobei die Anstiegszeit durch die Zeitkonstante 
+
+\[
+\tau = R \cdot C
+\]
+
+bestimmt wird. Die Spannung steigt dabei exponentiell nach
+
+\[
+U(t) = U_{CC} \left(1 - e^{-\frac{t}{RC}} \right)
+\]
+
+an. Ein größerer Widerstand führt zu einer größeren Zeitkonstante \( \tau \) und somit zu einem langsameren Spannungsanstieg, während ein kleinerer Widerstand eine kleinere Zeitkonstante und damit eine schnellere Schaltflanke bewirkt.
+
+\subsubsection{Schaltungsaufbau}
+
+Um die korrekte Verdrahtung zu testen wurde von Diplomant Maximilian Koch ein Pyhton Programm geschrieben welches unter ``Bildverwis'' zu sehen ist. Der Output von diesem Programm ist unter ``Bildverweis'' zu sehen.
+
+Aufbau auf einem Steckbrett zur Inbetriebnahme der Sensoren:
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/einzel.png}
+    \caption{Einzelbeschaltung}
+    \label{fig:einzel}
+\end{figure}
+
+rotes Jumper-Kabel 		-> Signal \newline
+blaues Jumper Kabel mittig	-> GND \newline
+blaues Jumper Kabel rechts	-> VCC \newline
+
+
+\subsubsection{Matrix-entwicklung}
 Wichtige Punkte zu beachten für die Matrix sind:
 \begin{itemize}
 	\item Leistungsaufnahme der Sensoren
@@ -173,12 +238,92 @@ Wichtige Punkte zu beachten für die Matrix sind:
 	\item Störsicherheit
 \end{itemize}
 
+\paragraph{Leistungsaufnahme}
+
+Der gewählte A3144 Hall-Effekt Sensor benötigt typischerweise 4,4mA bis zu maximal 9 mA ``Quelle''. Bei acht parallel angeschlossenen Sensoren ergibt sich so ein Strombedarf von ca. 35 mA bis maximal 72 mA. Ein GPIO Pin des Raspberry Pi ist allerdings nur für ungefähr 16 mA fähig ``Quelle''. Deshalb wird für die Versorgung der Sensoren ein MOSFET als Schalter benötigt. \newline
+
+\paragraph{Schaltzeiten}
+
+Um für zuverlässige Auslesungen der Matrix zu sorgen müssen Anstiegs und Abfallzeiten der Signalleitungen als auch die Schaltzeiten der MOSFETS beachtet werden um überlappende Signale zu verhindern.
+Dafür wird gesorgt indem Diplomant Maximilian Koch ein entsprechendes Delay im Code zur Auslesung der Matrix implementiert. \newline
+
+\paragraph{Störsicherheit}
+
+Die Matrix sollte so konzipiert und umgesetzt werden, dass zum einen keine Fehlerhaften Signale auf den Leitungen vorkommen. Diese Fälle wurden schon in den Punkten ``Querverweis'' und ``Querverweis'' gelöst, sodass diese nicht auftreten. Zum Schutz der GPIO Pins sind noch Gatewiderstände notwendig. Diese variieren je nach Gatekapazität von MOSFET zu MOSFET. Um das Gate auf LOW zu halten, wenn der GPIO PIN noch kein Signal sendet wurde auch am Gate des Mosfets ein 100kOhm Gate-Pulldown Widerstand eingebaut. Zuätzlich sollte die Matrix aber auch so umgesetzt werden, dass der Spieler auf dem Brett die Figuren bewegen kann, ohne darauf achten zu müssen, große Bewegungen um Felder zu machen, welche er nicht bespielen will.  
+
+\vfill
+\newpage
+
+\subsubsection{Prototypenaufbau}
+
+Bei der Erstellung des Prototypen in Form einer 2x2 Matrix wurden als MOSFETs 2 IRLZ44 N-Kanal verwendet, da diese bereits zur Verfügung standen. Diese sind jedoch nicht perfekt da bei einer Gate-Spannung von 3,3V Der $R_{\mathrm{DSon}}$ noch nicht minimal klein ist ``Quelle'', allerdings ist es für die Testung ausreichend und durch die geringe Last von maximal ca. 30mW ist Wärmeentstehung durch den Widerstand auch nicht problematisch.
+
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|l|}
+\hline
+\textbf{Bauteil} & \textbf{Anzahl} & \textbf{Bemerkung} \\ \hline
+A3144 Hall-Sensor & 4 & Digitale Hall-Effekt Sensoren \\ \hline
+IRLZ44N MOSFET & 2 & N-Kanal Logic-Level MOSFET \\ \hline
+Gate-Pulldown Widerstand & 2 & 100 k$\Omega$ \\ \hline
+Gate-Widerstand & 2 & 220 $\Omega$ \\ \hline
+Pull-Up Widerstand & 2 & 3,3 k$\Omega$ \\ \hline
+\end{tabular}
+\caption{Verwendete elektronische Bauteile}
+\label{tab:bauteile}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\textwidth]{figures/2x2Wiringplan.png}
+\caption{2x2 Wiring Plan}
+\label{fig:wiringplan}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+
+\begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/PlatinenPrototyp2.jpg}
+    \caption{Schaltplan der aufgebauten Schaltung}
+    \label{fig:schaltplan}
+\end{minipage}
+\hfill
+\begin{minipage}{0.5\textwidth}
+\begin{itemize}
+	\item Steckanschluss oben links		\newline-> 3,3V Spannungsversorgung
+	\item Steckanschluss unten rechts	\newline-> Ground
+	\item Blockklemme rechts			\newline-> GPIO Ausgänge Raspberry Pi
+	\item Blockklemme unten			\newline-> GPIO Eingänge Raspberry Pi
+	\newline
+	
+	Die Schaltung wurde als LOW-Side Beschaltung aufgebaut, das bedeuet, dass nicht mehr 3,3V aktiv durchgeschaltet werden, sondern der 			MOSFET den Ground durchschaltet
+\end{itemize}
+\end{minipage}
+\end{figure}
+
+Das Programm welches Diplomant Maximilian Koch geschrieben hat, um die Platine erfolgreich in Betrieb zu nehmen, ist unter Punkt ``Querverweis'' zu finden. 
+\newpage
+
+
 \subsection{Platinendesign}
+
+Die Entwicklung des Schaltplans sowie das Layout der Leiterplatte wurden mit der Software Altium Designer in der Version 22.7.1 erstellt. Auf Basis der erstellten Konstruktionsdatein erfolgte die Fertigung der Leiterplatte durch den Leiterplattenhersteller JLCPCB. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\paperwidth]{figures/8x8Matrix.png}
+\caption{8x8 LED-Matrix}
+\label{fig:8x8matrix}
+\end{figure}
+
+Der Schaltplan ist so aufgebaut, dass rechts die Ausgänge vom Raspberry Pi sind welche die Zeilen aktiv ein und ausschalten. Unten sind die Anschlüsse für die Raspberry Pi Eingänge welche an den Signalleitungen der A3144 Sensoren hängen. 
 
 \subsection{Gehäusefertigung}
 
 \subsection{Stromversorgung}
-
 
 \section{Software}
 
