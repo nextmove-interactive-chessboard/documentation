@@ -1,4 +1,17 @@
-\section{Hardware}
+% Nur Footer für deinen Teil:
+\ofoot*{Christoph Schwaninger}
+
+% Kapitel-Startseiten sollen NICHT "plain" sein:
+\makeatletter
+\let\origchapter\chapter
+\renewcommand{\chapter}{%
+  \@ifstar{\origchapter*}{\@dblarg\chapter@nostar}%
+}
+\newcommand{\chapter@nostar}[2][]{%
+  \origchapter[#1]{#2}%
+  \thispagestyle{scrheadings}% <-- erzwingt Header auch auf der Kapitel-Startseite
+}
+\makeatother
 
 \subsection{Bauteilauswahl}
 
@@ -213,7 +226,7 @@ blaues Jumper Kabel mittig	-> GND \newline
 blaues Jumper Kabel rechts	-> VCC \newline
 
 
-\subsubsection{Matrixentwicklung}
+\subsubsection{Matrix-entwicklung}
 Wichtige Punkte zu beachten für die Matrix sind:
 \begin{itemize}
 	\item Leistungsaufnahme der Sensoren
@@ -239,14 +252,71 @@ Die Matrix sollte so konzipiert und umgesetzt werden, dass zum einen keine Fehle
 
 \subsubsection{Prototypenaufbau}
 
-Bei der Erstellung des Prototypen in Form einer 2x2 Matrix wurden als MOSFETs 2 IRLZ44 N-Kanal verwendet, da diese bereits zur Verfügung standen. Diese sind jedoch nicht perfekt da bei einer Gate-Spannung von 3,3V Der $R_{\mathrm{DSon}}$ noch nicht minimal klein ist, allerdings ist es für die Testung ausreichend und durch die geringe Last von maximal ca. 30mW ist Wärmeentstehung durch den Widerstand auch nicht problematisch.
+Bei der Erstellung des Prototypen in Form einer 2x2 Matrix wurden als MOSFETs 2 IRLZ44 N-Kanal verwendet, da diese bereits zur Verfügung standen. Diese sind jedoch nicht perfekt da bei einer Gate-Spannung von 3,3V Der $R_{\mathrm{DSon}}$ noch nicht minimal klein ist ``Quelle'', allerdings ist es für die Testung ausreichend und durch die geringe Last von maximal ca. 30mW ist Wärmeentstehung durch den Widerstand auch nicht problematisch.
 
 
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|l|}
+\hline
+\textbf{Bauteil} & \textbf{Anzahl} & \textbf{Bemerkung} \\ \hline
+A3144 Hall-Sensor & 4 & Digitale Hall-Effekt Sensoren \\ \hline
+IRLZ44N MOSFET & 2 & N-Kanal Logic-Level MOSFET \\ \hline
+Gate-Pulldown Widerstand & 2 & 100 k$\Omega$ \\ \hline
+Gate-Widerstand & 2 & 220 $\Omega$ \\ \hline
+Pull-Up Widerstand & 2 & 3,3 k$\Omega$ \\ \hline
+\end{tabular}
+\caption{Verwendete elektronische Bauteile}
+\label{tab:bauteile}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\textwidth]{figures/2x2Wiringplan.png}
+\caption{2x2 Wiring Plan}
+\label{fig:wiringplan}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+
+\begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/PlatinenPrototyp2.jpg}
+    \caption{Schaltplan der aufgebauten Schaltung}
+    \label{fig:schaltplan}
+\end{minipage}
+\hfill
+\begin{minipage}{0.5\textwidth}
+\begin{itemize}
+	\item Steckanschluss oben links		\newline-> 3,3V Spannungsversorgung
+	\item Steckanschluss unten rechts	\newline-> Ground
+	\item Blockklemme rechts			\newline-> GPIO Ausgänge Raspberry Pi
+	\item Blockklemme unten			\newline-> GPIO Eingänge Raspberry Pi
+	\newline
+	
+	Die Schaltung wurde als LOW-Side Beschaltung aufgebaut, das bedeuet, dass nicht mehr 3,3V aktiv durchgeschaltet werden, sondern der 			MOSFET den Ground durchschaltet
+\end{itemize}
+\end{minipage}
+\end{figure}
+
+Das Programm welches Diplomant Maximilian Koch geschrieben hat, um die Platine erfolgreich in Betrieb zu nehmen, ist unter Punkt ``Querverweis'' zu finden. 
+\newpage
 
 
 \subsection{Platinendesign}
 
+Die Entwicklung des Schaltplans sowie das Layout der Leiterplatte wurden mit der Software Altium Designer in der Version 22.7.1 erstellt. Auf Basis der erstellten Konstruktionsdatein erfolgte die Fertigung der Leiterplatte durch den Leiterplattenhersteller JLCPCB. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\paperwidth]{figures/8x8Matrix.png}
+\caption{8x8 LED-Matrix}
+\label{fig:8x8matrix}
+\end{figure}
+
+Der Schaltplan ist so aufgebaut, dass rechts die Ausgänge vom Raspberry Pi sind welche die Zeilen aktiv ein und ausschalten. Unten sind die Anschlüsse für die Raspberry Pi Eingänge welche an den Signalleitungen der A3144 Sensoren hängen. 
+
 \subsection{Gehäusefertigung}
 
 \subsection{Stromversorgung}
-
