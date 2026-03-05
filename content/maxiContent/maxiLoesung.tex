@@ -28,53 +28,78 @@ Die schlussendliche Wahl fiel dann auf den Rotary encoder, da er eine gute Misch
 \subsubsection{Funktionsweise eines Rotary encoders}
 Die Art, wie solch ein Inkrementalgeber funktionert, ist für viele auf den ersten Blick vielleicht nicht ganz verständlich und wird wahrscheinlich mit der Funktionweise eines Potentiometers verwechselt. Allerdings handelt es sich hier um einen kodierten Drehschalter. Der Hauptunterschied, welcher bei Bedienung schnell auffällt ist, dass sich dieses Bauteil, im Vergleich zum klassischen Potentiometer, \glqq unendlich lange\grqq{} drehen lässt. Jeder Drehpunkt kann taktil erfühlt werden.
 Ein Inkrementalgeber hat zwei Ausgangssignale, A und B, welche bei Drehung ein periodisches Rechtecksignal ausgeben.
+
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=6cm]{rotaryencoder_workings}
-	\caption{Funktionsweise eines Inkrementalgebers}
-	\label{fig:funkt}
+	\begin{minipage}[b]{0.6\textwidth}
+		\includegraphics[width=\textwidth]{rotaryencoder_workings}
+		\caption{Funktionsweise eines Inkrementalgebers}
+		\label{fig:funkt}
+		%%https://components101.com/modules/KY-04-rotary-encoder-pinout-features-datasheet-working-application-alternative
+	\end{minipage}
+	\hfill
+	\begin{minipage}[b]{0.35\textwidth}
+		\includegraphics[width=\textwidth]{pinout}
+		\caption{Pinout des KY-040}
+		\label{fig:pinout}
+		%%https://www.espboards.dev/sensors/ky-040/
+	\end{minipage}
 \end{figure}
-https://www.build-electronic-circuits.com/rotary-encoders/
-
 Je nachdem, ob A oder B zuerst mit einer Zone Kontakt macht, wird eine Drehung in bzw. gegen die Uhrzeigerrichtung erkannt.
 
+
+
 \subsubsection{Code für KY-040}
+
 Der erste code sollte die Funktionalität sicherstellen und eine Vertrautheit mit dem Bauteil und dessen handling ermöglichen.
-Auf der Dokumentationsseite von gpiozero findet sich unter Kapitel 2.21 \glqq Rotary encoder\grqq{} ein einfaches Beispiel, welches — nach richtigem Konfigurieren der Pins — sofort gestartet werden kann.
+Auf der Dokumentationsseite von gpiozero findet sich unter Kapitel 2.21 \glqq Rotary encoder\grqq{} ein einfaches Beispiel mit einer LED. Mit Hilfe dieses Beispiels 
 
-\begin{lstlisting}[language=Python, caption = {Einen Encoder, eine RGB-LED und einen Button als Farbauwahl}]
-from threading import Event
-from colorzero import Color
-from gpiozero import RotaryEncoder, RGBLED, Button
+%\begin{adjustbox}{max width=\linewidth}
+\begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {Erstes Beispiel für die Einbindung eines Rotary encoders}]
+import threading
 
-rotor = RotaryEncoder(16, 20, wrap=True, max_steps=180)
-rotor.steps = -180
-led = RGBLED(22, 23, 24, active_high=False)
-btn = Button(21, pull_up=False)
-led.color = Color('#f00')
-done = Event()
+from gpiozero import RotaryEncoder, Button
 
-def change_hue():
-    # Scale the rotor steps (-180..180) to 0..1
-    hue = (rotor.steps + 180) / 360
-    led.color = Color(h=hue, s=1, v=1)
 
-def show_color():
+class Encoder:
+    def __init__(self):
+        self.encoder = RotaryEncoder(13, 19, wrap = True,
+									max_steps=100,
+									bounce_time=0.05)
 
-def stop_script():
-    print('Exiting')
-    done.set()
+        self.button = Button(16, pull_up = True, 
+							bounce_time = 0.05,
+							hold_time = 2)
 
-print('Select a color by turning the knob')
-rotor.when_rotated = change_hue
-print('Push the button to see the HTML code for the color')
-btn.when_released = show_color
-print('Hold the button to exit')
-btn.when_held = stop_script
-done.wait()
+        self.done = threading.Event()
+
+        self.button.when_released = self.handle_button  
+        self.encoder.when_rotated = self.handle_rotate
+
+
+    def handle_rotate(self):
+        print(self.encoder.steps)
+
+
+    def handle_button(self):
+        print("Button released")
+
+	
+if __name__ == "__main__":
+    encoder = Encoder()
+    encoder.done.wait()
 \end{lstlisting}
-    %%print(f'Hue {led.color.hue.deg:.1f}° = {led.color.html}')
+%\end{adjustbox}
 
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{encoderCodeTest}
+	\caption{Ergebnis des Code-Tests}
+	\label{fig:encoderTest}
+\end{figure}
+
+Die Ausgabe zeigt, dass der Encoder korrekt funktioniert. Dreht man ihn im Uhrzeigersinn, so werden die Zahlen kleiner. Wird er in die entgegengesetzte Richtung gedreht, werden die Zahlen größer.
+Am Ende wird nur der Button geklickt. Dieser Output wird mit \glqq Button released\grqq{} angezeigt. Es ist zu beachten, dass die Ausgabe der Schritte von 0 bis 100 geht, da im Code die Option \glqq max\char`_steps\grqq{} auf 100 gesetzt wurde. Ohne diese Option würde die Ausgabe von - inf bis +inf gehen, da sich der Encoder unendlich drehen lässt.
 
 \subsection {Entwicklung eines Menüs}
 Ein benutzerfreundliches Menü, welches zu Beginn des einschaltens erscheint, ist essenziell für ein gutes Spielerlebnis. Eine erste Überlegung, wie die Struktur dieses Spielmenüs aussehen soll, war wie folgt aufgebaut:
