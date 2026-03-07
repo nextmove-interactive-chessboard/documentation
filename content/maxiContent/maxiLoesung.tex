@@ -1,7 +1,11 @@
+%%MAXIMALE LÄNGE FÜR CODE: 63 ZEICHEN
+
 \graphicspath{ {figures/} }
 \renewcommand{\myauthor}{Maximilian Koch}
 
-Ein smartes Schachbrett vor sich zu haben ist an sich gut. Wenn sich jedoch auf diesem keine Software befindet, dann ist dessen Nutzung aber wenig vielversprechend. Ein Kernfeature ist das spielen gegen einen Schachcomputer
+Ein smartes Schachbrett vor sich zu haben ist an sich gut. Wenn sich jedoch auf diesem keine Software 
+befindet, dann ist dessen Nutzung aber wenig vielversprechend. Ein Kernfeature ist das spielen gegen einen 
+Schachcomputer
 
 \subsection{Schachcomputer}
 Um das was folgt besser zu verstehen, muss zuerst das Prinzip eines Schachcomputers erläutert werden. (?)
@@ -9,14 +13,18 @@ Um das was folgt besser zu verstehen, muss zuerst das Prinzip eines Schachcomput
 
 
 \subsection{Rotary encoder als Eingabegerät}
-Zur Auswahl des passenden Eingabegeräts, kamen einige Vorschläge auf:
+Zur Auswahl des passenden Eingabegeräts, kamen einige Varianten auf:
 \begin{itemize}
 	\item Das Steuern über vier Buttons, nach dem D-pad (Abkürzung für directional pad) Prinzip
 	\item Über einen Joystick wie auf einem Konsolencontroller
 	\item Über einen Rotary encoder, wie er zum Beispiel in Autos verbaut ist
 \end{itemize}
 
-Die schlussendliche Wahl fiel dann auf den Rotary encoder, da er eine gute Mischung aus modernität und funktionalität bietet. Bei dem Modell, welches im Schachbrett verbaut wurde, handelt es sich um den KY-040. Dieser ist der mit unter am weitesten verbreiteste seiner Art und die Einbindung mit dem Raspberry Pi 5 ist dank der gpiozero library auch praktisch.
+Die schlussendliche Wahl fiel dann auf den Rotary encoder, da er eine gute Mischung aus modernität und 
+funktionalität bietet. Bei dem Modell, welches im Schachbrett verbaut wurde, handelt es sich um den KY-040. 
+Dieser ist der mit unter am weitesten verbreiteste seiner Art und die Einbindung mit dem Raspberry Pi 5 
+ist dank der gpiozero library auch praktisch.
+
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=6cm]{ky-040}
@@ -26,81 +34,312 @@ Die schlussendliche Wahl fiel dann auf den Rotary encoder, da er eine gute Misch
 %%https://www.elektronik-kompendium.de/sites/praxis/bauteil_ky040-drehschalter.htm
 
 \subsubsection{Funktionsweise eines Rotary encoders}
-Die Art, wie solch ein Inkrementalgeber funktionert, ist für viele auf den ersten Blick vielleicht nicht ganz verständlich und wird wahrscheinlich mit der Funktionweise eines Potentiometers verwechselt. Allerdings handelt es sich hier um einen kodierten Drehschalter. Der Hauptunterschied, welcher bei Bedienung schnell auffällt ist, dass sich dieses Bauteil, im Vergleich zum klassischen Potentiometer, \glqq unendlich lange\grqq{} drehen lässt. Jeder Drehpunkt kann taktil erfühlt werden.
-Ein Inkrementalgeber hat zwei Ausgangssignale, A und B, welche bei Drehung ein periodisches Rechtecksignal ausgeben.
+Die Art, wie solch ein Inkrementalgeber funktionert, ist für viele auf den ersten Blick vielleicht nicht 
+ganz verständlich und wird wahrscheinlich mit der Funktionweise eines Potentiometers verwechselt. 
+Allerdings handelt es sich hier um einen kodierten Drehschalter. Der Hauptunterschied, welcher bei 
+Bedienung schnell auffällt ist, dass sich dieses Bauteil, im Vergleich zum klassischen Potentiometer, 
+\glqq unendlich lange\grqq{} drehen lässt. Jeder Drehpunkt kann taktil erfühlt werden.
+Ein Inkrementalgeber hat zwei Ausgangssignale, A und B, welche bei Drehung ein periodisches Rechtecksignal 
+ausgeben.
+
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=6cm]{rotaryencoder_workings}
-	\caption{Funktionsweise eines Inkrementalgebers}
-	\label{fig:funkt}
+	\begin{minipage}[b]{0.6\textwidth}
+		\includegraphics[width=\textwidth]{rotaryencoder_workings}
+		\caption{Funktionsweise eines Inkrementalgebers}
+		\label{fig:funkt}
+		%%https://components101.com/modules/KY-04-rotary-encoder-pinout-features-datasheet-working-application-alternative
+	\end{minipage}
+	\hfill
+	\begin{minipage}[b]{0.35\textwidth}
+		\includegraphics[width=\textwidth]{pinout}
+		\caption{Pinout des KY-040}
+		\label{fig:pinout}
+		%%https://www.espboards.dev/sensors/ky-040/
+	\end{minipage}
 \end{figure}
-https://www.build-electronic-circuits.com/rotary-encoders/
+Je nachdem, ob A oder B zuerst mit einer Zone Kontakt macht, wird eine Drehung in bzw. gegen die 
+Uhrzeigerrichtung erkannt.
 
-Je nachdem, ob A oder B zuerst mit einer Zone Kontakt macht, wird eine Drehung in bzw. gegen die Uhrzeigerrichtung erkannt.
 
 \subsubsection{Code für KY-040}
-Der erste code sollte die Funktionalität sicherstellen und eine Vertrautheit mit dem Bauteil und dessen handling ermöglichen.
-Auf der Dokumentationsseite von gpiozero findet sich unter Kapitel 2.21 \glqq Rotary encoder\grqq{} ein einfaches Beispiel, welches — nach richtigem Konfigurieren der Pins — sofort gestartet werden kann.
 
-\begin{lstlisting}[language=Python, caption = {Einen Encoder, eine RGB-LED und einen Button als Farbauwahl}]
-from threading import Event
-from colorzero import Color
-from gpiozero import RotaryEncoder, RGBLED, Button
+Der erste code sollte die Funktionalität sicherstellen und eine Vertrautheit mit dem Bauteil und dessen 
+handling ermöglichen.
+Auf der Dokumentationsseite von gpiozero findet sich unter Kapitel 2.21 \glqq Rotary encoder\grqq{} ein 
+einfaches Beispiel mit einer LED. Mit Hilfe dieses Beispiels 
 
-rotor = RotaryEncoder(16, 20, wrap=True, max_steps=180)
-rotor.steps = -180
-led = RGBLED(22, 23, 24, active_high=False)
-btn = Button(21, pull_up=False)
-led.color = Color('#f00')
-done = Event()
+\begin{scriptsize}
+\begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {Erstes Beispiel für die Einbindung eines Rotary encoders}]
+import threading
 
-def change_hue():
-    # Scale the rotor steps (-180..180) to 0..1
-    hue = (rotor.steps + 180) / 360
-    led.color = Color(h=hue, s=1, v=1)
+from gpiozero import RotaryEncoder, Button
 
-def show_color():
 
-def stop_script():
-    print('Exiting')
-    done.set()
+class Encoder:
+    def __init__(self):
+        self.encoder = RotaryEncoder(13, 19, wrap = True,
+									max_steps=100,
+									bounce_time=0.05)
 
-print('Select a color by turning the knob')
-rotor.when_rotated = change_hue
-print('Push the button to see the HTML code for the color')
-btn.when_released = show_color
-print('Hold the button to exit')
-btn.when_held = stop_script
-done.wait()
+        self.button = Button(16, pull_up = True, 
+							bounce_time = 0.05,
+							hold_time = 2)
+
+        self.done = threading.Event()
+
+        self.button.when_released = self.handle_button  
+        self.encoder.when_rotated = self.handle_rotate
+
+
+    def handle_rotate(self):
+        print(self.encoder.steps)
+
+
+    def handle_button(self):
+        print("Button released")
+
+	
+if __name__ == "__main__":
+    encoder = Encoder()
+    encoder.done.wait()
 \end{lstlisting}
-    %%print(f'Hue {led.color.hue.deg:.1f}° = {led.color.html}')
+\end{scriptsize}
 
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{encoderCodeTest}
+	\caption{Ergebnis des Code-Tests}
+	\label{fig:encoderTest}
+\end{figure}
 
-\subsection {Entwicklung eines Menüs}
-Ein benutzerfreundliches Menü, welches zu Beginn des einschaltens erscheint, ist essenziell für ein gutes Spielerlebnis. Eine erste Überlegung, wie die Struktur dieses Spielmenüs aussehen soll, war wie folgt aufgebaut:
-Wird das Schachbrett gestartet, wird auf einem Display, welches sich auf dem Schachbrett befindet, angezeigt, dass sich der Benutzer zwischen  \glqq Offlinespiel\grqq{} oder \glqq Onlinespiel\grqq{} entscheiden kann. 
+\newpage
+Die Ausgabe zeigt, dass der Encoder korrekt funktioniert. Dreht man ihn im Uhrzeigersinn, so werden 
+die Zahlen kleiner. Wird er in die entgegengesetzte Richtung gedreht, werden die Zahlen größer.
+Am Ende wird nur der Button geklickt. Dieser Output wird mit \glqq Button released\grqq{} angezeigt. 
+Es ist zu beachten, dass die Ausgabe der Schritte von 0 bis 100 geht, da im Code die Option 
+\glqq max\char`_steps\grqq{} auf 100 gesetzt wurde. Ohne diese Option würde die Ausgabe von - inf bis +inf 
+gehen, da sich der Encoder unendlich drehen lässt.
+
+\subsection{Entwicklung eines Menüs}
+Ein benutzerfreundliches Menü, welches zu Beginn des einschaltens erscheint, ist essenziell für ein gutes 
+Spielerlebnis. Eine erste Überlegung, wie die Struktur dieses Spielmenüs aussehen soll, war wie folgt 
+aufgebaut:
+Wird das Schachbrett gestartet, wird auf einem Display, welches sich auf dem Schachbrett befindet, 
+angezeigt, dass sich der Benutzer zwischen  \glqq Offlinespiel\grqq{} oder \glqq Onlinespiel\grqq{} 
+entscheiden kann. 
 
 
 \subsubsection{\glqq Offlinespiel\grqq{}}
-Wird ersteres gewählt, so erscheint ein Untermenü. Hier besteht die Wahl zwischen \glqq Spieler vs. Spieler\grqq{} und \glqq Spieler vs. COM\grqq{} hat.
-\glqq Spieler vs. Spieler\glqq{} steht dafür, dass der Benutzer gegen einen Gegenüber Schach spielen kann, ganz ohne Einmischung eines Schachcomputers. Im Falle der Entscheidung auf diese Möglichkeit, startet das Spiel sofort. Die Auswahl \glqq Spieler vs. COM\glqq{} hingegen erlaubt es, noch vor dem Beginn des Spiels zwischen eine von drei Schwierigkeitsstufen — Leicht, Mittel oder Schwer — zu wählen, welche der Schachcomputer haben soll. Die Stufen unterscheiden sich davon, wie lange der Schachcomputer Zeit lässt um einen optimalen Zug zu berechnen.
+Wird ersteres gewählt, so erscheint ein Untermenü. Hier besteht die Wahl zwischen 
+\glqq Spieler vs. Spieler\grqq{} und \glqq Spieler vs. COM\grqq{}.
+\glqq Spieler vs. Spieler\glqq{} steht dafür, dass der Benutzer gegen einen Gegenüber Schach spielen kann, 
+ganz ohne Einmischung eines Schachcomputers. Im Falle der Entscheidung auf diese Möglichkeit, startet das 
+Spiel sofort. Die Auswahl \glqq Spieler vs. COM\grqq{} hingegen erlaubt es, noch vor dem Beginn des Spiels 
+zwischen eine von drei Schwierigkeitsstufen — Leicht, Mittel oder Schwer — zu wählen, welche der 
+Schachcomputer haben soll. Die Stufen unterscheiden sich davon, wie lange sich der Schachcomputer Zeit 
+lässt, um einen optimalen Zug zu berechnen.
 Nachdem eine Schwierigkeitsstufe gewählt wurde, geht nun das Spiel los und der Nutzer kann spielen.
 
 
-\subsubsection{\glqq Onlinespiel\glqq{}}
-Wird sich anstelle des Einzelspiels für das Onlinespiel entschieden, erscheint ein Untermenü, in dem der Benutzer aufgefordert wird, sich entwerder einzulogen oder einen neuen account zu registrieren. Ersteres geht davon aus, dass der Benutzer schon über ein Bentzerkonto verfügt und deshalb nur noch den NFC-Chip an das Lesegerät auf dem Schachbrett legen soll, damit der Benutzer in der Datenbank verglichen werden kann. Kann kein bereits bestehender Nutzer dem NFC-Chip zugeordnet werden, so wird der Nutzer infolgedessen aufgefordert, sich zu registrieren. Beim registrieren wird ein neuer Eintrag in der Datenbank erstellt, und der Benutzer kann fortfahren.
-Im Falle des Onlinespiels kann der Spieler nur gegen einen Schachcomputer spielen und im Anschluss daran seine Partie auf der Website analysieren.
+\subsubsection{\glqq Onlinespiel\grqq{}}
+Wird sich anstelle des Einzelspiels für das Onlinespiel entschieden, erscheint ein Untermenü, in dem der 
+Benutzer aufgefordert wird, sich entwerder einzulogen oder einen neuen account zu registrieren. Ersteres 
+geht davon aus, dass der Benutzer schon über ein Bentzerkonto verfügt und deshalb nur noch den NFC-Chip 
+an das Lesegerät auf dem Schachbrett legen soll, damit der Benutzer in der Datenbank verglichen werden kann. 
+Kann kein bereits bestehender Nutzer dem NFC-Chip zugeordnet werden, so wird der Nutzer infolgedessen 
+aufgefordert, sich zu registrieren. Beim registrieren wird ein neuer Eintrag in der Datenbank erstellt, 
+und der Benutzer kann fortfahren.
+Im Falle des Onlinespiels kann der Spieler nur gegen einen Schachcomputer spielen und im Anschluss daran 
+seine Partie auf der Website analysieren.
 
 
 \subsubsection{Verknüpfen von Menü und Encoder}
+Die Menüstruktur, welche zuvor beschrieben wurde, muss jetzt mit dem Encoder so verknüpft werden, dass der 
+Benutzer mit diesem durch die verschiedenen Optionen navigieren kann. Es muss also so programmiert werden, 
+dass die Drehung des Encoders die Auswahl im Menü ändert und das Klicken des Buttons die Auswahl bestätigt.
+Die Hürde hierbei ist, dass sich die Menüstruktur in einem Baumdiagramm befindet, welches sich je nach 
+Auswahl verändert. Es muss also so programmiert werden, dass die Auswahlmöglichkeiten im Menü immer an 
+die aktuelle Position im Baum angepasst werden.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{treeDiagramFirstMenuStructure}
+	\caption{Baumdiagramm der Menüstruktur}
+	\label{fig:treeDiagramfirstMenuStructure}
+\end{figure}
+
+\begin{scriptsize}
+\begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {Erstes Beispiel für die Einbindung eines Rotary encoders}]
+import time
+import threading
+
+from luma.oled.device import sh1106
+from luma.core.render import canvas
+from luma.core.interface.serial import i2c
+from gpiozero import RotaryEncoder, Button
+
+
+
+class Menu():
+    def __init__(self):
+        self.ai_diff = 1
+        self.menu_state = 0
+        self.selected_index = 0
+
+        # Initialize rotary encoder and button
+        self.encoder = RotaryEncoder(11, 9, wrap = True,
+									max_steps=100,
+									bounce_time=0.05)
+
+        self.button = Button(10, pull_up = True,
+							bounce_time = 0.05,
+							hold_time = 2)
+        
+		self.done = threading.Event()
+
+        self.serial = i2c(port = 1, address = 0x3C)
+        self.device = sh1106(self.serial)
+
+        self.button.when_released = self.handle_button
+        self.button.when_held = self.stop_script
+        self.encoder.when_rotated = self.handle_rotate
+
+
+    def handle_rotate(self):
+        #print(self.encoder.steps)
+
+        match self.menu_state:
+            case 0:  # Splash Screen
+                    pass
+            case 1:  # Main Menu
+                if self.encoder.steps % 2 == 0:
+                    self.selected_index = 0  # Singleplayer
+                elif self.encoder.steps % 2 == 1:
+                    self.selected_index = 1  # Multiplayer
+            case 2:  # Login Screen
+                if self.encoder.steps == 0:
+                    self.selected_index = 0  # Login
+                elif self.encoder.steps == 1:
+                    self.selected_index = 1  # Register
+            case 3:  # AI Difficulty Selection
+                if self.encoder.steps == 0:
+                    self.ai_diff = 1  # Easy
+                elif self.encoder.steps == 1:
+                    self.ai_diff = 2  # Medium
+                elif self.encoder.steps == 2:
+                    self.ai_diff = 3  # Hard
+            case 4:  # Game Screen
+                    pass
+            
+    def handle_button(self):
+        match self.menu_state:
+            case 0:  # Splash Screen
+                pass
+            case 1:  # Main Menu
+                if self.selected_index == 0:
+                    self.menu_state = 2  # Go to Login Screen
+                elif self.selected_index == 1:
+                    self.menu_state = 4  # Start Multiplayer Game
+            case 2:  # Login Screen
+                if self.selected_index == 0:
+                    self.menu_state = 4  # Singleplayer (Login)
+                elif self.selected_index == 1:
+                    self.menu_state = 4  # Singleplayer (Guest)
+            case 3:  # AI Difficulty Selection
+                self.menu_state = 4  # Start Singleplayer (AI set)
+            case 4:  # Game Screen
+                pass
+
+
+    def stop_script(self):
+        self.done.set()
+
+
+    def draw_menu(self):
+        if self.device:
+            with canvas(self.device) as draw:
+                match self.menu_state:
+                    case 0:  # Splash Screen
+                        draw.text((35, 25), "Nextmove", fill = "white")
+                        draw.rectangle(self.device.bounding_box, outline="white")
+                        self.menu_state = 1  # Go to Main Menu
+                    case 1:  # Main Menu
+                        options = ["Einzelspieler", "Mehrspieler"]
+                        draw.text((40, 0), "-- Home --", fill = "white")
+                        for i, option in enumerate(options):
+                            if i == self.selected_index:
+                                draw.text((20, 15 + i*15), "> " + option, fill = "white")
+                            else:
+                                draw.text((20, 15 + i*15), option, fill = "white")
+                    case 2:  # Login Screen
+                        draw.text((25, 0), "-- Login --", fill = "white")
+                        options = ["Login", "Register"]
+                        for i, option in enumerate(options):
+                            if i == self.selected_index:
+                                draw.text((20, 15 + i*15), "> " + option, fill = "white")
+                            else:
+                                draw.text((20, 15 + i*15), option, fill = "white")
+
+                    case 3:  # AI Difficulty Selection
+                        draw.text((15, 0), "-- AI Difficulty --", fill = "white")
+                        options = ["Easy", "Medium", "Hard"]
+                        for i, option in enumerate(options):
+                            if i == self.ai_diff - 1:
+                                draw.text((20, 15 + i*15), "> " + option, fill = "white")
+                            else:
+                                draw.text((20, 15 + i*15), option, fill = "white")
+
+                    case 4:  # Game Screen
+                        draw.text((20, 0), "-- Game On --", fill = "white")
+        else:
+            print("Nextmove")
+            time.sleep(2)
+
+
+if __name__ == "__main__":
+    menu = Menu()
+    try:
+        # Main loop
+        while not menu.done.is_set():
+            menu.draw_menu()
+            time.sleep(0.05)
+    except KeyboardInterrupt:
+        pass
+\end{lstlisting}
+\end{scriptsize}
+
+Der Aufbau dieses Codes ist so gestaltet, dass das wechseln in die verschiedenen Untermenüs mit Hilfe von 
+\glqq match-case\grqq{} Blöcken umgesetzt wird.
+
+\begin{itemize}
+	\item case 0: Splash Screen
+	\item case 1: Main Menu
+	\item case 2: Login Screen
+	\item case 3: AI Difficulty Selection
+	\item case 4: Game Screen
+\end{itemize}
+Gestartet wird mit einem Splash Screen, welcher den Namen des Schachbretts anzeigt. 
+Nach einer kurzen Zeitspanne wechselt das Menü automatisch zum Hauptmenü, in dem der Benutzer zwischen 
+Einzelspieler und Mehrspieler wählen kann.
+
+Unter case 2: \glqq Login Screen\grqq{} wird die Auswahl zwischen Login und Register getroffen. 
+In diesem ersten Aufbau wird, wenn sich sowohl für Login als auch für Register entschieden wird, direkt 
+auf menu state 4: \glqq Game Screen\grqq{} gewechselt wird. In einem späteren Schritt soll 
+hier natürlich noch die Funktionalität des Logins bzw. der Registrierung implementiert werden, damit der 
+Wechsel zum Spielbildschirm erst dann passiert, wenn der Login bzw. die Registrierung erfolgreich war.
 
 \subsection{Die Restrukturierung}
 UPDATE NACH RESTRUCTUNING
-Wird das Schachbrett gestartet, wird auf einem Display, welches sich auf dem Schachbrett befindet, angezeigt, dass sich der Benutzer zwischen \glqq Login\glqq{} oder \glqq Registrieren\glqq{} entscheiden kann. Ersteres geht davon aus, dass der Benutzer schon über ein Bentzerkonto verfügt und deshalb nur noch den NFC-Chip an das Lesegerät auf dem Schachbrett legen soll, damit der Benutzer in der Datenbank verglichen werden kann. Kann kein bereits bestehender Nutzer dem NFC-Chip zugeordnet werden, wird der Benutzer aufgefordert, sich zu registrieren. Beim registrieren wird ein neuer Eintrag in der Datenbank gemacht, und der Benutzer kann fortfahren.
+Wird das Schachbrett gestartet, wird auf einem Display, welches sich auf dem Schachbrett befindet, 
+angezeigt, dass sich der Benutzer zwischen \glqq Login\glqq{} oder \glqq Registrieren\glqq{} entscheiden kann. 
+Ersteres geht davon aus, dass der Benutzer schon über ein Bentzerkonto verfügt und deshalb 
+nur noch den NFC-Chip an das Lesegerät auf dem Schachbrett legen soll, damit der Benutzer in der Datenbank 
+verglichen werden kann. Kann kein bereits bestehender Nutzer dem NFC-Chip zugeordnet werden, wird 
+der Benutzer aufgefordert, sich zu registrieren. Beim registrieren wird ein neuer Eintrag in der Datenbank 
+gemacht, und der Benutzer kann fortfahren.
 
 
 \subsection{Steuerung einer 2x2 Matrix}
-
 
 \subsection{Spiellogik}
 
@@ -110,6 +349,22 @@ Wird das Schachbrett gestartet, wird auf einem Display, welches sich auf dem Sch
 
 
 \subsection{Einbindung des Spielererkennung}
+\begin{figure}[h]
+	\centering
+	\begin{minipage}[b]{0.4\textwidth}
+		\includegraphics[width=\textwidth]{rc-522}
+		\caption{RC-522 RFID Modul}
+		\label{fig:rc522}
+		%%https://ardubotics.eu/en/rfid/1685-rfid-set-mifare-rfid-mfrc-522.html
+	\end{minipage}
+	\hfill
+	\begin{minipage}[b]{0.5\textwidth}
+		\includegraphics[width=\textwidth]{rc-522Pinout}
+		\caption{Pinout des MFRC-522}
+		\label{fig:rc522Pinout}
+		%%https://microcontrollerslab.com/rc522-rfid-module-arduino-tutorial/
+	\end{minipage}
+\end{figure}
 
 
 \subsection{Die Datenübertragung}
