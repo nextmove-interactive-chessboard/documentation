@@ -328,8 +328,63 @@ auf menu state 4: \glqq Game Screen\grqq{} gewechselt wird. In einem späteren S
 hier natürlich noch die Funktionalität des Logins bzw. der Registrierung implementiert werden, damit der 
 Wechsel zum Spielbildschirm erst dann passiert, wenn der Login bzw. die Registrierung erfolgreich war.
 
+\subsection{Einbindung des Spielererkennung}
+Die Erste Idee, welche zur Spielererkennung aufkam, war die Einbindung eines Fingerabdrucksensors. Allerdings 
+stellte sich aufgrund von Zeitmangel heraus, dass die Einbindung eines solchen Sensors aufgrund der fehlenden 
+Erfahrung mit solch einem Bauteil als zu riskant angesehen werden kann. Deshalb wurde sich für die Einbindung 
+eines RFID-Lesegeräts inklusive NFC-Chips entschieden, da die Einbindung eines solchen Bauteils als deutlich 
+einfacher angesehen werden kann.
+
+\subsubsection{RC-522 RFID Modul}
+Das RC-522 ist ein RFID-Lesegerät, welchees über SPI mit einem Mikrocontroller wie dem Raspberry Pi kommunizieren 
+kann. Es unterstützt das 13,56 MHz Frequenzband und ist kompatibel mit verschiedenen RFID-Tags, einschließlich 
+MIFARE-Karten.
+
+\begin{figure}[h]
+	\centering
+	\begin{minipage}[h]{0.4\textwidth}
+		\includegraphics[width=\textwidth]{rc-522}
+		\caption{RC-522 RFID Modul}
+		\label{fig:rc522}
+		%%https://ardubotics.eu/en/rfid/1685-rfid-set-mifare-rfid-mfrc-522.html
+	\end{minipage}
+	\hfill
+	\begin{minipage}[h]{0.5\textwidth}
+		\includegraphics[width=\textwidth]{rc-522Pinout}
+		\caption{Pinout des MFRC-522}
+		\label{fig:rc522Pinout}
+		%%https://microcontrollerslab.com/rc522-rfid-module-arduino-tutorial/
+	\end{minipage}
+\end{figure}
+\newpage
+
+Konkret sollte es sich um das RC-522 RFID Modul handeln, welches sich durch seine einfache Einbindung und die 
+gute Dokumentation auszeichnet. Nach Erhalt des Moduls musste allerdings festgestellt werden, dass das Bauteil defekt 
+geliefert wurde und deshalb nicht verwendet werden konnte.
+
+\subsubsection{RFID-Modul Alternative}
+Nach der Feststellung, dass das RC-522 Modul defekt geliefert wurde, musste eine Alternative gefunden werden. Diese wurde 
+in Form einer Idee gefunden, welche ein Fahrradschloss als Inspiration nutzt. Es handelt sich hierbei um eine 
+rein Softwareseitige Lösung. Der Benutzer soll einen vierstelligen Code mit Hilfe des Encoder auf dem eingebauten 
+Display eingeben können. Dieser Code soll dann mit dem in der Datenbank hinterlegten Code verglichen werden. 
+Stimmen die Codes überein, so wird der Benutzer eingeloggt und kann fortfahren. Stimmen die Codes nicht überein, 
+wird der Benutzer aufgefordert, es erneut zu versuchen.
+
 \subsection{Die Restrukturierung}
-UPDATE NACH RESTRUCTUNING
+Infolge dessen wurde sich auch dazu entschieden, die bereits bestehende Menüstruktur zu überarbeiten, da die zu 
+dieser Zeit vorhandene Struktur als nicht mehr optimal gesehen wurde. Es wurde sich dazu entschieden, die Auswahl 
+zwischen \glqq Login\glqq{} und \glqq Registrieren\glqq{} als ersten Schritt im Hauptmenü zu platzieren.
+Die Struktur sieht jetzt wie folgt aus:
+\begin{itemize}
+	\item case 0: Splash Screen
+	\item case 1: Login Screen
+	\item case 2: Login to account
+	\item case 3: Register an account
+	\item case 4: Main menu
+    \item case 5: AI Difficulty Selection
+	\item case 6: Game Screen
+\end{itemize}
+
 Wird das Schachbrett gestartet, wird auf einem Display, welches sich auf dem Schachbrett befindet, 
 angezeigt, dass sich der Benutzer zwischen \glqq Login\glqq{} oder \glqq Registrieren\glqq{} entscheiden kann. 
 Ersteres geht davon aus, dass der Benutzer schon über ein Bentzerkonto verfügt und deshalb 
@@ -337,6 +392,8 @@ nur noch den NFC-Chip an das Lesegerät auf dem Schachbrett legen soll, damit de
 verglichen werden kann. Kann kein bereits bestehender Nutzer dem NFC-Chip zugeordnet werden, wird 
 der Benutzer aufgefordert, sich zu registrieren. Beim registrieren wird ein neuer Eintrag in der Datenbank 
 gemacht, und der Benutzer kann fortfahren.
+
+
 
 
 \subsection{Steuerung einer 2x2 Matrix}
@@ -348,23 +405,6 @@ gemacht, und der Benutzer kann fortfahren.
 \subsubsection{Der Mehrspieler (Spieler gegen Spieler)}
 
 
-\subsection{Einbindung des Spielererkennung}
-\begin{figure}[h]
-	\centering
-	\begin{minipage}[b]{0.4\textwidth}
-		\includegraphics[width=\textwidth]{rc-522}
-		\caption{RC-522 RFID Modul}
-		\label{fig:rc522}
-		%%https://ardubotics.eu/en/rfid/1685-rfid-set-mifare-rfid-mfrc-522.html
-	\end{minipage}
-	\hfill
-	\begin{minipage}[b]{0.5\textwidth}
-		\includegraphics[width=\textwidth]{rc-522Pinout}
-		\caption{Pinout des MFRC-522}
-		\label{fig:rc522Pinout}
-		%%https://microcontrollerslab.com/rc522-rfid-module-arduino-tutorial/
-	\end{minipage}
-\end{figure}
 
 
 \subsection{Die Datenübertragung}
