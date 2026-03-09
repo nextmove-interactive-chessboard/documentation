@@ -7,21 +7,16 @@ Ein smartes Schachbrett vor sich zu haben ist an sich gut. Wenn sich jedoch auf 
 befindet, dann ist dessen Nutzung aber wenig vielversprechend. Ein Kernfeature ist das spielen gegen einen 
 Schachcomputer
 
-\subsection{Schachcomputer}
-Um das was folgt besser zu verstehen, muss zuerst das Prinzip eines Schachcomputers erläutert werden. (?)
-
-
-
 \subsection{Rotary encoder als Eingabegerät}
-Zur Auswahl des passenden Eingabegeräts, kamen einige Varianten auf:
+Zur Auswahl des passenden Eingabegeräts, kommen einige Varianten auf:
 \begin{itemize}
 	\item Das Steuern über vier Buttons, nach dem D-pad (Abkürzung für directional pad) Prinzip
 	\item Über einen Joystick wie auf einem Konsolencontroller
 	\item Über einen Rotary encoder, wie er zum Beispiel in Autos verbaut ist
 \end{itemize}
 
-Die schlussendliche Wahl fiel dann auf den Rotary encoder, da er eine gute Mischung aus modernität und 
-funktionalität bietet. Bei dem Modell, welches im Schachbrett verbaut wurde, handelt es sich um den KY-040. 
+Die schlussendliche Wahl fällt dann auf den Rotary encoder, da er eine gute Mischung aus modernität und 
+funktionalität bietet. Bei dem Modell, welches im Schachbrett verbaut wird, handelt es sich um den KY-040. 
 Dieser ist der mit unter am weitesten verbreiteste seiner Art und die Einbindung mit dem Raspberry Pi 5 
 ist dank der gpiozero library auch praktisch.
 
@@ -63,11 +58,11 @@ Uhrzeigerrichtung erkannt.
 
 
 \subsubsection{Code für KY-040}
-
 Der erste code sollte die Funktionalität sicherstellen und eine Vertrautheit mit dem Bauteil und dessen 
 handling ermöglichen.
 Auf der Dokumentationsseite von gpiozero findet sich unter Kapitel 2.21 \glqq Rotary encoder\grqq{} ein 
-einfaches Beispiel mit einer LED. Mit Hilfe dieses Beispiels 
+einfaches Beispiel mit einer LED. Auf Basis dieses Beispiels und dem weiteren lesen der Dokumentation von 
+gpiozero, kann ein einfaches Skript erstellt werden.
 
 \begin{scriptsize}
 \begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {Erstes Beispiel für die Einbindung eines Rotary encoders}]
@@ -117,13 +112,13 @@ if __name__ == "__main__":
 Die Ausgabe zeigt, dass der Encoder korrekt funktioniert. Dreht man ihn im Uhrzeigersinn, so werden 
 die Zahlen kleiner. Wird er in die entgegengesetzte Richtung gedreht, werden die Zahlen größer.
 Am Ende wird nur der Button geklickt. Dieser Output wird mit \glqq Button released\grqq{} angezeigt. 
-Es ist zu beachten, dass die Ausgabe der Schritte von 0 bis 100 geht, da im Code die Option 
-\glqq max\char`_steps\grqq{} auf 100 gesetzt wurde. Ohne diese Option würde die Ausgabe von - inf bis +inf 
-gehen, da sich der Encoder unendlich drehen lässt.
+Es ist zu beachten, dass die Ausgabe der Schritte in diesem Beispien nur von 0 bis 100 geht, da im Code
+die Option \glqq max\char`_steps\grqq{} auf 100 gesetzt wurde. Ohne diese Option würde die Ausgabe von 
+- inf bis +inf gehen, da sich der Encoder unendlich drehen lässt.
 
 \subsection{Entwicklung eines Menüs}
 Ein benutzerfreundliches Menü, welches zu Beginn des einschaltens erscheint, ist essenziell für ein gutes 
-Spielerlebnis. Eine erste Überlegung, wie die Struktur dieses Spielmenüs aussehen soll, war wie folgt 
+Spielerlebnis. Eine erste Überlegung, wie die Struktur dieses Spielmenüs aussehen soll, ist wie folgt 
 aufgebaut:
 Wird das Schachbrett gestartet, wird auf einem Display, welches sich auf dem Schachbrett befindet, 
 angezeigt, dass sich der Benutzer zwischen  \glqq Offlinespiel\grqq{} oder \glqq Onlinespiel\grqq{} 
@@ -324,19 +319,19 @@ Einzelspieler und Mehrspieler wählen kann.
 
 Unter case 2: \glqq Login Screen\grqq{} wird die Auswahl zwischen Login und Register getroffen. 
 In diesem ersten Aufbau wird, wenn sich sowohl für Login als auch für Register entschieden wird, direkt 
-auf menu state 4: \glqq Game Screen\grqq{} gewechselt wird. In einem späteren Schritt soll 
+auf menu state 4: \glqq Game Screen\grqq{} gewechselt. In einem späteren Schritt soll 
 hier natürlich noch die Funktionalität des Logins bzw. der Registrierung implementiert werden, damit der 
-Wechsel zum Spielbildschirm erst dann passiert, wenn der Login bzw. die Registrierung erfolgreich war.
+Wechsel zum Spielbildschirm erst dann passiert, wenn der Login bzw. die Registrierung erfolgreich ist.
 
 \subsection{Einbindung des Spielererkennung}
-Die Erste Idee, welche zur Spielererkennung aufkam, war die Einbindung eines Fingerabdrucksensors. Allerdings 
-stellte sich aufgrund von Zeitmangel heraus, dass die Einbindung eines solchen Sensors aufgrund der fehlenden 
-Erfahrung mit solch einem Bauteil als zu riskant angesehen werden kann. Deshalb wurde sich für die Einbindung 
+Die Erste Idee, welche zur Spielererkennung aufkommt, ist die Einbindung eines Fingerabdrucksensors. Allerdings 
+stellt sich aufgrund von Zeitmangel heraus, dass die Einbindung eines solchen Sensors aufgrund der fehlenden 
+Erfahrung mit solch einem Bauteil als zu riskant angesehen wird. Deshalb wird sich für die Einbindung 
 eines RFID-Lesegeräts inklusive NFC-Chips entschieden, da die Einbindung eines solchen Bauteils als deutlich 
 einfacher angesehen werden kann.
 
 \subsubsection{RC-522 RFID Modul}
-Das RC-522 ist ein RFID-Lesegerät, welchees über SPI mit einem Mikrocontroller wie dem Raspberry Pi kommunizieren 
+Das RC-522 ist ein RFID-Lesegerät, welches über SPI mit einem Mikrocontroller wie dem Raspberry Pi kommunizieren 
 kann. Es unterstützt das 13,56 MHz Frequenzband und ist kompatibel mit verschiedenen RFID-Tags, einschließlich 
 MIFARE-Karten.
 
@@ -358,12 +353,12 @@ MIFARE-Karten.
 \end{figure}
 \newpage
 
-Konkret sollte es sich um das RC-522 RFID Modul handeln, welches sich durch seine einfache Einbindung und die 
+Konkret handelt es sich um das RC-522 RFID Modul, welches sich durch seine einfache Einbindung und die 
 gute Dokumentation auszeichnet. Nach Erhalt des Moduls musste allerdings festgestellt werden, dass das Bauteil defekt 
-geliefert wurde und deshalb nicht verwendet werden konnte.
+geliefert wurde und deshalb nicht verwendet werden kann.
 
 \subsubsection{RFID-Modul Alternative}
-Nach der Feststellung, dass das RC-522 Modul defekt geliefert wurde, musste eine Alternative gefunden werden. Diese wurde 
+Nach der Feststellung, dass das RC-522 Modul defekt geliefert wurde, musste eine Alternative gefunden werden. Diese wird 
 in Form einer Idee gefunden, welche ein Fahrradschloss als Inspiration nutzt. Es handelt sich hierbei um eine 
 rein Softwareseitige Lösung. Der Benutzer soll einen vierstelligen Code mit Hilfe des Encoder auf dem eingebauten 
 Display eingeben können. Dieser Code soll dann mit dem in der Datenbank hinterlegten Code verglichen werden. 
@@ -371,8 +366,8 @@ Stimmen die Codes überein, so wird der Benutzer eingeloggt und kann fortfahren.
 wird der Benutzer aufgefordert, es erneut zu versuchen.
 
 \subsection{Die Restrukturierung}
-Infolge dessen wurde sich auch dazu entschieden, die bereits bestehende Menüstruktur zu überarbeiten, da die zu 
-dieser Zeit vorhandene Struktur als nicht mehr optimal gesehen wurde. Es wurde sich dazu entschieden, die Auswahl 
+Infolge dessen wird sich auch dazu entschieden, die bereits bestehende Menüstruktur zu überarbeiten, da die zu 
+dieser Zeit vorhandene Struktur als nicht mehr optimal gesehen wird. Es wird sich dazu entschieden, die Auswahl 
 zwischen \glqq Login\glqq{} und \glqq Registrieren\glqq{} als ersten Schritt im Hauptmenü zu platzieren.
 Die Struktur sieht jetzt wie folgt aus:
 \begin{itemize}
@@ -388,23 +383,31 @@ Die Struktur sieht jetzt wie folgt aus:
 Wird das Schachbrett gestartet, wird auf einem Display, welches sich auf dem Schachbrett befindet, 
 angezeigt, dass sich der Benutzer zwischen \glqq Login\glqq{} oder \glqq Registrieren\glqq{} entscheiden kann. 
 Ersteres geht davon aus, dass der Benutzer schon über ein Bentzerkonto verfügt und deshalb 
-nur noch den NFC-Chip an das Lesegerät auf dem Schachbrett legen soll, damit der Benutzer in der Datenbank 
-verglichen werden kann. Kann kein bereits bestehender Nutzer dem NFC-Chip zugeordnet werden, wird 
-der Benutzer aufgefordert, sich zu registrieren. Beim registrieren wird ein neuer Eintrag in der Datenbank 
-gemacht, und der Benutzer kann fortfahren.
+nur noch seinen Zahlencode auf dem Schachbrett eingeben soll, damit dieser in der Datenbank 
+verglichen werden kann. Ist es nicht möglich, einen bereits bestehender Nutzer der Zahlenkombination zuzuordnern, so  
+wird der Benutzer aufgefordert, sich zu registrieren. Beim registrieren entsteht ein neuer Eintrag in der Datenbank 
+und der Benutzer kann fortfahren.
 
+Das folgende Baumdiagramm zeigt den neuen Aufbau der Menüstruktur, welcher die Login- und 
+Registrierungsoptionen als ersten Schritt zeigt.
 
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{treeDiagramSecondMenuStructure}
+	\caption{Baumdiagramm der überarbeiteten Menüstruktur}
+	\label{fig:treeDiagramSecondMenuStructure}
+\end{figure}
 
 
 \subsection{Steuerung einer 2x2 Matrix}
+
+
 
 \subsection{Spiellogik}
 
 \subsubsection{Das Einzelspiel (Spieler gegen Computer)}
 
 \subsubsection{Der Mehrspieler (Spieler gegen Spieler)}
-
-
 
 
 \subsection{Die Datenübertragung}
