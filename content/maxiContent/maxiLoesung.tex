@@ -7,6 +7,81 @@ Ein smartes Schachbrett vor sich zu haben ist an sich gut. Wenn sich jedoch auf 
 befindet, dann ist dessen Nutzung aber wenig vielversprechend. Ein Kernfeature ist das spielen gegen einen 
 Schachcomputer
 
+\subsection{Steuerung einer 2x2 Matrix}
+Es wurde nicht direkt damit begonnen, die komplette Steuerung der finalen 8x8 Matrix zu programmieren, 
+weil es einfacher ist, klein anzufangen und den dann vorhandenen Code auf die finale Anzahl von Feldern zu 
+erweitern. Außerdem hat Christoph noch die Aufgabe, die größere 8x8 Matrix zu designen und dann 
+infolgedessen zu bestellen. So bleibt zunächst nur die Möglichkeit, mit der 2x2 Matrix zu arbeiten.
+
+\begin{scriptsize}
+\begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {Erstes Beispiel für die Steuerung einer 2x2 Matrix}]
+import RPi.GPIO as GPIO
+import time
+
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)
+
+
+pins = {
+    "upPower": 17,
+    "lowPower": 27,
+    "left": 23,
+    "right": 24,
+}
+
+
+# Setup
+for pin in pins.values():
+    GPIO.setup(pin, GPIO.OUT)
+
+def scan_matrix():
+    # --- Reihe 1 aktiv ---
+    GPIO.output(pins["upPower"], GPIO.HIGH)
+    GPIO.output(pins["lowPower"], GPIO.LOW)
+
+    if GPIO.input(pins["left"]) == GPIO.LOW:
+        print("A1 erkannt")
+    elif GPIO.input(pins["right"]) == GPIO.LOW:
+        print("A2 erkannt")
+
+    # --- Reihe 2 aktiv ---
+    GPIO.output(pins["upPower"], GPIO.LOW)
+    GPIO.output(pins["lowPower"], GPIO.HIGH)
+
+    if GPIO.input(pins["left"]) == GPIO.LOW:
+        print("B1 erkannt")
+    elif GPIO.input(pins["right"]) == GPIO.LOW:
+        print("B2 erkannt")
+try:
+    while True:
+        scan_matrix()
+        time.sleep(0.4)
+
+except KeyboardInterrupt:
+	print("\nProgramm beendet")
+
+finally:
+	GPIO.cleanup()
+
+\end{lstlisting}
+\end{scriptsize}
+
+Dieser Code funktioniert so, dass die beiden Reihen der Matrix abwechselnd mit Strom versorgt werden. 
+Wenn eine Reihe mit Strom versorgt wird, und ein Sensor in dieser Reihe einen Magnet erkennt, dann wird 
+dies von diesem Sensor als LOW Signal ausgegeben.
+
+Ein Beispiel: Die erste Reihe wird mit Strom versorgt und der Code \glqq hört\grqq{}, ob er auf der linken 
+oder rechte Reihe (Pin 23 oder 24) ein LOW Signal erhält. Wird der Sensor auf das Feld A1 (Pin 23) mit Hilfe 
+eines Magneten auf LOW gesetzt, wird dies erkannt und \glqq A1 erkannt\grqq{} wird ausgegeben. 
+Dasselbe passiert, wenn der Sensor auf das Feld A2 (Pin 24) mit Hilfe eines Magneten auf LOW gesetzt wird, 
+nur dass hier \glqq A2 erkannt\grqq{} ausgegeben wird.
+
+Dieses Prinzip kann dann nicht nur für die 2x2 Matrix, sondern auch für die finale 8x8 Matrix angewendet 
+werden. Der Raspberry Pi schaltet dann nicht mehr nur zwischen zwei Reihen, sondern zwischen acht Reihen um. 
+Je nachdem, welche Reihe mit Strom versorgt wird, wird überprüft, ob auf einem der acht Sensoren in dieser 
+Reihe ein LOW Signal ausgegeben wird.
+
+
 \subsection{Rotary encoder als Eingabegerät}
 Zur Auswahl des passenden Eingabegeräts, kommen einige Varianten auf:
 \begin{itemize}
@@ -399,7 +474,9 @@ Registrierungsoptionen als ersten Schritt zeigt.
 \end{figure}
 
 
-\subsection{Steuerung einer 2x2 Matrix}
+
+
+
 
 
 
