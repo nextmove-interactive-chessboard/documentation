@@ -505,13 +505,77 @@ case 5:  # COM difficulty selection
 \end{scriptsize}
 
 
-
-
 \subsection{Spiellogik}
+Die Spiellogik ist der Kern dieser Aufgabe. Das Schwierigste ist es, das Erkennen von angehobenen Figuren und das 
+infolgedessen Erkennen von gültigen Zügen anzuzeigen.
 
 \subsubsection{Das Einzelspiel (Spieler gegen Computer)}
+Der Erste Teil der Spiellogik, welcher implementiert werden soll, ist die Logik für das Einzelspiel, also das Spiel 
+gegen einen lokal auf dem Schachbrett installierten Schachcomputer. Hierfür wird die Python Bibliothek 
+\verb|python-chess| verwendet, welche eine Vielzahl von Funktionen bietet, um nicht nur die Spiellogik eines 
+Schachspiels zu implementieren, sondern auch um den Schachcomputer zu konfigurieren und Züge zu berechnen. Es wird 
+sich dazu entschieden, die Stockfish Engine als Chesscomputer zu verwenden. Stockfish ist eine der stärksten und 
+beliebtesten Schach-Engines der Welt und bietet die Möglichkeit, die Schwierigkeit einzustellen.
+
+Außerdem wird für das Aufleuchten der LEDs, welche die angehobenen Figuren und die gültigen Züge anzeigen, die Python 
+Bibliothek \verb|neopixel| verwendet, welche die Ansteuerung der LEDs auf der Matrix mit Hilfe des DTA Pins 
+ermöglicht.
+
+Des weiteren kommt natürlich auch die Python Bibliothek \verb|gpiozero| zum Einsatz, um die 16 Pins, welche 
+jeweils für das Schalten und Lesen der Sensoren auf den Feldern zuständig sind, anfangs zu konfigurieren.
+
+Direkt nach der Auswahl der Schwierigkeitsstufe über das Menü, wird die Stockfish Engine mit der entsprechenden 
+Schwierigkeitsstufe konfiguriert. \verb|self.engine.configure| ist die Funktion, welche die Konfiguration der Engine 
+ermöglicht. Hier wird die Option \glqq Skill Level\grqq{} verwendet, welche die Schwierigkeit der Engine einstellt. 
+Die Werte für diese Option reichen von 0 bis 20, wobei 0 die einfachste und 20 die schwierigste Einstellung ist.
+
+\begin{scriptsize}
+\begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {Anfängliche Verarbeitung der Auswahl der Computerschwierigkeitsstufe}]
+if self.comDiff == 1:  # Configuration of engine skill level
+    self.engine.configure({"Skill Level": 1})  # Easy
+elif self.comDiff == 2:
+    self.engine.configure({"Skill Level": 5})  # Medium
+elif self.comDiff == 3:
+    self.engine.configure({"Skill Level": 10})  # Hard
+\end{lstlisting}
+\end{scriptsize}
+
+Anstelle von \verb|Skill Level| wäre es stattdessen möglich, die Suchtiefe der Engine mit der Option 
+\verb|depth={belieb. Zahl}| und der Rechenzeit \verb|time={belieb. Zahl}| einzustellen. Das macht Stockfish zwar 
+schwächer, weil er weniger in die Zukunft rechnet, doch übersieht daruch aber auch oft keine offensichtlichen Fehler. 
+Deshalb kann er trotz wenig Zeit und Tiefe, selbst auf leichtester Stufe zu schwer wirken. Die Einstellung über 
+\verb|Skill Level| lässt Stockfish absichtlich menschliche Fehler spielen, wenn das Level niedrig ist.
+
+Nachdem dies erledigt ist, werden die Pins für die Matrix konfiguriert. Es werden acht Pins für die Reihen als 
+\verb|DigitalOutputDevices| verwendet. Diese Pins sind für das Schalten der Reihen zuständig. Die restlichen acht 
+Pins sind für die Spalten als \verb|DigitalInputDevices| geschalten. Sie dienen dem lesen der Sensoren. Wird an einem 
+Sensor ein Magnet erkannt, so wird von diesem Pin ein LOW Signal ausgegeben.
+
+\begin{scriptsize}
+\begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {Setzen von Schalte- und Lesepins für die Matrix}]
+# Matrix-Setup
+self.rowPins = [4, 17, 27, 22, 0, 5, 6, 26]  # Turned on/off by script
+self.colPins = [14, 15, 23, 24, 20, 21, 7, 1]  # Process signals
+self.tiles = ["H", "G", "F", "E", "D", "C", "B", "A"]
+
+self.rows = []
+for p in self.rowPins:
+    self.rows.append(
+        DigitalOutputDevice(p, active_high=True, initial_value=False)
+    )
+
+self.cols = []
+for p in self.colPins:
+    self.cols.append(DigitalInputDevice(p, pull_up=True))
+\end{lstlisting}
+\end{scriptsize}
+
 
 \subsubsection{Der Mehrspieler (Spieler gegen Spieler)}
+Der zweite Teil der Spiellogik ist die Logik für das Mehrspiel, also das Spiel gegen einen Gegenüber. Dieser Teil ist 
+deutlich einfacher zu implementieren, da hier keine KI-Logik implementiert werden muss. Es kann der bestehende Code für 
+das Einzelspiel als Grundlage verwendet werden, da die Vorangehensweise für das Erkennen von angehobenen Figuren und 
+gültigen Zügen die gleiche ist. Die Logik für den Schachcomputer muss entfernt werden.
 
 
 \subsection{Die Datenübertragung}
