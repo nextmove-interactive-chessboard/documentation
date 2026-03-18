@@ -241,135 +241,7 @@ die aktuelle Position im Baum angepasst werden.
 	\label{fig:treeDiagramfirstMenuStructure}
 \end{figure}
 
-\begin{scriptsize}
-\begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {Erstes Beispiel für die Einbindung eines Rotary encoders}]
-class Menu():
-    def __init__(self):
-        self.ai_diff = 1
-        self.menu_state = 0
-        self.selected_index = 0
-
-        # Initialize rotary encoder and button
-        self.encoder = RotaryEncoder(11, 9, wrap = True,
-									max_steps=100,
-									bounce_time=0.05)
-
-        self.button = Button(10, pull_up = True,
-							bounce_time = 0.05,
-							hold_time = 2)
-        
-		self.done = threading.Event()
-
-        self.serial = i2c(port = 1, address = 0x3C)
-        self.device = sh1106(self.serial)
-
-        self.button.when_released = self.handle_button
-        self.button.when_held = self.stop_script
-        self.encoder.when_rotated = self.handle_rotate
-
-
-    def handle_rotate(self):
-        #print(self.encoder.steps)
-
-        match self.menu_state:
-            case 0:  # Splash Screen
-                    pass
-            case 1:  # Main Menu
-                if self.encoder.steps % 2 == 0:
-                    self.selected_index = 0  # Singleplayer
-                elif self.encoder.steps % 2 == 1:
-                    self.selected_index = 1  # Multiplayer
-            case 2:  # Login Screen
-                if self.encoder.steps == 0:
-                    self.selected_index = 0  # Login
-                elif self.encoder.steps == 1:
-                    self.selected_index = 1  # Register
-            case 3:  # AI Difficulty Selection
-                if self.encoder.steps == 0:
-                    self.ai_diff = 1  # Easy
-                elif self.encoder.steps == 1:
-                    self.ai_diff = 2  # Medium
-                elif self.encoder.steps == 2:
-                    self.ai_diff = 3  # Hard
-            case 4:  # Game Screen
-                    pass
-            
-    def handle_button(self):
-        match self.menu_state:
-            case 0:  # Splash Screen
-                pass
-            case 1:  # Main Menu
-                if self.selected_index == 0:
-                    self.menu_state = 2  # Go to Login Screen
-                elif self.selected_index == 1:
-                    self.menu_state = 4  # Start Multiplayer Game
-            case 2:  # Login Screen
-                if self.selected_index == 0:
-                    self.menu_state = 4  # Singleplayer (Login)
-                elif self.selected_index == 1:
-                    self.menu_state = 4  # Singleplayer (Guest)
-            case 3:  # AI Difficulty Selection
-                self.menu_state = 4  # Start Singleplayer (AI set)
-            case 4:  # Game Screen
-                pass
-
-
-    def stop_script(self):
-        self.done.set()
-
-
-    def draw_menu(self):
-        if self.device:
-            with canvas(self.device) as draw:
-                match self.menu_state:
-                    case 0:  # Splash Screen
-                        draw.text((35, 25), "Nextmove", fill = "white")
-                        draw.rectangle(self.device.bounding_box, outline="white")
-                        self.menu_state = 1  # Go to Main Menu
-                    case 1:  # Main Menu
-                        options = ["Einzelspieler", "Mehrspieler"]
-                        draw.text((40, 0), "-- Home --", fill = "white")
-                        for i, option in enumerate(options):
-                            if i == self.selected_index:
-                                draw.text((20, 15 + i*15), "> " + option, fill = "white")
-                            else:
-                                draw.text((20, 15 + i*15), option, fill = "white")
-                    case 2:  # Login Screen
-                        draw.text((25, 0), "-- Login --", fill = "white")
-                        options = ["Login", "Register"]
-                        for i, option in enumerate(options):
-                            if i == self.selected_index:
-                                draw.text((20, 15 + i*15), "> " + option, fill = "white")
-                            else:
-                                draw.text((20, 15 + i*15), option, fill = "white")
-
-                    case 3:  # AI Difficulty Selection
-                        draw.text((15, 0), "-- AI Difficulty --", fill = "white")
-                        options = ["Easy", "Medium", "Hard"]
-                        for i, option in enumerate(options):
-                            if i == self.ai_diff - 1:
-                                draw.text((20, 15 + i*15), "> " + option, fill = "white")
-                            else:
-                                draw.text((20, 15 + i*15), option, fill = "white")
-
-                    case 4:  # Game Screen
-                        draw.text((20, 0), "-- Game On --", fill = "white")
-        else:
-            print("Nextmove")
-            time.sleep(2)
-
-
-if __name__ == "__main__":
-    menu = Menu()
-    try:
-        # Main loop
-        while not menu.done.is_set():
-            menu.draw_menu()
-            time.sleep(0.05)
-    except KeyboardInterrupt:
-        pass
-\end{lstlisting}
-\end{scriptsize}
+MEHR SCHREIBEN
 
 Der Aufbau dieses Codes ist so gestaltet, dass das wechseln in die verschiedenen Untermenüs mit Hilfe von 
 \glqq match-case\grqq{} Blöcken umgesetzt wird. Der Aufbau der Menüstruktur sieht wie folgt aus:
@@ -455,7 +327,6 @@ nur noch seinen Zahlencode auf dem Schachbrett eingeben soll, damit dieser in de
 verglichen werden kann. Ist es nicht möglich, einen bereits bestehender Nutzer der Zahlenkombination zuzuordnern, so  
 wird der Benutzer aufgefordert, sich zu registrieren. Beim registrieren entsteht ein neuer Eintrag in der Datenbank 
 und der Benutzer kann fortfahren.
-\newpage
 
 Das folgende Baumdiagramm zeigt den neuen Aufbau der Menüstruktur, welcher die Login- und 
 Registrierungsoptionen als ersten Schritt zeigt.
