@@ -20,7 +20,7 @@ Die Entscheidung fiel auf den Raspberry Pi 5, da dieser bereits verfügbar war u
 Bei der Auswahl der Sensoren, die zur Erkennung der Spielfiguren sind, wurden mehrere Optionen in betracht gezogen:
 
 \begin{itemize}
-\item \textbf{Hall-Sensoren:} 
+\item \textbf{Hall-Sensoren:} `quelle''
 \begin{table}[H]
 \centering
 \renewcommand{\arraystretch}{1.3}
@@ -32,7 +32,7 @@ Technologie & Digitaler Hall-Effekt-Sensor \\
 \hline
 Beispielbauteil & A3144 (Digitaler Sensor) \\
 \hline
-Betriebsspannung & 4,5 V – 24 V  QUELLE!!!\\
+Betriebsspannung & 4,5 V – 24 V \\
 \hline
 Ausgang & Digital (Open-Collector) \\
 \hline
@@ -53,7 +53,7 @@ Praktikabilität & Sehr hoch, klein, einfache Beschaltung \\
 \label{tab:hall}
 \end{table}
 
-\item \textbf{NFC/RFID:} 
+\item \textbf{NFC/RFID:} ``quelle''
 
 \begin{table}[H]
 \centering
@@ -87,7 +87,7 @@ Praktikabilität & Mittel; Integration auf 64 Feldern erfordert Multiplexing \\
 \label{tab:nfc}
 \end{table}
 \newpage
-\item \textbf{Optische Sensoren:} 
+\item \textbf{Optische Sensoren:} ``quelle''
 
 \begin{table}[H]
 \centering
@@ -172,13 +172,13 @@ Der A3144 besitzt einen Open-Collector-Ausgang, weshalb ein externer Pull-Up-Wid
 R_{PU} = \frac{V_{CC} - V_{CE(sat)}}{I_{LOW}}
 \]
 
-wobei \(V_{CC}\) die Versorgungsspannung, \(V_{CE(sat)}\) die Sättigungsspannung des Transistors (Datenblatt \(0{,}4\,V\)) und \(I_{LOW}\) der gewünschte Strom im eingeschalteten Zustand ist. Für \(V_{CC} = 3{,}3\,V\) und \(I_{LOW} = 1\,mA\) ergibt sich
+wobei \(V_{CC}\) die Versorgungsspannung, \(V_{CE(sat)}\) die Sättigungsspannung des Sensors (Datenblatt \(0{,}4\,V\)) und \(I_{LOW}\) der gewünschte Strom im eingeschalteten Zustand ist. Für \(V_{CC} = 3{,}3\,V\) und \(I_{LOW} = 1\,mA\) ergibt sich
 
 \[
 R_{PU} = \frac{3{,}3\,V - 0{,}4\,V}{0{,}001\,A} = 2{,}9\,k\Omega
 \]
 
-Als geeigneter Normwert wird \(3{,}3\,k\Omega\) gewählt. Ein kleinerer Widerstand erhöht den Strom und verbessert die Schaltgeschwindigkeit, während ein größerer Widerstand den Stromverbrauch reduziert, jedoch Slangsamere Signalflanken bringt.
+Als geeigneter Normwert wird \(3{,}3\,k\Omega\) gewählt. Ein kleinerer Widerstand erhöht den Strom und verbessert die Schaltgeschwindigkeit, während ein größerer Widerstand den Stromverbrauch reduziert, jedoch langsamere Signalflanken bringt.
 
 Die Schaltgeschwindigkeit hängt vom Pull-Up-Widerstand ab, da dieser zusammen mit der parasitären Leitungskapazität \( C \) eine RC-Zeitkonstante bildet. Beim Übergang von LOW nach HIGH wird die Leitung über den Widerstand aufgeladen, wobei die Anstiegszeit durch die Zeitkonstante 
 
@@ -192,7 +192,7 @@ bestimmt wird. Die Spannung steigt dabei exponentiell nach
 U(t) = U_{CC} \left(1 - e^{-\frac{t}{RC}} \right)
 \]
 
-an. Ein größerer Widerstand führt zu einer größeren Zeitkonstante \( \tau \) und somit zu einem langsameren Spannungsanstieg, während ein kleinerer Widerstand eine kleinere Zeitkonstante und damit eine schnellere Schaltflanke bewirkt.
+an. 
 
 \subsubsection{Schaltungsaufbau}
 
@@ -211,6 +211,7 @@ rotes Jumper-Kabel 		-> Signal \newline
 blaues Jumper Kabel mittig	-> GND \newline
 blaues Jumper Kabel rechts	-> VCC \newline
 
+\newpage
 
 \subsubsection{Matrix-entwicklung}
 Wichtige Punkte zu beachten für die Matrix sind:
@@ -238,7 +239,7 @@ Die Matrix sollte so konzipiert und umgesetzt werden, dass zum einen keine Fehle
 
 \subsubsection{Prototypenaufbau}
 
-Bei der Erstellung des Prototypen in Form einer 2x2 Matrix wurden als MOSFETs 2 IRLZ44 N-Kanal verwendet, da diese bereits zur Verfügung standen. Diese sind jedoch nicht perfekt da bei einer Gate-Spannung von 3,3V Der $R_{\mathrm{DSon}}$ noch nicht minimal klein ist ``Quelle'', allerdings ist es für die Testung ausreichend und durch die geringe Last von maximal ca. 30mW ist Wärmeentstehung durch den Widerstand auch nicht problematisch.
+Bei der Erstellung des Prototypen in Form einer 2x2 Matrix wurden als MOSFETs 2 IRLZ44 N-Kanal verwendet, da diese bereits zur Verfügung standen. Diese sind jedoch nicht perfekt da bei einer Gate-Spannung von 3,3V Der $R_{\mathrm{DSon}}$ noch nicht minimal klein ist ``Quelle'', allerdings ist es für die Testung ausreichend und durch den geringen Laststrom von maximal ca. 18mA ist Wärmeentstehung durch den Widerstand auch nicht problematisch.
 
 
 \begin{table}[h]
@@ -308,7 +309,7 @@ Der Schaltplan ist so aufgebaut, dass rechts die Ausgänge vom Raspberry Pi sind
 
 Von diesem Schaltplan wurde nun ein 4-Lagiges PCB erstellt welches die Konstruktionsdatei für JLCPCB bereitstellen soll. Wichtig ist, dass die Felder und Anschlüsse so platziert werden wie diese berechnet wurden damit die Platine anschließend ins Gehäuse passt. 
 
-Das Schachbrett besteht aus jeweils 64 Quadraten mit einer Seitenlänge von jeweils $28\,\mathrm{mm}$. Zwischen jeweils zwei benachbarten Feldern liegt ein Abstand von $2\,\mathrm{mm}$, sodass pro Reihe $7$ Zwischenräume entstehen. Die Gesamtlänge einer Seite berechnet sich daher aus $8 \cdot 28\,\mathrm{mm} + 7 \cdot 2\,\mathrm{mm} = 238\,\mathrm{mm}$. Da das Schachbrett quadratisch ist, beträgt auch die andere Seitenlänge $238\,\mathrm{mm}$. Wichtig noch zu beachten ist, dass der erste Sensor  $14\,\mathrm{mm}$ vom Rand entfernt platziert werden muss.
+Das Schachbrett besteht aus jeweils 64 Quadraten mit einer Seitenlänge von jeweils $28\,\mathrm{mm}$. Zwischen jeweils zwei benachbarten Feldern liegt ein Abstand von $2\,\mathrm{mm}$, sodass pro Reihe $7$ Zwischenräume entstehen. Die Gesamtlänge einer Seite berechnet sich daher aus $8 \cdot 28\,\mathrm{mm} + 7 \cdot 2\,\mathrm{mm} = 238\,\mathrm{mm}$. Da das Schachbrett quadratisch ist, beträgt auch die andere Seitenlänge $238\,\mathrm{mm}$. Wichtig noch zu beachten ist, dass der erste Sensor  $14\,\mathrm{mm}$ vom Rand entfernt platziert werden muss. \newline
 
 \begin{figure}[H]
     \centering
@@ -331,7 +332,237 @@ Um diese Platine Final zu bestellen wurde ein Finaler Designrulecheck für ein 4
 \end{figure}
 
 Die Platine wurde aus Kostengründen unbestückt bestellt und selbst bestückt. 
+Nachdem die Platine bestückt wurde, konnte diese erfolgreich von Maximilian Koch in Betrieb genommen ``Querverweis'' und somit konnte diese Aufgabenstellung erfolgreich abgeschlossen werden.
 
 \subsection{Gehäusefertigung}
 
+Das Gehäuse vereint alle Komponenten des Schachbretts und ist der Teil der am Sichtbarsten ist. Wichtig ist die präzise Positionierung der Hardware zur Figurenerkennung unmittelbar unter der Spielfläche, um eine fehlerfreie Detektion zu gewährleisten. Zudem muss die Stromversorgung mechanisch sicher montiert werden, um Beschädigungen durch Erschütterungen zu vermeiden. Sämtliche Anschlüsse sind so in das Design integriert, dass sie für den Nutzer leicht zugänglich sind. Um die Betriebssicherheit der Komponenten zu garantieren, wurde an ein Belüftungskonzept gedacht.
+\newline
+\newline
+Bei der Konstruktion und Fertigung wurden also folgende Punkte berücksichtigt:
+
+\begin{itemize}
+    \item Positionierung der Hardware zur Figurenerkennung
+    \item Feste Fixirung der weiteren Hardware
+    \item Lüfungskonzept um Komponenten vor überhitzen zu schützen
+    \item Positionierung der Nutzerschnittstellen
+    \item Design für ein gutes Nutzererlebnis
+\end{itemize}
+
+\subsubsection{Fertigungsverfahren und Gehäusestruktur}
+Als primäre Fertigungstechnik wurde der 3D-Druck gewählt, um eine hohe individuelle Gestaltungsmöglichkeit bei der Komponentenintegration zu erreichen. Aufgrund des begrenzten Bauraums der verfügbaren Drucker wurde das Gehäuse konstruktiv in Segmente unterteilt. Die finale Struktur setzt sich aus jeweils vier Modulen zusammen, aufgeteilt in ein $2 \times 2$-Raster für das Gehäuseunterteil sowie ein $2 \times 2$-Raster für die Oberseite. Diese Elemente werden durch mehreren Befestigungen miteinander verbunden.
+\newpage
+
+\subsubsection{Erste Version}
+
+Der erste Prototyp wurde vor dem finalen Hardwarestand erstellt und deshalb so konzipiert und gefertigt, dass schnelle und einfache Hardware-Zugriffe erfolgen konnten falls Komponenten getauscht werden mussten. Das wurde mittels seitlichen Einlässen, einfachen Steckverbindngen und ohne fixe Verschraubung gelöst. Bei diesem Prototyp gibt es noch kein Airflow Konzept und endgülitge Montage von den jeweiligen Hardware Komponenten.
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/Prototyp1.PNG}
+    \caption{Bodenplatte und Deckplatte unten links.}
+    \label{fig:prototyp1}
+\end{figure}
+
+
+In der Grafik wird schön gezeigt, wie die Komponenten miteinander vereint werden. In der Grundplatte gibt es Male und Female Steckverbindungen und an den seitlichen Wänden Schraubverbindungen. Platz für die Bedienelemente wurde wie im Bild zusehen ist auch gemacht. Die Platine wird im Prototypen unter dem Raster liegen. Das Raster dient dazu um das Licht der LEDs unter der Platine auf die jeweiligen Felder zu beschränken.
+\newline
+\newline
+Die weiteren Elemente, welche für die Fertigung benötigt wurden, sind im Anhang. 
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/Prototyp_Aufbau.JPG}
+    \caption{Einbindung der Hardware in den Prototyp.}
+    \label{fig:prototyp_aufbau}
+\end{figure}
+\newpage
+Nach dem Erfolgreichem Druck aller 8 Bauelemente, konnte der erste erfolgreiche Prototyp zusammengefügt werden und somit wurde die Matrixprogrammierung für Maximilan Koch ermöglicht. 
+
+Problme welche danach aufgefallen sind:
+
+\begin{itemize}
+    \item \textbf{Toleranzanpassungen:} Aufgrund geringfügiger Maßungenauigkeiten traten verschiedene Passformprobleme auf, die Deckplatte war nicht passgenau auf der Grundplatte
+    \item \textbf{Belüftung:} Dem Prototypen fehlte es an ausreichendem Luftstrom, was das Risiko einer Überhitzung erhöhte. 
+    \item \textbf{Hardware-Integration:} Die Hardware ist in diesem Prototypen sehr unsicher gelegen, was oft zu Hardware Kontaktverlust geführt hat. 
+    \item \textbf{Spieleroberfläche: } Dem Spieler fehlt bei diesem Prototyp noch eine Oberfläche auf dieser er seine Figuren abstellen kann. 
+\end{itemize}
+
+\subsubsection{Finale Version}
+
+Die Finale Version konnte aufgrund von Zeitdruck nichtmehr ganz beendet werden. 
+\newline
+\newline
+Deshalb wurden beim finalen Gehäuse nur noch folgende Punkte überarbeitet und die weiteren wurden auf die mündliche Präsentation verschoben:
+\begin{itemize}
+    \item \textbf{Toleranzanpassungen:} Die Deckplatte wurde neu gedruckt und passt so nun auf die Grundplatte.
+    \item \textbf{Spieleroberfäche:} Eine Plexiglasscheibe und die dazugehörige Halterung wurden hinzugefügt.
+\end{itemize}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/Finale_Deckplatte.PNG}
+    \caption{Ansicht der finalen Deckplatte des Schachbretts.}
+    \label{fig:finale_deckplatte}
+\end{figure}
+
+Unterschiede zur alten Deckplatte sind zum einen die überarbeiteten Toleranzen, damit die Deckplatte besser auf auf der Grundplatte passt. Auch wurde die Einbindung vom Display überarbeitet, sodass keine Ränder mehr von diesem zu sehen sind. 
+Der letzte Punkt der gemacht wurde, ist ein Schlitz um die Plexiglasplatte über dem Raster einzuführen, damit keine Übergänge und unebenheiten auf dem Spielfeld zu sehen sind.
+
+
+\newpage
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[angle=90, width=0.8\textwidth]{figures/Finaler_Außenblick.JPG}
+    \caption{Außenansicht des fertigen Schachbretts.}
+    \label{fig:finaler_aussenblick}
+\end{figure}
+
+Belüftung und Hardware-Integration wurde für die Finale Version aus dem Grund vernachlässigt, da diese nur bedingt optisch zu sehen sind. Toleranze und Spielfläche hingegen sind für ein Optisch beendetes Schachbrett unumgänglich.
+\newline
+\newline
+
+Für die Defensio wird noch die Hardware-Integration und das Belüftungskonzept umgesetzt. Der zu Präsentierende Druck soll zusätzlich auch noch mit Holzfilament gedruckt werden um an ein ``traditionelles'' Schachbrett zu erinnern.
+\newpage
 \subsection{Stromversorgung}
+
+Bei der Entwicklung der Stromversorgung ist es wichtig, dass die Nutzung des Schachbretts nicht eingeschränkt oder limitiert wird. Deshalb wurde eine Schaltung für einen nahtlosen Akku-Netzteilbetrieb entwickelt. Wichtige Punkte, auf die geachtet werden musste:
+
+\begin{itemize}
+    \item \textbf{Umschaltzeiten} zwischen den beiden Betriebsmodi (Akkubetrieb und Netzbetrieb), damit das System ohne Unterbrechung weiterlaufen kann.
+    \item \textbf{Leistungsaufnahme der Verbraucher}, die für das aktive Spielgeschehen benötigt wird, sowie die zusätzlich verfügbare Leistung zum \textbf{Laden des Akkus}.
+\end{itemize}
+
+
+\subsubsection{Worst-Case-Leistungsaufnahme des Systems}
+
+Um die Stromversorgung des Systems korrekt dimensionieren zu können, muss zunächst die maximale Leistungsaufnahme aller Komponenten bestimmt werden. Dabei wird angenommen, dass der Akku nicht geladen wird und alle Verbraucher gleichzeitig aktiv sind.
+
+Das System besteht aus folgenden Hauptkomponenten:
+
+\begin{itemize}
+    \item Raspberry Pi 5
+    \item 64 WS2811 RGB-LEDs
+    \item 64 Hall-Sensoren (A3144)
+\end{itemize}
+
+\paragraph{Leistungsaufnahme Raspberry Pi 5}
+
+Der Raspberry Pi 5 wird mit einer Versorgungsspannung von $5\,V$ betrieben. Unter hoher Last kann der Stromverbrauch bis zu etwa $2.4\,A$ betragen.
+
+\[
+P_{RPi} = 5\,V \cdot 2.4\,A = 12\,W
+\]
+
+\paragraph{Leistungsaufnahme der WS2811 LEDs}
+
+Eine einzelne WS2811 RGB-LED benötigt im Worst Case (alle drei Farbkanäle aktiv bei maximaler Helligkeit) etwa $60\,mA$ bei $5\,V$.
+
+\[
+I_{LED} = 64 \cdot 60\,mA = 3.84\,A
+\]
+
+\[
+P_{LED} = 5\,V \cdot 3.84\,A = 19.2\,W
+\]
+
+\paragraph{Leistungsaufnahme der Hall-Sensoren}
+
+Die verwendeten A3144 Hall-Sensoren werden mit einer Versorgungsspannung von $3.3\,V$ betrieben. Der typische Stromverbrauch eines Sensors beträgt etwa $4\,mA$.
+
+\[
+I_{Hall} = 64 \cdot 4\,mA = 256\,mA
+\]
+
+\[
+P_{Hall} = 3.3\,V \cdot 0.256\,A \approx 0.84\,W
+\]
+
+\paragraph{Gesamte Worst-Case-Leistungsaufnahme}
+
+Die maximale Leistungsaufnahme des Systems ergibt sich aus der Summe aller Verbraucher:
+
+\[
+P_{ges} = 12\,W + 19.2\,W + 0.84\,W
+\]
+
+\[
+P_{ges} \approx 32\,W
+\]
+
+Damit muss die Stromversorgung des Systems mindestens eine Leistung von etwa $32\,W$ bereitstellen können, um einen stabilen Betrieb im Worst Case zu gewährleisten. Im realen Betrieb ist die Leistungsaufnahme der LEDs jedoch um einiges geringer.
+
+\paragraph{Berechnung der Batteriekapazität}
+
+Für die Dimensionierung der Batterie wird zunächst die benötigte Kapazität in Wattstunden (Wh) berechnet. Bei einer gewünschten Laufzeit von etwa $1\,h$ und einer Worst-Case-Leistungsaufnahme des Systems von $P_{ges} \approx 32\,W$ ergibt sich:
+
+\[
+E_{Batterie} = P_{ges} \cdot t = 32\,W \cdot 1\,h = 32\,Wh
+\]
+
+Die gewählte Batterie muss also mindestens $32\,Wh$ bereitstellen, um das Schachbrett im Worst Case für eine Stunde betreiben zu können. Die Versorgungsspannung der Batterie wird dabei noch nicht festgelegt; die spätere Anpassung auf $5\,V$ und $3,3\,V$ für den Raspberry Pi 5, die WS2811 LEDs und die A3144 Hall Sensoren erfolgt über einen Step-Down-Converter. 
+
+\paragraph{Auswahl der Akkus und BMS}
+
+Für das Schachbrett wurde entschieden, als Energiespeicher auf drei in Serie verschaltete **Li-Ion-Zellen Samsung INR18650-35E 3400\,mAh – 8\,A** (Produktionsjahr 2023, bezogen von nkon.nl) zurückzugreifen. Diese Zellen zeichnen sich durch eine hohe Energiedichte, stabile Leistungsabgabe und eine zuverlässige Lebensdauer aus, wodurch sie sich gut für den mobilen Betrieb des Systems eignen. Um diese zu verschalten wurde eine Handelsübliche 12,6V Batterie Management Platine gekauft. 
+
+Die drei seriell geschalteten Samsung INR18650-35E Zellen (3,6\,V, 3400\,mAh) speichern jeweils etwa $12,24\,\mathrm{Wh}$. Für alle drei Zellen ergibt sich damit eine Gesamtenergie von
+
+\[
+E_{\mathrm{gesamt}} = 3 \cdot 12,24\,\text{Wh} \approx 36,7\,\mathrm{Wh}.
+\]
+
+Diese Energie steht theoretisch den Verbrauchern zur Verfügung. In der Praxis erreicht jedoch nicht alles der Energie die Last, da Verluste durch den Step-Down-Wandler, Leitungen und Bauteilen auftreten.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/BMS.jpg}
+        \caption{BMS-Platine}
+        \label{fig:bms}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/AKKU.jpg}
+        \caption{Akkupack}
+        \label{fig:akku}
+    \end{minipage}
+\end{figure}
+
+\paragraph{Ladung des Akkupacks}
+
+Die Ladung des Akkupacks erfolgt über ein **XL4015-Modul**, das als einstellbares Step-Down-Lademodul eingesetzt wird. Es unterstützt das **CC/CV-Ladeverfahren** (Constant Current / Constant Voltage), bei dem zunächst ein konstanter Ladestrom fließt, bis die Zellen die eingestellte Maximalspannung erreichen, und anschließend die Spannung konstant gehalten wird, während der Strom allmählich abnimmt. Dadurch wird ein sicheres und schonendes Aufladen der Lithium-Ionen-Zellen gewährleistet.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.55\textwidth]{figures/XL4015.jpg}
+    \caption{XL4015 Step-Down-Lademodul}
+    \label{fig:xl4015}
+\end{figure}
+\vspace{0.5cm}
+
+Der Ladecontroller muss bevor er zum laden des Akkus verwendet wird noch richtig eingestellt werden. Die Ladespannung beträgt 12,6\,V und geladen wird mit einem Strom von 1\,A wobei hier durchaus mehr möglich wäre.
+
+\paragraph{Umschaltschaltung zwischen Akku- und Netzbetrieb}
+
+In der Umschaltschaltung, die den Betrieb zwischen Akku- und Netzbetrieb ermöglicht, wird ein **IRLZ44N N-Kanal-MOSFET** eingesetzt, um die Verbindung zwischen dem XL4015-Lademodul und dem Akkupack herzustellen. Dieser MOSFET verhindert Rückspeisungen in das Lademodul, sorgt aber gleichzeitig dafür, dass kein nennenswerter Spannungsabfall entsteht. Für die direkte Umschaltlogik wurde ein **P-Kanal-MOSFET** verwendet, der den schnellen Wechsel zwischen Netz- und Akkubetrieb ermöglicht.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/Powersupply.jpg}
+    \caption{Umschaltschaltung zwischen Akku- und Netzbetrieb}
+    \label{fig:powersupply}
+\end{figure}
+Um Versorgungsunterbrechungen während der Umschaltphasen zwischen Batterie- und Akkubetrieb zu vermeiden, wird den Step-Down-Convertern ein Kondensator mit einer Kapazität von $2200\,\mu\mathrm{F}$ und geriengem Innenwiderstand vorgeschaltet. 
+Die im Kondensator gespeicherte elektrische Energie $E$ ist proportional zum Quadrat der anliegenden Spannung $U$ und wird durch folgende Formel beschrieben:
+
+
+\[
+    E = \frac{1}{2} \cdot C \cdot U^2
+\]
+
+Aus diesem Grund wurde sich dazu entschieden die Kondensatoren vor den Step-Down-Convertern zu schalten.
