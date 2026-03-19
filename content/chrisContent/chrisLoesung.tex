@@ -5,10 +5,10 @@
 
 Für die Diplomarbeit wurden mehrere Rechner in betracht gezogen, jedoch wurde die Entscheidung zwischen den folgenden beiden getroffen aus dem Grund, dass beide sofort zur Verfügung standen:
 \begin{itemize}
-\item \textbf{Raspberry Pi 5:} Der Raspberry pi 5 verfügt über einen Quad-Core ARM Cortex-A76 Prozessor wodurch genug Rechenleistung bereitgestellt ist. Zusätzlich bietet dieser genug Schnittstellen um mit einer einfach 8x8 Matrix die Schaltung zu entwickeln. Ein weiterer Punkt ist die gute Dokumentation, möglichen Librarys und die Programmiermöglichkeit mittels Pyhton welche, für Diplomant Maximilian Koch, bevorzugt ist.
+\item \textbf{Raspberry Pi 5:} Der Raspberry pi 5 verfügt über einen Quad-Core ARM Cortex-A76 Prozessor wodurch genug Rechenleistung bereitgestellt ist. Zusätzlich bietet dieser genug Schnittstellen um mit einer einfach 8x8 Matrix die Schaltung zu entwickeln \cite{raspi5_brief}. Ein weiterer Punkt ist die gute Dokumentation, möglichen Librarys und die Programmiermöglichkeit mittels Pyhton welche, für Diplomant Maximilian Koch, bevorzugt ist.
 Die Nachteile des Raspberry Pi sind zum einen den bnötigten Platz welchen dieser benötigt, die Anschaffungskosten für einen und der höhere Stromverbrauch.\\
 
-\item \textbf{ESP32-S3:} Der ESP32-S3 verfügt über einen Dual-Core-Xtensa-LX7 Prozsessor welcher für das auslesen der Matrix genug Rechenleistung bereitstellen könnte. Für den ESP32-S3 spricht auch seine kompakte Größe, seine geringe Leisutngsaufnahme und die geringen Anschaffungskosten.
+\item \textbf{ESP32-S3:} Der ESP32-S3 verfügt über einen Dual-Core-Xtensa-LX7 Prozsessor welcher für das auslesen der Matrix genug Rechenleistung bereitstellen könnte. Für den ESP32-S3 spricht auch seine kompakte Größe, seine geringe Leisutngsaufnahme und die geringen Anschaffungskosten \cite{espressif_esp32s3}.
 Die Nachteile des ESP32 sind zum einen aber auch die begrenzte Rechenleistung. Die weitere Hardware welche auch vom ESP gesteuert wreden muss, könnte den ESP schnell an seine Grenzen bringen und das fehlen eines vollwertigem Betriebssystem welches das Umsetzen von komplexeren Softwarestrukturen erschwert. 
 \end {itemize}
 
@@ -20,7 +20,7 @@ Die Entscheidung fiel auf den Raspberry Pi 5, da dieser bereits verfügbar war u
 Bei der Auswahl der Sensoren, die zur Erkennung der Spielfiguren sind, wurden mehrere Optionen in betracht gezogen:
 
 \begin{itemize}
-\item \textbf{Hall-Sensoren:} `quelle''
+\item \textbf{Hall-Sensoren:} \cite{allegro_a3144}
 \begin{table}[H]
 \centering
 \renewcommand{\arraystretch}{1.3}
@@ -53,7 +53,7 @@ Praktikabilität & Sehr hoch, klein, einfache Beschaltung \\
 \label{tab:hall}
 \end{table}
 
-\item \textbf{NFC/RFID:} ``quelle''
+\item \textbf{NFC/RFID:} \cite{nxp_pn532, nxp_mfrc522}
 
 \begin{table}[H]
 \centering
@@ -87,7 +87,7 @@ Praktikabilität & Mittel; Integration auf 64 Feldern erfordert Multiplexing \\
 \label{tab:nfc}
 \end{table}
 \newpage
-\item \textbf{Optische Sensoren:} ``quelle''
+\item \textbf{Optische Sensoren:} \cite{vishay_tcrt5000, vishay_cny70}
 
 \begin{table}[H]
 \centering
@@ -165,6 +165,7 @@ Die Ausgänge vom Sensor und Verschaltung dieser sehen wie folgt aus:
 \end{figure}
 
 \subsubsection{Pull-Up Widerstandsberechnung}
+\label{sec:Pull-Up_Widerstandsberechnung}
 
 Der A3144 besitzt einen Open-Collector-Ausgang, weshalb ein externer Pull-Up-Widerstand erforderlich ist, um im HIGH-Zustand eine definierte Ausgangsspannung zu erzeugen. Die Dimensionierung erfolgt auf Grundlage des Ohmschen Gesetzes. Der Widerstand bestimmt dabei den Strom im LOW-Zustand sowie die Schaltgeschwindigkeit des Signals. Die Berechnung erfolgt mit
 
@@ -172,7 +173,7 @@ Der A3144 besitzt einen Open-Collector-Ausgang, weshalb ein externer Pull-Up-Wid
 R_{PU} = \frac{V_{CC} - V_{CE(sat)}}{I_{LOW}}
 \]
 
-wobei \(V_{CC}\) die Versorgungsspannung, \(V_{CE(sat)}\) die Sättigungsspannung des Sensors (Datenblatt \(0{,}4\,V\)) und \(I_{LOW}\) der gewünschte Strom im eingeschalteten Zustand ist. Für \(V_{CC} = 3{,}3\,V\) und \(I_{LOW} = 1\,mA\) ergibt sich
+wobei \(V_{CC}\) die Versorgungsspannung, \(V_{CE(sat)}\) die Sättigungsspannung des Sensors (Datenblatt \(0{,}4\,V\)) \cite{allegro_a3144} und \(I_{LOW}\) der gewünschte Strom im eingeschalteten Zustand ist. Für \(V_{CC} = 3{,}3\,V\) und \(I_{LOW} = 1\,mA\) ergibt sich
 
 \[
 R_{PU} = \frac{3{,}3\,V - 0{,}4\,V}{0{,}001\,A} = 2{,}9\,k\Omega
@@ -223,23 +224,24 @@ Wichtige Punkte zu beachten für die Matrix sind:
 
 \paragraph{Leistungsaufnahme}
 
-Der gewählte A3144 Hall-Effekt Sensor benötigt typischerweise 4,4mA bis zu maximal 9 mA ``Quelle''. Bei acht parallel angeschlossenen Sensoren ergibt sich so ein Strombedarf von ca. 35 mA bis maximal 72 mA. Ein GPIO Pin des Raspberry Pi ist allerdings nur für ungefähr 16 mA fähig ``Quelle''. Deshalb wird für die Versorgung der Sensoren ein MOSFET als Schalter benötigt. \newline
+Der gewählte A3144 Hall-Effekt Sensor benötigt typischerweise 4,4mA bis zu maximal 9 mA \cite{allegro_a3144}. Bei acht parallel angeschlossenen Sensoren ergibt sich so ein Strombedarf von ca. 35 mA bis maximal 72 mA. Ein GPIO Pin des Raspberry Pi ist allerdings nur für ungefähr 16 mA fähig ``Quelle''. Deshalb wird für die Versorgung der Sensoren ein MOSFET als Schalter benötigt. \newline
 
 \paragraph{Schaltzeiten}
+\label{sec:schaltzeiten}
 
 Um für zuverlässige Auslesungen der Matrix zu sorgen müssen Anstiegs und Abfallzeiten der Signalleitungen als auch die Schaltzeiten der MOSFETS beachtet werden um überlappende Signale zu verhindern.
 Dafür wird gesorgt indem Diplomant Maximilian Koch ein entsprechendes Delay im Code zur Auslesung der Matrix implementiert. \newline
 
 \paragraph{Störsicherheit}
 
-Die Matrix sollte so konzipiert und umgesetzt werden, dass zum einen keine Fehlerhaften Signale auf den Leitungen vorkommen. Diese Fälle wurden schon in den Punkten ``Querverweis'' und ``Querverweis'' gelöst, sodass diese nicht auftreten. Zum Schutz der GPIO Pins sind noch Gatewiderstände notwendig. Diese variieren je nach Gatekapazität von MOSFET zu MOSFET. Um das Gate auf LOW zu halten, wenn der GPIO PIN noch kein Signal sendet wurde auch am Gate des Mosfets ein 100kOhm Gate-Pulldown Widerstand eingebaut. Zuätzlich sollte die Matrix aber auch so umgesetzt werden, dass der Spieler auf dem Brett die Figuren bewegen kann, ohne darauf achten zu müssen, große Bewegungen um Felder zu machen, welche er nicht bespielen will.  
+Die Matrix sollte so konzipiert und umgesetzt werden, dass zum einen keine Fehlerhaften Signale auf den Leitungen vorkommen. Diese Fälle wurden schon in den Punkten \ref{sec:Pull-Up_Widerstandsberechnung} und \ref{sec:schaltzeiten} gelöst, sodass diese nicht auftreten. Zum Schutz der GPIO Pins sind noch Gatewiderstände notwendig. Diese variieren je nach Gatekapazität von MOSFET zu MOSFET. Um das Gate auf LOW zu halten, wenn der GPIO PIN noch kein Signal sendet wurde auch am Gate des Mosfets ein 100kOhm Gate-Pulldown Widerstand eingebaut. Zuätzlich sollte die Matrix aber auch so umgesetzt werden, dass der Spieler auf dem Brett die Figuren bewegen kann, ohne darauf achten zu müssen, große Bewegungen um Felder zu machen, welche er nicht bespielen will.  
 
 \vfill
 \newpage
 
 \subsubsection{Prototypenaufbau}
 
-Bei der Erstellung des Prototypen in Form einer 2x2 Matrix wurden als MOSFETs 2 IRLZ44 N-Kanal verwendet, da diese bereits zur Verfügung standen. Diese sind jedoch nicht perfekt da bei einer Gate-Spannung von 3,3V Der $R_{\mathrm{DSon}}$ noch nicht minimal klein ist ``Quelle'', allerdings ist es für die Testung ausreichend und durch den geringen Laststrom von maximal ca. 18mA ist Wärmeentstehung durch den Widerstand auch nicht problematisch.
+Bei der Erstellung des Prototypen in Form einer 2x2 Matrix wurden als MOSFETs 2 IRLZ44 N-Kanal verwendet, da diese bereits zur Verfügung standen. Diese sind jedoch nicht perfekt da bei einer Gate-Spannung von 3,3V Der $R_{\mathrm{DSon}}$ noch nicht minimal klein ist \cite{infineon_irlz44n}, allerdings ist es für die Testung ausreichend und durch den geringen Laststrom von maximal ca. 18mA ist Wärmeentstehung durch den Widerstand auch nicht problematisch.
 
 
 \begin{table}[h]
@@ -320,7 +322,7 @@ Das Schachbrett besteht aus jeweils 64 Quadraten mit einer Seitenlänge von jewe
     \label{fig:altium_pcb}
 \end{figure}
 
-Um diese Platine Final zu bestellen wurde ein Finaler Designrulecheck für ein 4-lagiges JLC PCB gemacht (Designrules ``Quelle'') und erfolgreich mit null Errors durchgeführt und somit war die Platinenerstellung erledigt. 
+Um diese Platine Final zu bestellen wurde ein Finaler Designrulecheck für ein 4-lagiges JLC PCB gemacht (Designrules \cite{ozgur_jlcpcb_rules} ) und erfolgreich mit null Errors durchgeführt und somit war die Platinenerstellung erledigt. 
 
 \begin{figure}[H]
     \centering
@@ -458,7 +460,7 @@ P_{RPi} = 5\,V \cdot 2.4\,A = 12\,W
 
 \paragraph{Leistungsaufnahme der WS2811 LEDs}
 
-Eine einzelne WS2811 RGB-LED benötigt im Worst Case (alle drei Farbkanäle aktiv bei maximaler Helligkeit) etwa $60\,mA$ bei $5\,V$.
+Eine einzelne WS2811 RGB-LED benötigt im Worst Case (alle drei Farbkanäle aktiv bei maximaler Helligkeit) etwa $60\,mA$ bei $5\,V$. \cite{eevblog_ws2812b_power}
 
 \[
 I_{LED} = 64 \cdot 60\,mA = 3.84\,A
@@ -470,14 +472,14 @@ P_{LED} = 5\,V \cdot 3.84\,A = 19.2\,W
 
 \paragraph{Leistungsaufnahme der Hall-Sensoren}
 
-Die verwendeten A3144 Hall-Sensoren werden mit einer Versorgungsspannung von $3.3\,V$ betrieben. Der typische Stromverbrauch eines Sensors beträgt etwa $4\,mA$.
+Die verwendeten A3144 Hall-Sensoren werden mit einer Versorgungsspannung von $3.3\,V$ betrieben. Der maximale Stromverbrauch eines Sensors beträgt etwa $9\,mA$ Allderdings werden nur immer 8 gleichzeitig verwendet.
 
 \[
-I_{Hall} = 64 \cdot 4\,mA = 256\,mA
+I_{Hall} = 8 \cdot 9\,mA = 72\,mA
 \]
 
 \[
-P_{Hall} = 3.3\,V \cdot 0.256\,A \approx 0.84\,W
+P_{Hall} = 3.3\,V \cdot 0.072\,A \approx 0.25\,W
 \]
 
 \paragraph{Gesamte Worst-Case-Leistungsaufnahme}
@@ -485,7 +487,7 @@ P_{Hall} = 3.3\,V \cdot 0.256\,A \approx 0.84\,W
 Die maximale Leistungsaufnahme des Systems ergibt sich aus der Summe aller Verbraucher:
 
 \[
-P_{ges} = 12\,W + 19.2\,W + 0.84\,W
+P_{ges} = 12\,W + 19.2\,W + 0.25\,W
 \]
 
 \[
@@ -506,7 +508,7 @@ Die gewählte Batterie muss also mindestens $32\,Wh$ bereitstellen, um das Schac
 
 \paragraph{Auswahl der Akkus und BMS}
 
-Für das Schachbrett wurde entschieden, als Energiespeicher auf drei in Serie verschaltete **Li-Ion-Zellen Samsung INR18650-35E 3400\,mAh – 8\,A** (Produktionsjahr 2023, bezogen von nkon.nl) zurückzugreifen. Diese Zellen zeichnen sich durch eine hohe Energiedichte, stabile Leistungsabgabe und eine zuverlässige Lebensdauer aus, wodurch sie sich gut für den mobilen Betrieb des Systems eignen. Um diese zu verschalten wurde eine Handelsübliche 12,6V Batterie Management Platine gekauft. 
+Für das Schachbrett wurde entschieden, als Energiespeicher auf drei in Serie verschaltete **Li-Ion-Zellen Samsung INR18650-35E 3400\,mAh – 8\,A** (Produktionsjahr 2023, bezogen von nkon.nl \cite{nkon_website}) zurückzugreifen. Diese Zellen zeichnen sich durch eine hohe Energiedichte, stabile Leistungsabgabe und eine zuverlässige Lebensdauer aus, wodurch sie sich gut für den mobilen Betrieb des Systems eignen. Um diese zu verschalten wurde eine Handelsübliche 12,6V Batterie Management Platine gekauft. 
 
 Die drei seriell geschalteten Samsung INR18650-35E Zellen (3,6\,V, 3400\,mAh) speichern jeweils etwa $12,24\,\mathrm{Wh}$. Für alle drei Zellen ergibt sich damit eine Gesamtenergie von
 
@@ -566,3 +568,5 @@ Die im Kondensator gespeicherte elektrische Energie $E$ ist proportional zum Qua
 \]
 
 Aus diesem Grund wurde sich dazu entschieden die Kondensatoren vor den Step-Down-Convertern zu schalten.
+
+
