@@ -1,6 +1,6 @@
 %%MAXIMALE LÄNGE FÜR CODE: 63 ZEICHEN
 
-\graphicspath{ {figures/} }
+\graphicspath{{figures/}}
 \renewcommand{\myauthor}{Maximilian Koch}
 
 Ein smartes Schachbrett vor sich zu haben ist an sich gut. Wenn sich jedoch auf diesem keine Software 
@@ -98,10 +98,9 @@ ist dank der gpiozero library auch praktisch.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=6cm]{ky-040}
-	\caption{KY-040 Rotary Encoder}
+	\caption{KY-040 Rotary Encoder \cite{ky-40}}
 	\label{fig:ky040}
 \end{figure}
-%%https://www.elektronik-kompendium.de/sites/praxis/bauteil_ky040-drehschalter.htm
 
 \subsubsection{Funktionsweise eines Rotary encoders}
 Die Art, wie solch ein Inkrementalgeber funktionert, ist für viele auf den ersten Blick vielleicht nicht 
@@ -114,18 +113,16 @@ ausgeben.
 
 \begin{figure}[h]
 	\centering
-	\begin{minipage}[b]{0.6\textwidth}
+	\begin{minipage}[b]{0.5\textwidth}
 		\includegraphics[width=\textwidth]{rotaryencoder_workings}
-		\caption{Funktionsweise eines Inkrementalgebers}
+		\caption{Funktionsweise eines Inkrementalgebers \cite{funkt}}
 		\label{fig:funkt}
-		%%https://components101.com/modules/KY-04-rotary-encoder-pinout-features-datasheet-working-application-alternative
 	\end{minipage}
 	\hfill
-	\begin{minipage}[b]{0.35\textwidth}
+	\begin{minipage}[b]{0.4\textwidth}
 		\includegraphics[width=\textwidth]{pinout}
-		\caption{Pinout des KY-040}
+		\caption{Pinout des KY-040 \cite{pinout}}
 		\label{fig:pinout}
-		%%https://www.espboards.dev/sensors/ky-040/
 	\end{minipage}
 \end{figure}
 Je nachdem, ob A oder B zuerst mit einer Zone Kontakt macht, wird eine Drehung in bzw. gegen die 
@@ -279,16 +276,14 @@ MIFARE-Karten.
 	\centering
 	\begin{minipage}[h]{0.4\textwidth}
 		\includegraphics[width=\textwidth]{rc-522}
-		\caption{RC-522 RFID Modul}
+		\caption{RC-522 RFID Modul \cite{rc522}}
 		\label{fig:rc522}
-		%%https://ardubotics.eu/en/rfid/1685-rfid-set-mifare-rfid-mfrc-522.html
 	\end{minipage}
 	\hfill
 	\begin{minipage}[h]{0.5\textwidth}
 		\includegraphics[width=\textwidth]{rc-522Pinout}
-		\caption{Pinout des MFRC-522}
+		\caption{Pinout des MFRC-522 \cite{rc522Pinout}}
 		\label{fig:rc522Pinout}
-		%%https://microcontrollerslab.com/rc522-rfid-module-arduino-tutorial/
 	\end{minipage}
 \end{figure}
 \newpage
