@@ -5,8 +5,18 @@
 \section{Webinterface}
 Da ein Ziel dieser Diplomarbeit die Möglichkeit, bereits gespielte Spiele zu analysieren, ist, braucht es ein Webinterface. Dieses besteht aus drei Komponenten: Website, Datenbank und Server. Alle drei sind eng miteinander verbunden und arbeiten zusammen, um eine reibungslose Benutzererfahrung zu gewährleisten.
 
-\subsection{Website}
+\subsection{Entwicklungsumgebung und Software-Architektur}
 Die Website ist die Benutzeroberfläche, über die die Nutzer mit dem System interagieren. Sie bietet Funktionen wie die Anzeige von bereits gespielten Spielen, die Erstellung von neuen Nutzern und das Spielen neuer Spiele. 
+
+\subsubsection{Entwicklungs-Tools}
+Für die Entwicklung des Webinterfaces wurden verschiedene Tools und Technologien verwendet. Dazu gehören:
+\begin{itemize}
+    \item Visual Studio Code: Ein leistungsstarker Code-Editor, der die Entwicklung von Webanwendungen erleichtert.
+    \item Python: Die Hauptprogrammiersprache für die Backend-Entwicklung.
+    \item Flask: Ein leichtgewichtiges Webframework für Python, das die Entwicklung von Webanwendungen erleichtert.
+    \item MySQL: Ein relationales Datenbankmanagementsystem, das zur Speicherung der Spieldaten verwendet wird.
+    \item HTML/CSS/JavaScript: Für die Gestaltung und Funktionalität des Frontends.
+\end{itemize}
 
 \subsubsection{Frontend}
 Zum Frontend der Website gehören alle Elemente, die der Nutzer direkt sieht und mit denen er interagiert. Dazu gehören alle visuelle Elemente.
@@ -21,27 +31,8 @@ Die Codestruktur sieht wie folgt aus:
     \item backend.py: Dies ist die Hauptdatei, die den Server startet und die Routen definiert.
     \begin{scriptsize}
     \begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {Backend-Implementierung}]
-        import os
-        import logging
-        import mysql.connector
-        from mysql.connector import Error
-        from flask import Flask, request, jsonify
-        from flask_cors import CORS
-
-
         app = Flask(__name__)
-        CORS(app)   #CORS aktivieren, um Anfragen von anderen Domains zu erlauben
-
-
-        @app.route("/")
-        def hello_world():
-            return "<p>Hello, World!</p>"
-
-
-        # Logging konfigurieren
-        logging.basicConfig(level=logging.DEBUG)
-        logger = logging.getLogger(__name__)
-
+        CORS(app)  
 
         db_config = {
             "host": os.getenv("DB_HOST", "localhost"),
@@ -52,57 +43,20 @@ Die Codestruktur sieht wie folgt aus:
 
         @app.route('/save_game', methods=['POST'])
         def save_game():
-            data = request.json
-            user_id = data.get('user_id')
-            pgn = data.get('pgn')
-            gegner = data.get('gegner')
-            ergebnis = data.get('ergebnis')
-
-            try:
-                conn = mysql.connector.connect(**db_config)
-                cursor = conn.cursor()
-                
-                query = """INSERT INTO spiele (user_id, gegner_name, ergebnis, pgn_daten) 
-                        VALUES (%s, %s, %s, %s)"""
-                cursor.execute(query, (user_id, gegner, ergebnis, pgn))
-                
-                conn.commit()
-                return jsonify({"status": "Spiel gespeichert!"}), 201
-            except Exception as e:
-                return jsonify({"error": str(e)}), 500
+            data = request.json  
+                        
+            query = "INSERT INTO spiele (user_id, gegner_name, ergebnis, pgn_daten) VALUES (%s, %s, %s, %s)"
+            cursor.execute(query, (user_id, gegner, ergebnis, pgn))
             
-            
-            finally:
-                if conn and conn.is_connected():
-                    cursor.close()
-                    conn.close()
+            conn.commit()
 
-
+    
         @app.route('/get_games/<int:user_id>', methods=['GET'])
         def get_games(user_id):
-            conn = None
-            try:
-                conn = mysql.connector.connect(**db_config)
-                cursor = conn.cursor(dictionary=True)
-                
-                query = "SELECT * FROM spiele WHERE user_id = %s"
-                cursor.execute(query, (user_id,))
-                games = cursor.fetchall()
-                
-                return jsonify({"games": games}), 200
-            except Exception as e:
-                return jsonify({"error": str(e)}), 500
-
-            finally:
-                if conn and conn.is_connected():
-                    cursor.close()
-                    conn.close()
-
-
-        if __name__ == "__main__":
-            app.run(host="127.0.0.1", port=5000)
-
-
+            cursor = conn.cursor(dictionary=True)
+            query = "SELECT * FROM spiele WHERE user_id = %s"
+            cursor.execute(query, (user_id,))
+            games = cursor.fetchall()
     \end{lstlisting}
     \end{scriptsize}
 
@@ -122,4 +76,5 @@ Die Codestruktur sieht wie folgt aus:
 Die Datenbank dient als Speicher für alle relevanten Informationen, die vom System verarbeitet werden. Dazu gehören Informationen über die Nutzer, die gespielten Spiele, die Ergebnisse und andere relevante Daten. Die Datenbank ermöglicht es dem Server, schnell auf Anfragen zu reagieren und die benötigten Informationen bereitzustellen.
 
 \subsection{Server}
-Der Server fungiert als zentrale Steuereinheit, die die Kommunikation zwischen der Website und der Datenbank koordiniert. Er verarbeitet die Anfragen der Nutzer und stellt die entsprechenden Daten aus der Datenbank bereit.
+Der Server dient als zentrale Steuereinheit, die die Kommunikation zwischen der Website und der Datenbank koordiniert. Er verarbeitet die Anfragen der Nutzer und stellt die entsprechenden Daten aus der Datenbank bereit.
+Verwendet wird hier ein Linux Debian Server der Schule.  
