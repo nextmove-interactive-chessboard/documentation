@@ -16,17 +16,11 @@ Es wurde ein Debian Server von der Schule verwendet. Er wird mit ssh konfigurier
 \subsubsection{Datenbank}
 Die Wahl zwischen MariaDB und MySQL war nicht schwer. Das liegt daran, dass MariaDB eine modifizierte und damit modernere Version von MySQL ist. 
 
-\subsection{Website}
-Das Ziel der Website ist es:
-\begin{itemize}
-\item einen Benutzer anlegen zu können, 
-\item online Schach spielen zu können 
-\item und die bereits gespielten Spiele analysieren zu können
-\end{itemize}
+\subsection{Frontend}
+Es soll eine webbasierte Benutzeroberfläche mit HTML, CSS und JavaScript erstellt werden, die dem Benutzer den Zugriff auf seine Partien ermöglicht. Die Kommunikation mit dem Server erfolgt asynchron über die Fetch API, um eine flüssige Benutzererfahrung ohne Neuladen der Seite zu gewährleisten.
+
+\subsection{Backend}
+Ein Python-basiertes Flask-Framework, das als zentrale Schnittstelle (Rest-API) zwischen der Datenbank und dem Frontend fungiert. Dieses verarbeitet eingehende Daten vom Frontend sowie Partiedaten vom physischen Schachbrett. Um parallele Prozesse (Web-Anfragen und Socket-Datenströme) zu bewältigen, wird die Multithreading-Funktion von Python genutzt.
 
 \subsection{Datenbank}
-Die Datenbank speichert alle wichtigen Daten. Das sind die Benutzernamen mit Ausgabe des NFC-Sensors, Schachzüge und Spiele. 
-
-\subsection{Server}
-Der Server verbindet die Website, Datenbank und den Raspberry Pi des Schachbretts miteinander und sorgt für eine reibungsfreie Kommunikation. 
-
+Eine MariaDB-Datenbank, die alle benutzer- und spielrelevanten Daten (z.B. PGN-Notationen) relational speichert und über den SQL-Standard zur Verfügung stellt. 
