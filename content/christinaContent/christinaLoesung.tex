@@ -1,6 +1,5 @@
 \renewcommand{\myauthor}{Christina Seidner}
 
-
 Da ein Ziel dieser Diplomarbeit die Möglichkeit, bereits gespielte Spiele zu analysieren, ist, braucht es ein Webinterface. Dieses besteht aus drei Komponenten: Website (Frontend), Server (Backend) und Datenbank. Alle drei sind eng miteinander verbunden und arbeiten zusammen, um eine reibungslose Benutzererfahrung zu gewährleisten.
 
 \subsection{Entwicklungsumgebung und Software-Architektur}
@@ -20,10 +19,173 @@ Für die Entwicklung des Webinterfaces wurden verschiedene Tools und Technologie
 
 \subsubsection{Ordnerstruktur}
 \begin{itemize}
-    \item frontend/: Dieser Ordner enthält alle Dateien, die man für die Gestaltung der Website braucht. Dazu gehören die HTML-Dateien (index.html, Benutzereingabe.html, Schachbrett.html, Spielanalyse.html und weiterleitung.html), die CSS-Dateien (styles.css, maincss.css), die JavaScript-Datei (api.js), ico-Datei für das Logo (favicon.ico) und die Bilder (schachbrett.jpg und die Schachfiguren).
-    \item backend/: Dieser Ordner enthält alle Dateien, die im Hintergrund laufen. Das sind die Python-Dateien (__init__.py, backend.py, receive.py und wsgi.py) und die pgn-Dateien für die bereits gespielten Spiele.
+    \item /frontend: Dieser Ordner enthält alle Dateien, die man für die Gestaltung der Website braucht. Dazu gehören:
+        \begin{itemize}
+            \item HTML-Dateien 
+                \begin{itemize} 
+                    \item index.html 
+                    \item Benutzereingabe.html
+                    \item schachbrett.html
+                    \item Spielanalyse.html 
+                    \item weiterleitung.html
+                \end{itemize}
+            \item CSS-Dateien
+                \begin{itemize}
+                    \item styles.css
+                    \item maincss.css
+                \end{itemize}
+            \item die JavaScript-Datei
+                \begin{itemize}
+                    \item api.js
+                \end{itemize}
+            \item die ico-Datei für das Logo
+                \begin{itemize}
+                    \item favicon.ico
+                \end{itemize}
+            \item Bilder
+                \begin{itemize}
+                    \item schachbrett.jpg
+                    \item und die Schachfiguren
+                \end{itemize}
+        \end{itemize} 
+        
+    \item /backend: Dieser Ordner enthält alle Dateien, die im Hintergrund laufen. Das sind:
+        \begin{itemize}
+            \item Python-Dateien
+                \begin{itemize}
+                    \item  \texttt{\_\_init\_\_.py}
+                    \item backend.py
+                    \item wsgi.py
+                \end{itemize}
+            \item pgn-Dateien für die bereits gespielten Spiele
+                \begin{itemize}
+                    \item beispielSpiel1.pgn
+                    \item beispielSpiel2.pgn
+                    \item beispielSpiel3.pgn
+                \end{itemize}
+        \end{itemize}
 \end{itemize}
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\textwidth]{figures/OrdnerstrukturServer.png}
+    \caption{Ordnerstruktur am Server}
+    \label{fig:OrdnerstrukturServer}
+\end{figure}
+
+\newpage
+
+\subsection{Realisation der Benutzeroberfläche}
+Die Benutzeroberfläche der Website wurde mit HTML, CSS und JavaScript gestaltet.
+
+HTML wurde verwendet, um die Struktur der Website zu erstellen, während CSS für die Gestaltung und das Layout verantwortlich ist. JavaScript wurde eingesetzt, um die Interaktivität der Website zu ermöglichen, insbesondere für die Kommunikation mit dem Backend über API-Aufrufe.
+
+\subsubsection{Struktur}
+Die Website besteht aus mehreren Seiten, wobei jede eine spezifische Funktion erfüllt:
+\begin{itemize}
+    \item index.html: Die Startseite, die eine Übersicht über die Funktionen der Website bietet.
+    \item Benutzereingabe.html: Hier können Nutzer ihre Informationen eingeben, um ein neues Konto zu erstellen oder sich anzumelden.
+    \item schachbrett.html: Diese Seite zeigt das Schachbrett an, auf dem die Nutzer spielen können. Das Schachbrett wurde selbsständig gestaltet, um eine individuelle und ansprechende Benutzererfahrung zu bieten.
+    \item Spielanalyse.html: Hier können Nutzer bereits gespielte Spiele analysieren und ihre Züge überprüfen.
+    \item weiterleitung.html: Diese Seite dient als Weiterleitung nach bestimmten Aktionen, wie z.B. nach der Anmeldung oder nach dem Speichern eines Spiels.
+\end{itemize}
+
+\subsubsection{Der Fluss der Daten}
+Die Daten fließen zwischen dem Frontend und dem Backend über API-Aufrufe.
+Ein Beispiel: \\
+\texttt{Wenn der Nutzer auf schachbrett.html einen Zug macht, registriert ein JavaScript-Event-Listener diese Aktion und bereitet die Daten für den POST-Request an den /save_game-Endpunkt vor. Der Server empfängt diese Daten, verarbeitet sie und speichert sie in der Datenbank. Sobald die Daten erfolgreich gespeichert wurden, sendet der Server eine Bestätigung zurück an das Frontend, das dann die Benutzeroberfläche entsprechend aktualisiert, um den neuen Spielstand anzuzeigen.}
+
+
+\subsection{Bereitstellungsprozess}
+\subsubsection{Der Ursprung}
+Am Anfang wurde die Website lokal auf dem persönlichen Laptop entwickelt. Alle Funktionen wurden implementiert und getestet, um sicherzustellen, dass sie wie erwartet funktionieren. Der Laptop diente sozusagen als vorübergehender Server. Erst danach wurde die Website auf den Debian-Server der Schule übertragen. 
+Dafür wurden alle benötigten Dateien in das GitHub-Repository hochgeladen und von dort aus auf den Server geklont. 
+Auf einem Windows-PC funktioniert das mit \\
+\texttt{git clone https://github.com/nextmove-interactive-chessboard/documentation.}
+
+\subsubsection{SSH-Key-Authentifizierung}
+Da der Server in Linux-Debian läuft, kann das GitHub-Repository nicht genauso geklont werden, da es aus Sicherheitgründen abgeschafft wurde.
+Wenn man es trotzdem versucht, bekommt man die Fehlermeldungen \\
+\texttt{remote: Password authentication is not supported.} \\
+\texttt{fatal: Authentication failed}
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\textwidth]{figures/gitcloneFalsch.png}
+    \caption{Fehlerhafte Git-Clone-Operation}
+    \label{fig:gitcloneFalsch}
+\end{figure}
+
+\newpage
+Daher muss mit dem Befehl \\
+\texttt{ssh-keygen -t ed25519 -C "cseidner@tsn.at"} \\
+ein ssh-key-Paar angelegt werden, um Zugriff auf das Repository zu bekommen.
+Nur, wer den privaten Schlüssel besitzt, kann auf das Repository zugreifen. Dieser bleibt auf dem Server, während der öffentliche Schlüssel in GitHub hinterlegt wird.
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\textwidth]{figures/sshkey.png}
+    \caption{SSH-Key-Generierung}
+    \label{fig:sshkey}
+\end{figure}
+
+Nun kann der key mit dem Befehl \\
+\texttt{cat \string~\string/.ssh/id\_ed25519.pub} \\
+angezeigt werden:
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\textwidth]{figures/sshkey2.png}
+    \caption{SSH-Key-Anzeige}
+    \label{fig:sshkey2}
+\end{figure}
+
+\newpage
+Diesen Key fügt man nun in GitHub unter \\
+\texttt{Settings $\rightarrow$ SSH and GPG keys $\rightarrow$ New SSH key} \\
+ein. Dieser ssh-key heißt ssh Server (Debian). 
+
+Um jetzt neu klonen zu können, muss die ssh-Konfiguration gegebenenfalls erneuert werden. 
+
+Mit \\
+\texttt{eval "\$(ssh-agent -s)"} \\
+\texttt{ssh-add \string~\string/.ssh/id\_ed25519} \\
+kann überprüft werden, ob der neu erstellte ssh-key tatsächlich aktiv geladen ist. 
+
+Nachdem eine ssh-Konfiguration \texttt{nano \string~\string/.ssh/config} mit dem Inhalt \\
+\texttt{Host github.com} \\
+\texttt{HostName github.com} \\
+\texttt{User git} \\
+\texttt{IdentityFile \string~\string/.ssh/id\_ed25519} \\
+\texttt{ProxyCommand none} \\
+
+angelegt wurde, müssen noch die Ordnerrechte eingeschränkt werden, damit die ssh-Verbindung nicht alles blockiert: \\
+\texttt{chmod 700 \string~\string/.ssh} \\
+\texttt{chmod 600 \string~\string/.ssh/id\_ed25519} \\
+\texttt{chmod 644 \string~\string/.ssh/id\_ed25519.pub}\\
+
+\newpage
+\subsubsection{Deployment}
+Nun kann das Repository mit dem ssh-Link geklont werden. Dieser liegt in GitHub unter \texttt{Code $\rightarrow$ SSH}. \\
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\textwidth]{figures/gitcloneRichtig.png}
+    \caption{Erfolgreiche Git-Clone-Operation}
+    \label{fig:gitcloneRichtig}
+\end{figure}
+
+\subsection{Datenbank-Design und Implementierung}
+
+\subsection{Server-Konfiguration}
+
+\subsection{Backend-Logik und Socket-Kommunikation}
+
+
+
+\newpage
 \subsubsection{Frontend}
 Zum Frontend der Website gehören alle Elemente, die der Nutzer direkt sieht und mit denen er interagiert. Dazu gehören alle visuelle Elemente.
 
