@@ -11,20 +11,12 @@ infolgedessen zu bestellen. So bleibt zunächst nur die Möglichkeit, mit der 2x
 
 \begin{scriptsize}
 \begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {Erstes Beispiel für die Steuerung einer 2x2 Matrix}]
-import RPi.GPIO as GPIO
-import time
-
-GPIO.setwarnings(False)
-GPIO.setmode(GPIO.BCM)
-
-
 pins = {
     "upPower": 17,
     "lowPower": 27,
     "left": 23,
     "right": 24,
 }
-
 
 # Setup
 for pin in pins.values():
@@ -48,17 +40,10 @@ def scan_matrix():
         print("B1 erkannt")
     elif GPIO.input(pins["right"]) == GPIO.LOW:
         print("B2 erkannt")
-try:
-    while True:
-        scan_matrix()
-        time.sleep(0.4)
 
-except KeyboardInterrupt:
-	print("\nProgramm beendet")
-
-finally:
-	GPIO.cleanup()
-
+while True:
+    scan_matrix()
+    time.sleep(0.4)
 \end{lstlisting}
 \end{scriptsize}
 
@@ -99,6 +84,8 @@ praktisch.
 	\label{fig:ky040}
 \end{figure}
 
+\newpage
+
 \subsubsection{Funktionsweise eines Rotary encoders}
 Die Art, wie solch ein Inkrementalgeber funktioniert, ist für viele auf den ersten Blick vielleicht nicht 
 ganz verständlich und wird wahrscheinlich mit der Arbeitsweise eines Potentiometers verwechselt. 
@@ -106,19 +93,19 @@ Allerdings handelt es sich hier um einen kodierten Drehschalter. Der Hauptunters
 Bedienung schnell auffällt ist, dass sich dieses Bauteil, im Vergleich zum klassischen Potentiometer, 
 \glqq unendlich lange\grqq{} drehen lässt. Jeder Drehpunkt kann taktil erfühlt werden.
 Ein Inkrementalgeber hat zwei Ausgangssignale, A und B, welche bei Drehung ein periodisches Rechtecksignal 
-ausgeben.
+ausgeben. \cite{ky-40}
 
 \begin{figure}[h]
 	\centering
-	\begin{minipage}[b]{0.5\textwidth}
+	\begin{minipage}[b]{0.4\textwidth}
 		\includegraphics[width=\textwidth]{rotaryencoder_workings}
 		\caption{Funktionsweise eines Inkrementalgebers \cite{funkt}}
 		\label{fig:funkt}
 	\end{minipage}
 	\hfill
-	\begin{minipage}[b]{0.4\textwidth}
+	\begin{minipage}[b]{0.5\textwidth}
 		\includegraphics[width=\textwidth]{pinout}
-		\caption{Pinout des KY-040 \cite{pinout}}
+		\caption{Pinout des KY-040 \cite{ky-40}}
 		\label{fig:pinout}
 	\end{minipage}
 \end{figure}
@@ -126,13 +113,14 @@ ausgeben.
 In Abhängigkeit davon, ob A oder B zuerst eine Zone berührt, wird eine Drehung im Uhrzeigersinn beziehungsweise gegen 
 den Uhrzeigersinn festgestellt.
 
+\newpage
 
 \subsubsection{Code für KY-040}
 Der erste code sollte die Funktionalität sicherstellen und eine Vertrautheit mit dem Bauteil und dessen 
 Handling ermöglichen.
 Auf der Dokumentationsseite von gpiozero findet sich unter Kapitel 2.21 \glqq Rotary encoder\grqq{} \cite{gpiozero}ein 
 einfaches Beispiel mit einer LED. Auf Basis dieses Beispiels und dem weiteren Lesen der Dokumentation von 
-gpiozero, kann ein einfaches Skript erstellt werden.
+gpiozero, kann ein einfaches Skript erstellt werden.\\
 
 \begin{scriptsize}
 \begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {Erstes Beispiel für die Einbindung eines Rotary encoders}]
@@ -173,7 +161,7 @@ if __name__ == "__main__":
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=\textwidth]{encoderCodeTest}
+	\includegraphics[width=0.8\textwidth]{encoderCodeTest}
 	\caption{Ergebnis des Code-Tests}
 	\label{fig:encoderTest}
 \end{figure}
@@ -236,8 +224,6 @@ die aktuelle Position im Baum angepasst werden.
 	\label{fig:treeDiagramfirstMenuStructure}
 \end{figure}
 
-MEHR SCHREIBEN
-
 Der Aufbau dieses Codes ist so gestaltet, dass das Wechseln in die verschiedenen Untermenüs mithilfe von 
 \glqq Match-Case\grqq{} Blöcken umgesetzt wird. Der Aufbau der Menüstruktur sieht wie folgt aus:
 
@@ -286,8 +272,7 @@ MIFARE-Karten.
 \end{figure}
 \newpage
 
-Konkret handelt es sich um das RC-522 RFID Modul, welches sich durch seine einfache Einbindung und die 
-gute Dokumentation auszeichnet. Nach Erhalt des Moduls musste allerdings festgestellt werden, dass das Bauteil defekt 
+Nach Erhalt des Moduls musste allerdings festgestellt werden, dass das Bauteil defekt 
 geliefert wurde und deshalb nicht verwendet werden kann.
 
 
@@ -302,7 +287,7 @@ wird der Benutzer aufgefordert, es erneut zu versuchen.
 
 \subsection{Die Restrukturierung}
 Infolgedessen wird sich auch dazu entschieden, die bereits bestehende Menüstruktur zu überarbeiten, da die zu 
-dieser Zeit vorhandene Struktur als nicht mehr optimal gesehen wird. Es wird sich dazu entschieden, die Auswahl 
+dieser Zeit vorhandene Struktur als nicht mehr als optimal gesehen wird. Es wird sich dazu entschieden, die Auswahl 
 zwischen \glqq Login\glqq{} und \glqq Registrieren\glqq{} als ersten Schritt im Hauptmenü zu platzieren.
 Die Struktur sieht jetzt wie folgt aus:
 \begin{itemize}

@@ -1,0 +1,972 @@
+\subsection{oopmenu.py}
+\begin{scriptsize}
+\begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {oopmenu.py}]
+import time
+import threading
+
+import board
+import neopixel
+from luma.oled.device import sh1106
+from luma.core.render import canvas
+from luma.core.interface.serial import i2c
+from gpiozero import RotaryEncoder, Button, DigitalOutputDevice, DigitalInputDevice
+
+from login import Login
+from ComGame import COMGame
+from MultiGame import MultiGame
+
+
+class Menu:
+    def __init__(self):
+        self.comDiff = 1
+        self.menuState = 0
+        self.selectedIndex = 0
+        self.splashStart = time.monotonic()
+
+        # Initialize rotary encoder and button
+        self.encoder = RotaryEncoder(13, 19, wrap=True, max_steps=100,
+                                     bounce_time=0.05)
+
+        self.button = Button(16, pull_up=True, bounce_time=0.05, hold_time=2)
+
+        self.done = threading.Event()
+        Button.was_held = False
+
+        self.button.when_held = self.stop_script
+        self.button.when_released = self.handle_button
+        self.encoder.when_rotated = self.handle_rotate
+
+        self.serial = i2c(port=1, address=0x3C)
+        self.device = sh1106(self.serial)
+
+        # NeoPixel setup
+        self.pixelPin = board.D12
+        self.numPixels = 64
+        self.pixels = neopixel.NeoPixel(
+            self.pixelPin,
+            self.numPixels,
+            brightness=0.25,
+            auto_write=False)
+        self.pixels.fill((0, 0, 0))
+        self.pixels.show()
+
+        self.login = Login(self.device)
+
+        # Matrix setup
+        self.rowPins = [4, 17, 27, 22, 0, 5, 6, 26]
+        self.colPins = [14, 15, 23, 24, 20, 21, 7, 1]
+        self.tiles = ["H", "G", "F", "E", "D", "C", "B", "A"]
+
+        self.rows = []
+        for p in self.rowPins:
+            self.rows.append(
+                DigitalOutputDevice(p, active_high=True, initial_value=False))
+
+        self.cols = []
+        for p in self.colPins:
+            self.cols.append(DigitalInputDevice(p, pull_up=True))
+
+        self.squares = {
+            "A8": 0,  "B8": 1,  "C8": 2,  "D8": 3,  "E8": 4,  "F8": 5,  "G8": 6,  "H8": 7,
+            "A7": 15, "B7": 14, "C7": 13, "D7": 12, "E7": 11, "F7": 10, "G7": 9,  "H7": 8,
+            "A6": 16, "B6": 17, "C6": 18, "D6": 19, "E6": 20, "F6": 21, "G6": 22, "H6": 23,
+            "A5": 31, "B5": 30, "C5": 29, "D5": 28, "E5": 27, "F5": 26, "G5": 25, "H5": 24,
+            "A4": 32, "B4": 33, "C4": 34, "D4": 35, "E4": 36, "F4": 37, "G4": 38, "H4": 39,
+            "A3": 47, "B3": 46, "C3": 45, "D3": 44, "E3": 43, "F3": 42, "G3": 41, "H3": 40,
+            "A2": 48, "B2": 49, "C2": 50, "D2": 51, "E2": 52, "F2": 53, "G2": 54, "H2": 55,
+            "A1": 63, "B1": 62, "C1": 61, "D1": 60, "E1": 59, "F1": 58, "G1": 57, "H1": 56
+            }
+
+    def handle_rotate(self):
+        match self.menuState:
+            case 0:  # Splash Screen
+                pass
+            case 1:  # Login screen
+                if self.encoder.steps % 2 == 0:
+                    self.selectedIndex = 0  # Login
+                elif self.encoder.steps % 2 == 1:
+                    self.selectedIndex = 1  # Register
+            case 2:  # Login to account
+                self.login.handle_rotate(self.encoder.steps)
+            case 3:  # Register an account
+                self.login.handle_rotate(self.encoder.steps)
+            case 4:  # Main menu
+                if self.encoder.steps % 2 == 0:
+                    self.selectedIndex = 0  # Singleplayer
+                elif self.encoder.steps % 2 == 1:
+                    self.selectedIndex = 1  # Multiplayer
+            case 5:  # COM difficulty selection
+                if self.encoder.steps % 3 == 0:
+                    self.comDiff = 1  # Easy
+                elif self.encoder.steps % 3 == 1:
+                    self.comDiff = 2  # Medium
+                elif self.encoder.steps % 3 == 2:
+                    self.comDiff = 3  # Hard
+            case 6:  # Game Screen
+                pass
+
+    def handle_button(self):
+        if not Button.was_held:
+            match self.menuState:
+                case 0:  # Splash Screen
+                    pass
+                case 1:  # Login screen
+                    if self.selectedIndex == 0:
+                        self.login.reset_state(self.encoder.steps)
+                        self.menuState = 2  # Go to login to account screen
+                    elif self.selectedIndex == 1:
+                        self.login.reset_state(self.encoder.steps)
+                        self.menuState = 3  # Go to register screen
+                case 2:  # Login to account
+                    if self.login.handle_button():
+                        if self.login.verify_password():
+                            time.sleep(1)
+                            self.menuState = 4  # Go to main menu
+                        else:
+                            self.login.reset_state(self.encoder.steps)
+                case 3:  # Register an account
+                    if self.login.handle_button():
+                        self.login.save_password()
+                        time.sleep(1)
+                        self.menuState = 4  # Go to main menu
+                case 4:  # Main menu
+                    if self.selectedIndex == 0:
+                        self.menuState = 5  # Go to COM Difficulty Selection
+                    elif self.selectedIndex == 1:
+                        self.menuState = 6  # Start Multiplayer Game
+                        userCode = "".join(map(str, self.login.digits))
+                        self.MultiGame = MultiGame(
+                                                   encoder=self.encoder,
+                                                   button=self.button,
+                                                   rows=self.rows,
+                                                   cols=self.cols,
+                                                   tiles=self.tiles,
+                                                   squares=self.squares,
+                                                   pixels=self.pixels,
+                                                   userCode=userCode)
+                        self.draw_menu()
+                        self.MultiGame.run()
+                        self.menuState = 4
+                        self.selectedIndex = 0
+                case 5:  # COM Difficulty Selection
+                    self.ComGame = COMGame(
+                                           comDiff=self.comDiff,
+                                           encoder=self.encoder,
+                                           button=self.button,
+                                           rows=self.rows,
+                                           cols=self.cols,
+                                           tiles=self.tiles,
+                                           squares=self.squares,
+                                           pixels=self.pixels)
+                    self.menuState = 6
+                    self.draw_menu()
+                    self.ComGame.run()
+                    self.menuState = 4
+                    self.selectedIndex = 0
+        Button.was_held = False  # Reset state after button press
+
+    def stop_script(self):
+        Button.was_held = True
+        if Button.was_held and self.menuState in [1, 2, 3]:
+            self.menuState = 1  # Return to login screen
+        else:
+            self.menuState = 4  # Return to Main Menu
+            self.selectedIndex = 0
+            time.sleep(0.5)  # Debounce delay
+
+    def draw_menu(self):
+        with canvas(self.device) as draw:
+            match self.menuState:
+                case 0:  # Splash Screen
+                    draw.text((35, 25), "Nextmove", fill="white")
+                    draw.rectangle(self.device.bounding_box,
+                                    outline="white")
+                    if time.monotonic() - self.splashStart >= 2:
+                        self.menuState = 1  # Go to login screen
+                case 1:  # Login screen
+                    options = ["Login", "Register"]
+                    draw.text((40, 0), "-- Login --", fill="white")
+                    for i, option in enumerate(options):
+                        if i == self.selectedIndex:
+                            draw.text((20, 15 + i * 15),
+                                        "> " + option,
+                                        fill="white")
+                        else:
+                            draw.text((20, 15 + i * 15),
+                                        option,
+                                        fill="white")
+                case 2:  # Login to account
+                    self.login.draw_login(draw)
+                case 3:  # Register an account
+                    self.login.draw_register(draw)
+                case 4:  # Main menu
+                    options = ["Einzelspieler", "Mehrspieler"]
+                    draw.text((40, 0), "-- Home --", fill="white")
+                    for i, option in enumerate(options):
+                        if i == self.selectedIndex:
+                            draw.text(
+                                (20, 20 + i * 15),
+                                "> " + option,
+                                fill="white")
+                        else:
+                            draw.text(
+                                (20, 20 + i * 15),
+                                option,
+                                fill="white")
+                case 5:  # COM Difficulty Selection
+                    options = ["Leicht", "Mittel", "Schwer"]
+                    draw.text((8, 0), "-- COM Schwierigkeit --",
+                                fill="white")
+                    for i, option in enumerate(options):
+                        if i == self.comDiff - 1:
+                            draw.text((20, 15 + i * 15),
+                                        "> " + option,
+                                        fill="white")
+                        else:
+                            draw.text((20, 15 + i * 15),
+                                        option,
+                                        fill="white")
+                case 6:  # Game Screen
+                    draw.text((29, 0), "-- Game On --", fill="white")
+
+
+if __name__ == "__main__":
+    menu = Menu()
+    while not menu.done.is_set():
+        time.sleep(0.01)
+        menu.draw_menu()
+
+\end{lstlisting}
+\end{scriptsize}
+
+\newpage
+
+\subsection{multigame.py}
+\begin{scriptsize}
+\begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {multigame.py}]
+import os
+import time
+import socket
+
+import chess
+import chess.pgn
+import board
+
+
+class MultiGame:
+    def __init__(self, encoder, button, rows, cols, 
+                 tiles, squares, pixels, userCode):
+        self.board = chess.Board()
+        self.pickedSquare = None
+        self.pinSquare = None
+        self.legalMoves = []
+        self.previousSensor = {}
+
+        # Colors
+        self.colorSource = (100, 0, 200)
+        self.colorTarget = (50, 50, 50)
+        self.colorCapture = (250, 0, 0)
+        self.colorPinner = (250, 0, 0)
+        self.animationColor = (255, 0, 255)
+        self.colorOff = (0, 0, 0)
+        self.colorGreen = (0, 255, 0)
+        self.colorRed = (255, 0, 0)
+
+        # Timings
+        self.rowDischargeTime = 0.005
+        self.rowChargeTime = 0.005
+        self.debounceTime = 0.2
+        self.blinkInterval = 0.4
+
+        self.encoder = encoder
+        self.button = button
+
+        self.userCode = userCode
+        self.gameActive = False
+
+        # PGN setup
+        self.year = time.strftime("%Y")
+        self.month = time.strftime("%m")
+        self.day = time.strftime("%d")
+        self.pgnGame = chess.pgn.Game()
+        self.pgnGame.headers["Event"] = "Lokales Multiplayer Spiel"
+        self.pgnGame.headers["Date"] = f"{self.year}.{self.month}.{self.day}"
+        self.pgnGame.headers["White"] = self.userCode
+        self.pgnGame.headers["Black"] = "Spieler 2"
+        self.pgnNode = self.pgnGame
+        self.filename = f"{self.userCode}.pgn"
+
+        # Server setup
+        self.serverAddress = ("10.5.5.110", 5001)
+        self.clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+        # NeoPixel setup
+        self.pixelPin = board.D12
+        self.numPixels = 64
+        self.pixels = pixels
+
+        # Matrix setup
+        self.rows = rows
+        self.cols = cols
+        self.tiles = tiles
+        self.squares = squares
+
+    def returnToMenu(self):
+        self.gameActive = False
+        self.pixels.fill(self.colorOff)
+        self.pixels.show()
+        self.board.reset()
+
+    def calibrateBoard(self):
+        for r, row in enumerate(self.rows):
+            row.on()
+            time.sleep(self.rowChargeTime)
+            rank = r + 1
+            for c, col in enumerate(self.cols):
+                field = self.tiles[c] + str(rank)
+                if col.value == 0:
+                    self.previousSensor[field] = 0
+                else:
+                    self.previousSensor[field] = 1
+            row.off()
+            time.sleep(self.rowDischargeTime)
+
+    def startingAnimation(self):
+        self.pixels.fill(self.colorOff)
+        self.pixels.show()
+        for i in range(self.numPixels):
+            self.pixels[i] = self.animationColor
+            if i % 8 == 0:
+                time.sleep(0.1)
+            self.pixels.show()
+        time.sleep(1)
+        for i in range(self.numPixels):
+            self.pixels[i] = self.colorOff
+            if i % 8 == 0:
+                time.sleep(0.1)
+            self.pixels.show()
+        self.pixels.fill(self.animationColor)
+        self.pixels.show()
+        time.sleep(0.5)
+        self.pixels.fill(self.colorOff)
+        self.pixels.show()
+
+    def setSingleLed(self, square, color):
+        name = chess.square_name(square).upper()
+        if name in self.squares:
+            self.pixels[self.squares[name]] = color
+
+    def updateLedBoard(self):
+        self.pixels.fill(self.colorOff)
+        if self.pickedSquare is not None:
+            self.setSingleLed(self.pickedSquare, self.colorSource)
+            for move in self.legalMoves:
+                targetSquare = move.to_square
+                if self.board.is_capture(move):
+                    self.setSingleLed(targetSquare, self.colorCapture)
+                else:
+                    self.setSingleLed(targetSquare, self.colorTarget)
+        if self.pinSquare is not None:
+            self.setSingleLed(self.pinSquare, self.colorPinner)
+
+        self.pixels.show()
+
+    def postGame(self, boardTurn):
+        # Define field ranges
+        whiteSquares = ["A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1",
+                        "A2", "B2", "C2", "D2", "E2", "F2", "G2", "H2"]
+        blackSquares = ["A7", "B7", "C7", "D7", "E7", "F7", "G7", "H7",
+                        "A8", "B8", "C8", "D8", "E8", "F8", "G8", "H8"]
+        
+        # Blink 5 times
+        for _ in range(5):
+            self.pixels.fill(self.colorOff)
+            self.pixels.show()
+            time.sleep(0.3)
+            
+            # Light up the fields based on boardTurn
+            if boardTurn == chess.WHITE:
+                # White won: green for white squares, red for black squares
+                for square in whiteSquares:
+                    if square in self.squares:
+                        self.pixels[self.squares[square]] = self.colorRed
+                for square in blackSquares:
+                    if square in self.squares:
+                        self.pixels[self.squares[square]] = self.colorGreen
+            else:
+                # Black won: red for white squares, green for black squares
+                for square in whiteSquares:
+                    if square in self.squares:
+                        self.pixels[self.squares[square]] = self.colorGreen
+                for square in blackSquares:
+                    if square in self.squares:
+                        self.pixels[self.squares[square]] = self.colorRed
+
+            self.pixels.show()
+            time.sleep(0.3)
+        try:
+            self.clientSocket.connect(self.serverAddress)
+
+            with open(self.filename, "rb") as file:
+                data = file.read()
+                self.clientSocket.sendall(data)
+
+            self.clientSocket.close()
+        except:
+            pass
+        
+        self.gameActive = False
+
+    def savePGN(self):
+        with open(self.filename, "w") as f:
+            f.write(str(self.pgnGame))
+
+    def boardScanCycle(self):
+        """
+        Scans the board for changes. Turn on each row, check columns,
+        then turn off the row. Detects piece lifts and landings, 
+        checks for legal moves and handles checkmate condition.
+        """
+        for r, row in enumerate(self.rows):
+            row.on()
+            time.sleep(self.rowChargeTime)
+
+            rank = r + 1
+            for c, col in enumerate(self.cols):
+                field = self.tiles[c] + str(rank)
+
+                if col.value == 0:
+                    currentState = 0
+                else:
+                    currentState = 1
+
+                if field in self.previousSensor:
+                    previous = self.previousSensor[field]
+                else:
+                    previous = currentState
+
+                # Lift
+                if previous == 1 and currentState == 0:
+                    if self.pickedSquare is None:
+                        sq = chess.parse_square(field.lower())
+                        piece = self.board.piece_at(sq)
+
+                        # Only show moves if it's the right color's turn
+                        if piece and piece.color == self.board.turn:
+                            self.pickedSquare = sq
+                            self.legalMoves = []
+                            for move in self.board.legal_moves:
+                                if move.from_square == sq:
+                                    self.legalMoves.append(move)
+                            self.updateLedBoard()
+
+                # Land
+                elif previous == 0 and currentState == 1:
+                    if self.pickedSquare is not None:
+                        time.sleep(self.debounceTime)
+                        if col.value == 1:
+                            sq = chess.parse_square(field.lower())
+
+                            foundMove = None
+                            for move in self.legalMoves:
+                                if move.to_square == sq:
+                                    foundMove = move
+                                    break
+
+                            if foundMove:
+                                self.board.push(foundMove)
+
+                                # Checkmate check
+                                if self.board.is_checkmate():
+                                    if self.board.turn == chess.WHITE:
+                                        self.postGame(self.board.turn)
+                                    else:
+                                        self.postGame(self.board.turn)
+
+                                self.pgnNode = self.pgnNode.add_variation(foundMove)
+                                self.savePGN()
+
+                                self.pickedSquare = None
+                                self.legalMoves = []
+                                self.pixels.fill(self.colorOff)
+                                self.pixels.show()
+                                self.calibrateBoard()
+                            elif sq == self.pickedSquare:
+                                self.pickedSquare = None
+                                self.legalMoves = []
+                                self.pixels.fill(self.colorOff)
+                                self.pixels.show()
+
+                self.previousSensor[field] = currentState
+
+            row.off()
+            time.sleep(self.rowDischargeTime)
+            
+    def run(self):
+        self.gameActive = True
+        self.calibrateBoard()
+        self.startingAnimation()
+
+        try:
+            while self.gameActive:
+                self.boardScanCycle()
+                time.sleep(0.01)
+            self.returnToMenu()
+        
+        except KeyboardInterrupt:
+            try:
+                self.clientSocket.connect(self.serverAddress)
+
+                with open(self.filename, "rb") as file:
+                    data = file.read()
+                    self.clientSocket.sendall(data)
+
+                self.clientSocket.close()
+            except:
+                pass
+
+            self.pixels.fill(self.colorOff)
+            self.pixels.show()
+
+        finally:
+            self.returnToMenu()
+            os.remove(self.filename)
+
+\end{lstlisting}
+\end{scriptsize}
+
+\subsection{comgame.py}
+\begin{scriptsize}
+\begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {comgame.py}]
+import time
+import board
+import chess
+import chess.engine
+
+
+class COMGame:
+    def __init__(self, comDiff, encoder, button, rows,
+                 cols, tiles, squares, pixels):
+        self.board = chess.Board()
+        self.engine = chess.engine.SimpleEngine.popen_uci("/usr/games/stockfish")
+        self.comDiff = comDiff
+        if self.comDiff == 1:  # Configuration of engine skill level
+            self.engine.configure({"Skill Level": 1})  # Easy
+        elif self.comDiff == 2:
+            self.engine.configure({"Skill Level": 5})  # Medium
+        elif self.comDiff == 3:
+            self.engine.configure({"Skill Level": 10})  # Hard
+        self.chessboard = chess.Board()
+        self.pickedSquare = None
+        self.pinSquare = None
+        self.legalMoves = []
+        self.gameActive = False
+        self.previousSensor = {}
+
+        # Colors
+        self.colorSource = (100, 0, 200)
+        self.colorTarget = (50, 50, 50)
+        self.colorCapture = (250, 0, 0)
+        self.colorPinner = (250, 0, 0)
+        self.animationColor = (255, 0, 255)
+
+        self.colorComFrom = (255, 255, 0)
+        self.colorComTo = (255, 255, 0)
+        self.colorComCapture = (255, 255, 0)
+        self.colorSuccess = (0, 255, 0)
+        self.colorError = (255, 0, 0)
+        self.colorOff = (0, 0, 0)
+        self.colorGreen = (0, 255, 0)
+        self.colorRed = (255, 0, 0)
+
+        # Timings
+        self.rowDischargeTime = 0.005
+        self.rowChargeTime = 0.005
+        self.debounceTime = 0.2
+        self.blinkInterval = 0.4
+
+        # GPIO setup
+        # Rotary encoder and button
+        self.encoder = encoder
+        self.button = button
+
+        # NeoPixel setup
+        self.pixelPin = board.D12
+        self.numPixels = 64
+        self.pixels = pixels
+
+        # Matrix setup
+        self.rows = rows
+        self.cols = cols
+        self.tiles = tiles
+        self.squares = squares
+
+    def returnToMenu(self):
+        self.gameActive = False
+        self.pixels.fill(self.colorOff)
+        self.pixels.show()
+        self.board.reset()
+        self.chessboard.reset()
+
+    def calibrateBoard(self):
+        for r, row in enumerate(self.rows):
+            row.on()
+            time.sleep(self.rowChargeTime)
+            rank = r + 1
+            for c, col in enumerate(self.cols):
+                field = self.tiles[c] + str(rank)
+                if col.value == 0:
+                    self.previousSensor[field] = 0
+                else:
+                    self.previousSensor[field] = 1
+            row.off()
+            time.sleep(self.rowDischargeTime)
+
+    def startingAnimation(self):
+        self.pixels.fill(self.colorOff)
+        self.pixels.show()
+        for i in range(self.numPixels):
+            self.pixels[i] = self.animationColor
+            if i % 8 == 0:
+                time.sleep(0.1)
+            self.pixels.show()
+        time.sleep(1)
+        for i in range(self.numPixels):
+            self.pixels[i] = self.colorOff
+            if i % 8 == 0:
+                time.sleep(0.1)
+            self.pixels.show()
+        self.pixels.fill(self.animationColor)
+        self.pixels.show()
+        time.sleep(0.5)
+        self.pixels.fill(self.colorOff)
+        self.pixels.show()
+
+    def setSingleLed(self, square, color):
+        name = chess.square_name(square).upper()
+        if name in self.squares:
+            self.pixels[self.squares[name]] = color
+
+    def updateLedBoard(self):
+        self.pixels.fill(self.colorOff)
+        if self.pickedSquare is not None:
+            self.setSingleLed(self.pickedSquare, self.colorSource)
+            for move in self.legalMoves:
+                targetSquare = move.to_square
+                if self.chessboard.is_capture(move):
+                    self.setSingleLed(targetSquare, self.colorCapture)
+                else:
+                    self.setSingleLed(targetSquare, self.colorTarget)
+        if self.pinSquare is not None:
+            self.setSingleLed(self.pinSquare, self.colorPinner)
+
+        self.pixels.show()
+
+    def displayComLed(self, move):
+        self.pixels.fill(self.colorOff)
+        if self.chessboard.is_capture(move):
+            self.setSingleLed(move.to_square, self.colorComCapture)
+        else:
+            self.setSingleLed(move.to_square, self.colorComTo)
+        self.setSingleLed(move.from_square, self.colorComFrom)
+        self.pixels.show()
+
+    def postGame(self, boardTurn):
+        # Define field ranges
+        whiteSquares = ["A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1",
+                        "A2", "B2", "C2", "D2", "E2", "F2", "G2", "H2"]
+        blackSquares = ["A7", "B7", "C7", "D7", "E7", "F7", "G7", "H7",
+                        "A8", "B8", "C8", "D8", "E8", "F8", "G8", "H8"]
+        
+        # Blink 5 times
+        for _ in range(5):
+            # Clear all pixels
+            self.pixels.fill(self.colorOff)
+            self.pixels.show()
+            time.sleep(0.3)
+            
+            # Light up the fields based on boardTurn
+            if boardTurn == chess.WHITE:
+                # White won: green for white squares, red for black squares
+                for square in whiteSquares:
+                    if square in self.squares:
+                        self.pixels[self.squares[square]] = self.colorRed
+                for square in blackSquares:
+                    if square in self.squares:
+                        self.pixels[self.squares[square]] = self.colorGreen
+            else:
+                # Black won: red for white squares, green for black squares
+                for square in whiteSquares:
+                    if square in self.squares:
+                        self.pixels[self.squares[square]] = self.colorGreen
+                for square in blackSquares:
+                    if square in self.squares:
+                        self.pixels[self.squares[square]] = self.colorRed
+
+            self.pixels.show()
+            time.sleep(0.3)
+
+        self.gameActive = False
+
+    def boardScanCycle(self, expectedComMove=None):
+        detectedMove = None
+        for r, row in enumerate(self.rows):
+            row.on()
+            time.sleep(self.rowChargeTime)
+
+            rank = r + 1
+            for c, col in enumerate(self.cols):
+                field = self.tiles[c] + str(rank)
+
+                if col.value == 0:
+                    currentState = 0
+                else:
+                    currentState = 1
+
+                if field in self.previousSensor:
+                    previous = self.previousSensor[field]
+                else:
+                    previous = currentState
+
+                # If figure is picked up, sensor goes from 1 to 0
+                if previous == 1 and currentState == 0:
+                    if self.pickedSquare is None:
+                        sq = chess.parse_square(field.lower())
+                        piece = self.chessboard.piece_at(sq)
+
+                        # If color is correct, allow move
+                        if piece and piece.color == self.chessboard.turn:
+                            self.pickedSquare = sq
+                            self.legalMoves = []
+                            for move in self.board.legal_moves:
+                                if move.from_square == sq:
+                                    self.legalMoves.append(move)
+
+                            if expectedComMove:
+                                self.displayComLed(expectedComMove)
+                            else:
+                                self.updateLedBoard()
+
+                # If figure is put down, sensor goes from 0 to 1
+                elif previous == 0 and currentState == 1:
+                    if self.pickedSquare is not None:
+                        time.sleep(self.debounceTime)
+                        if col.value == 1:
+                            sq = chess.parse_square(field.lower())
+
+                            foundMove = None
+                            for move in self.legalMoves:
+                                if move.to_square == sq:
+                                    foundMove = move
+                                    break
+
+                            if foundMove:
+                                self.board.push(foundMove)
+                                self.chessboard.push(foundMove)
+                                self.pickedSquare = None
+                                self.legalMoves = []
+                                self.updateLedBoard()
+                                return foundMove
+                            elif sq == self.pickedSquare:
+                                # Figure was put back on its original square
+                                self.pickedSquare = None
+                                self.legalMoves = []
+                                if expectedComMove:
+                                    self.displayComLed(expectedComMove)
+                                else:
+                                    self.updateLedBoard()
+
+                # Checkmate check
+                if self.board.is_checkmate():
+                    if self.board.turn == chess.WHITE:
+                        self.postGame(self.board.turn)
+                    else:
+                        self.postGame(self.board.turn)
+                    self.returnToMenu()
+
+                self.previousSensor[field] = currentState
+
+            row.off()
+            time.sleep(self.rowDischargeTime)
+        return detectedMove
+
+    def run(self):
+        self.gameActive = True
+        self.calibrateBoard()
+        self.startingAnimation()
+
+        comMoveTarget = None
+
+        try:
+            while self.gameActive:
+                # Check if it's COM's turn and if move is not yet performed
+                currentTurnIsCom = self.chessboard.turn == chess.BLACK
+
+                if not currentTurnIsCom:
+                    comMoveTarget = None
+
+                if (
+                    currentTurnIsCom
+                    and comMoveTarget is None
+                    and not self.chessboard.is_game_over()
+                ):
+                    limit = chess.engine.Limit(time=0.1)
+                    result = self.engine.play(self.chessboard, limit)
+                    comMoveTarget = result.move
+                    self.displayComLed(comMoveTarget)
+
+                performedMove = self.boardScanCycle(
+                                expectedComMove=comMoveTarget)
+
+                # LED Handler for player
+                if (
+                    self.pickedSquare is None
+                    and self.pinSquare is None
+                    and not currentTurnIsCom
+                ):
+                    pass
+                elif self.pickedSquare is not None and not currentTurnIsCom:
+                    self.updateLedBoard()
+
+                # Handle moves
+                if performedMove:
+                    if currentTurnIsCom:
+                        if performedMove == comMoveTarget:
+                            self.pixels.fill(self.colorOff)
+                            self.setSingleLed(performedMove.to_square,
+                                              self.colorSuccess)
+                            self.pixels.show()
+                            time.sleep(1.0)
+                            self.calibrateBoard()
+                        else:
+                            self.pixels.fill(self.colorError)
+                            self.pixels.show()
+                            time.sleep(1.0)
+                            # Shows correct move again
+                            self.displayComLed(comMoveTarget)
+
+                            # Wrong move is thrown out
+                            self.board.pop()
+                            self.chessboard.pop()
+
+                    else:
+                        self.calibrateBoard()
+
+                time.sleep(0.01)
+
+        except KeyboardInterrupt:
+            self.pixels.fill(self.colorOff)
+            self.pixels.show()
+            self.engine.quit()
+
+        finally:
+            self.pixels.fill(self.colorOff)
+            self.pixels.show()
+            self.engine.quit()
+
+\end{lstlisting}
+\end{scriptsize}
+
+\subsection{login.py}
+\begin{scriptsize}
+\begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {login.py}]
+import luma.core.render, luma.core.interface.serial, luma.oled.device
+
+
+class Login():
+    def __init__(self, device):
+        self.device = device
+        self.digits = [0, 0, 0, 0]
+        self.currentIndex = 0
+        self.lastSteps = 0
+    
+    def reset_state(self, currentEncoderSteps):
+        self.digits = [0, 0, 0, 0]
+        self.currentIndex = 0
+        self.lastSteps = currentEncoderSteps
+
+    def handle_rotate(self, steps):
+        diff = steps - self.lastSteps
+        self.lastSteps = steps
+        
+        # Calculate change direction
+        change = 0
+        if diff > 0:
+            change = 1
+        elif diff < 0:
+            change = -1
+            
+        if change != 0:
+            self.digits[self.currentIndex] = (self.digits[self.currentIndex]
+                                              + change) % 10
+
+    def handle_button(self):
+        self.currentIndex += 1
+        if self.currentIndex >= 4:
+            return True
+        return False
+
+    def verify_password(self):
+        try:
+            password = "".join(map(str, self.digits))
+            with open("password.txt", "r") as f:
+                passwords = f.read().splitlines()
+                if password in passwords:
+                    return True
+                else:
+                    return False
+        except FileNotFoundError:
+            print("Password file not found.")
+            return False
+        except Exception as e:
+            print(f"Error checking password: {e}")
+            return False
+
+    def save_password(self):
+        try:
+            with open("password.txt", "a") as f:
+                f.write("".join(map(str, self.digits)) + "\n")
+            print("Password saved.")
+        except Exception as e:
+            print(f"Error saving password: {e}")
+
+    def draw_login(self, draw):
+        draw.text((40, 0), "-- Login --", fill = "white")
+
+        startX = 30
+        y = 30
+        spacing = 20
+
+        for i, digit in enumerate(self.digits):
+            x = startX + i * spacing
+            if i == self.currentIndex:
+                # Highlight the selected digit with a box or underline
+                draw.rectangle((x - 2, y - 2, x + 8, y + 12),
+                               outline="white", fill="black")
+                draw.text((x, y), str(digit), fill="white")
+                draw.rectangle((x - 3, y - 3, x + 9, y + 13),
+                               outline="white") # Outer box
+            else:
+                draw.text((x, y), str(digit), fill="white")
+
+    def draw_register(self, draw):
+        draw.text((10, 0), "Gib ein Passwort ein", fill="white")
+        
+        startX = 30
+        y = 30
+        spacing = 20
+        
+        for i, digit in enumerate(self.digits):
+            x = startX + i * spacing
+            if i == self.currentIndex:
+                # Highlight the selected digit with a box or underline
+                draw.rectangle((x - 2, y - 2, x + 8, y + 12),
+                               outline="white", fill="black")
+                draw.text((x, y), str(digit), fill="white")
+                draw.rectangle((x - 3, y - 3, x + 9, y + 13),
+                               outline="white") # Outer box
+            else:
+                draw.text((x, y), str(digit), fill="white")
+
+\end{lstlisting}
+\end{scriptsize}
