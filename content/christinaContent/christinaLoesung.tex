@@ -80,7 +80,7 @@ Die Benutzeroberfläche der Website wurde mit HTML, CSS und JavaScript gestaltet
 
 \subsubsection{Technologien}
 \begin{itemize}
-    \item HTML-Teil: 
+    \item Die wichtigsten HTML-Codes erklärt: 
     \begin{itemize}
         \item index.html: Diese Seite definiert die Startseite der Website. Sie enthält:
             \begin{itemize}
@@ -89,10 +89,86 @@ Die Benutzeroberfläche der Website wurde mit HTML, CSS und JavaScript gestaltet
                 \item Ein Menü mit Links zu: Schachbrett.html, Benutzereingabe.html und Spielanalyse.html. Diese Links wurden mit Buttons realisiert. 
                 \item Ein Footer mit einem E-Mail-Kontakt-Link
             \end{itemize}
-        \item Benutzereingabe.html: 
-    \end{itemize}
+        \begin{figure}
+            \centering
+            \includegraphics[width=1\textwidth]{figures/index.png}
+            \caption{Startseite der Website}
+            \label{fig:index}
+        \end{figure}
 
-HTML wurde verwendet, um die Struktur der Website zu erstellen, während CSS für die Gestaltung und das Layout verantwortlich ist. JavaScript wurde eingesetzt, um die Interaktivität der Website zu ermöglichen, insbesondere für die Kommunikation mit dem Backend über API-Aufrufe.
+        \newpage
+        \item Benutzereingabe.html: Diese Seite ermöglicht es den Nutzern, ihre Informationen einzugeben, um ein neues Konto zu erstellen oder sich anzumelden. Sie enthält:
+            \begin{itemize}
+                \item Ein Avatar-Div, das die Initialen des Benutzernamens anzeigt 
+                \item Ein Input-Feld für die Eingabe des Benutzernamens (maximal 24 Zeichen, ohne Autovervollständigung)
+                \item Ein Button 'OK', der die Funktion \texttt{register\_user()} aufruft. Diese ruft die Funktion \texttt{saveName()} auf. Dies ist für mögliche spätere Änderungen getrennt geschrieben, man könnte aber auch einfach sofort \texttt{saveName()} aufrufen.
+                \item Ein Toast-Div für Erfolgsmeldung
+                \item Ein Link zurück zur Startseite
+            \end{itemize}
+
+            Der JavaScript-Teil im Code enthält:
+            \begin{itemize}
+                \item Konstanten und Variablen für localStorage, Referenzen zu DOM-Elementen (Input, Button, Avatar, Toast).
+                \item Funktionen:
+                \begin{itemize}
+                    \item \texttt{sanitize(name)}: Entfernt überflüssige Leerzeichen und trimmt den Namen.
+                    \item \texttt{initialsFrom(name)}: Gibt den ersten Buchstaben des Namens als Initiale zurück (oder '-' bei leerem Namen).
+                    \item \texttt{updateAvatar(name)}: Aktualisiert das Avatar-Div mit den Initialen.
+                    \item \texttt{showToast(msg)}: Zeigt eine Toast-Nachricht für 1,5 Sekunden an.
+                    \item \texttt{saveName()}: Diese Funktion entfernt alle unsicheren oder unerwünschten Inhalte, der eingegebene Name wird in \texttt{localStorage} gespeichert, das Avatar wird aktualisiert, eine Erfolgsmeldung wird angezeigt und der Nutzer wird zur Weiterleitung weitergeleitet. Danach sendet sie eine POST-Anfrage an \texttt{http://chse:5000/register} mit dem Benutzernamen als JSON.
+                    \item \texttt{register\_user()} ruft die Funktion \texttt{saveName()} auf, um die Funktionalität zu trennen.
+                    \item Ein Even-Listener für die Eingabe mittels Enter-Taste, der die Funktion \texttt{saveName()} ausführt.
+                \end{itemize}
+            \end{itemize}
+
+        \begin{figure}
+            \centering
+            \includegraphics[width=1\textwidth]{figures/Benutzereingabe.png}
+            \caption{Benutzereingabe}
+            \label{fig:benutzereingabe}
+        \end{figure}
+
+        \newpage
+        \item schachbrett.html: Dieser Code zeichnet ein interaktives Schachbrett mit Canvas und erlaubt das Ziehen von Figuren per Klick. Dort gibt es:
+            \begin{itemize}
+                \item Alle Schachfiguren als Bilder in einer \texttt{<div style>}-Funktion.
+                \item Ein Canvas-Element \texttt{<canvas>}, auf dem das Spielfeld gezeichnet wird. Es wird ein weißes Rechteck als Hintergrund gezeichnet, das durch Linien am Rand eingegrenzt wird. Weitere Linien teilen das Spielfeld in 8x8 Quadrate auf. Eine horizontale (a-h) und eine vertikale (1-8) Beschriftung wird hinzugefügt. Jedes zweite Feld wird nun eingefärbt, um das typische Schachbrettmuster zu erzeugen.
+                \item Die Funktion \texttt{drawBoardAndPieces()}: löscht das Canvas und zeichnet Raster und Beschriftung. Die Figuren werden entsprechend ihrer Position auf dem Spielfeld gezeichnet (\texttt{ctx.drawImage(document.getElementById('piece'))}).
+                \item Für jede Figur gibt es einen Status, der durch die x- und y-Koordinate und die selected-Flag definiert ist. Die Bauern sind in Arrays als \texttt{pawnsBlack} und \texttt{pawnsWhite} definiert.  
+                \item \texttt{canvas.addEventListener("click", function(event))}: Er bestimmt die Mauspostion auf dem Brett mit \texttt{col, row}. Wenn \texttt{selected = true}, also ein Klick auf eine Figur erfolgt ist, wird die Figur an die neue Position bewegt und \texttt{selected = false} gesetzt. Für Bauern ist die Prüfung im Loop (\texttt{for p= 0...7}) und für die anderen Figuren per \texttt{if-else} definiert. 
+                \item Es ist möglich, eine Figur anzuklicken, um sie auszuwählen, um dann auf ein anderes Feld zu klicken, um sie wieder abzusetzen. 
+                \item Einen Link zurück zur Startseite.
+            \end{itemize}
+
+        \begin{figure}
+            \centering
+            \includegraphics[width=1\textwidth]{figures/schachbrett.png}
+            \caption{Online-Schachbrett}
+            \label{fig:onlineschachbrett}
+        \end{figure}
+
+
+        \newpage
+        \item Spielanalyse.html: Auf dieser Seite können Nutzer bereits gespielte Spiele analysieren und ihre Züge überprüfen. 
+            \begin{itemize}
+                \item Das Schachbrett wird genauso wie in schachbrett.html gezeichnet und die Schachfiguren werden gleich gezeichnet, allerdings können die Figuren nicht per Klick bewegt werden, sondern werden durch die Funktion \texttt{executeMove(moveNotation)}, die die Position der Figur entsprechend aktualisiert, bewegt.
+                \item Es gibt wieder für jede Figur einen Status als Objekt (\texttt{x, y}), aber keine \texttt{selected}-Flags, da es eine Spielanimation ist. 
+                \item Das \texttt{moves}-Array enthält die Notation für die Partie.
+                \item \texttt{executeMove(moveNotation)}: Diese Funktion entscheidet, ob es sich um eine weiße oder eine schwarze Figur handelt, indem der Modulo Null entspricht oder nicht \texttt{\% = 0} oder \texttt{\% != 0}. Die Funktion unterscheidet auch Bauerzug oder Figurzug (mit der Schachnorm für Bauern z.B. e4 und für einen Figurzug z.B. Nf3). Danach wird die passende Figur entsprechend der Notation im PGN-File gewählt und \texttt{animateMovement(piece, fromX, fromY, toX, toY)} aufgerufen, um die Bewegung zu animieren.
+                \item \texttt{animateMovement(piece, fromX, fromY, toX, toY)}: Diese Funktion animiert die Kurvenbewegung (400ms per \texttt{requestAnimationFrame}) und bei Ende erhöht der \texttt{currentMoveIndex}, setzt den \texttt{moveCounter} und ruft gegebenenfalls den nächsten Zug (500ms Timeout) auf, um die Partie automatisch durchlaufen zu lassen.
+                \item Es gibt einen Button \texttt{startAutoPlay()}, der startet oder weiter zählt, einen Button \texttt{pauseAutoPlay()}, der stoppt, einen \texttt{resetGame()}-Button, der die Figuren in die Startpositon zurücksetzt und den \texttt{moveCounter} wieder auf Null setzt. 
+            \end{itemize}
+
+        \begin{figure}
+            \centering
+            \includegraphics[width=1\textwidth]{figures/Analyse.png}
+            \caption{Spielanalyse}
+            \label{fig:Analyse}
+        \end{figure}
+
+    \end{itemize}
+\end{itemize}
+
 
 \subsubsection{Struktur}
 Die Website besteht aus mehreren Seiten, wobei jede eine spezifische Funktion erfüllt:
@@ -130,7 +206,6 @@ Wenn man es trotzdem versucht, bekommt man die Fehlermeldungen \\
     \label{fig:gitcloneFalsch}
 \end{figure}
 
-\newpage
 Daher muss mit dem Befehl \\
 \texttt{ssh-keygen -t ed25519 -C "cseidner@tsn.at"} \\
 ein ssh-key-Paar angelegt werden, um Zugriff auf das Repository zu bekommen.
@@ -139,11 +214,12 @@ Nur, wer den privaten Schlüssel besitzt, kann auf das Repository zugreifen. Die
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=1\textwidth]{figures/sshkey.png}
+    \includegraphics[width=0.8\textwidth]{figures/sshkey.png}
     \caption{SSH-Key-Generierung}
     \label{fig:sshkey}
 \end{figure}
 
+\newpage
 Nun kann der key mit dem Befehl \\
 \texttt{cat \string~\string/.ssh/id\_ed25519.pub} \\
 angezeigt werden:
@@ -155,7 +231,6 @@ angezeigt werden:
     \label{fig:sshkey2}
 \end{figure}
 
-\newpage
 Diesen Key fügt man nun in GitHub unter \\
 \texttt{Settings $\rightarrow$ SSH and GPG keys $\rightarrow$ New SSH key} \\
 ein. Dieser ssh-key heißt ssh Server (Debian). 
