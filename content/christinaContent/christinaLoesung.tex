@@ -1,9 +1,7 @@
 \renewcommand{\myauthor}{Christina Seidner}
 
 
-
-\section{Webinterface}
-Da ein Ziel dieser Diplomarbeit die Möglichkeit, bereits gespielte Spiele zu analysieren, ist, braucht es ein Webinterface. Dieses besteht aus drei Komponenten: Website, Datenbank und Server. Alle drei sind eng miteinander verbunden und arbeiten zusammen, um eine reibungslose Benutzererfahrung zu gewährleisten.
+Da ein Ziel dieser Diplomarbeit die Möglichkeit, bereits gespielte Spiele zu analysieren, ist, braucht es ein Webinterface. Dieses besteht aus drei Komponenten: Website (Frontend), Server (Backend) und Datenbank. Alle drei sind eng miteinander verbunden und arbeiten zusammen, um eine reibungslose Benutzererfahrung zu gewährleisten.
 
 \subsection{Entwicklungsumgebung und Software-Architektur}
 Die Website ist die Benutzeroberfläche, über die die Nutzer mit dem System interagieren. Sie bietet Funktionen wie die Anzeige von bereits gespielten Spielen, die Erstellung von neuen Nutzern und das Spielen neuer Spiele. 
@@ -11,11 +9,19 @@ Die Website ist die Benutzeroberfläche, über die die Nutzer mit dem System int
 \subsubsection{Entwicklungs-Tools}
 Für die Entwicklung des Webinterfaces wurden verschiedene Tools und Technologien verwendet. Dazu gehören:
 \begin{itemize}
-    \item Visual Studio Code: Ein leistungsstarker Code-Editor, der die Entwicklung von Webanwendungen erleichtert.
+    \item Visual Studio Code: Dieser Code-Editor wurde für die Entwicklung des Backends und des Frontends verwendet. 
+    \item Nano: Wurde auf dem Server verwendet, um Dateien direkt zu bearbeiten.
+    \item Git: Wurde für die Versionskontrolle und Zusammenarbeit verwendet, um den Code effizient zu verwalten und Änderungen nachzuverfolgen.
     \item Python: Die Hauptprogrammiersprache für die Backend-Entwicklung.
-    \item Flask: Ein leichtgewichtiges Webframework für Python, das die Entwicklung von Webanwendungen erleichtert.
-    \item MySQL: Ein relationales Datenbankmanagementsystem, das zur Speicherung der Spieldaten verwendet wird.
+    \item Flask: Ein leichtgewichtiges Webframework für Python, das gut mit den anderen Komponenten zusammenarbeitet.
+    \item MariaDB: Ein relationales Datenbankmanagementsystem, das zur Speicherung der Spieldaten verwendet wird.
     \item HTML/CSS/JavaScript: Für die Gestaltung und Funktionalität des Frontends.
+\end{itemize}
+
+\subsubsection{Ordnerstruktur}
+\begin{itemize}
+    \item frontend/: Dieser Ordner enthält alle Dateien, die man für die Gestaltung der Website braucht. Dazu gehören die HTML-Dateien (index.html, Benutzereingabe.html, Schachbrett.html, Spielanalyse.html und weiterleitung.html), die CSS-Dateien (styles.css, maincss.css), die JavaScript-Datei (api.js), ico-Datei für das Logo (favicon.ico) und die Bilder (schachbrett.jpg und die Schachfiguren).
+    \item backend/: Dieser Ordner enthält alle Dateien, die im Hintergrund laufen. Das sind die Python-Dateien (__init__.py, backend.py, receive.py und wsgi.py) und die pgn-Dateien für die bereits gespielten Spiele.
 \end{itemize}
 
 \subsubsection{Frontend}
