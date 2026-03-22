@@ -10,7 +10,7 @@ erweitern. Außerdem hat Christoph noch die Aufgabe, die größere 8x8 Matrix zu
 infolgedessen zu bestellen. So bleibt zunächst nur die Möglichkeit, mit der 2x2 Matrix zu arbeiten.\\
 
 \begin{scriptsize}
-\begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {Erstes Beispiel für die Steuerung einer 2x2 Matrix}]
+\begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption={Erstes Beispiel für die Steuerung einer 2x2 Matrix}, label={lst:2x2matrix}]
 pins = {
     "upPower": 17,
     "lowPower": 27,
@@ -50,7 +50,9 @@ while True:
 
 Dieser Code funktioniert so, dass die beiden Reihen der Matrix abwechselnd mit Strom versorgt werden. 
 Wenn eine Reihe mit Strom versorgt wird, und ein Sensor in dieser Reihe einen Magnet erkennt, dann wird 
-dies von diesem Sensor als LOW Signal ausgegeben.
+dies von diesem Sensor als LOW Signal ausgegeben. Hierfür wurde noch die RPi.GPIO \cite{RPi.GPIO} Bibliothek verwendet.\\
+Doch da diese Bibliothek seit dem 02.06.2022 nicht mehr aktualisiert wurde und auch kein SPI beziehungsweise I2C 
+unterstützt, wird stattdessen ab sofort die gpiozero \cite{gpiozero} Bibliothek verwendet. 
 
 Ein Beispiel: Die erste Reihe wird mit Strom versorgt und der Code \glqq hört\grqq{}, ob er auf der linken 
 oder rechte Reihe (Pin 23 oder 24) ein LOW Signal erhält. Wird der Sensor auf das Feld A1 (Pin 23), mithilfe 
@@ -63,6 +65,7 @@ Der Raspberry Pi schaltet dann nicht mehr nur zwischen zwei Reihen, sondern zwis
 Je nachdem, welche Reihe mit Strom versorgt wird, wird überprüft, ob auf einem der acht Sensoren in dieser Reihe ein 
 LOW Signal ausgegeben wird.
 
+CODE FÜR 8x8 MATRIX YALLAH
 
 \subsection{Rotary encoder als Eingabegerät}
 Zur Auswahl des passenden Eingabegeräts, kommen einige Varianten auf:
@@ -440,7 +443,7 @@ geschrieben, welches vorher in der \verb|__init()__| Funktion erstellt wurde. Di
 verwendet, um zu überprüfen, ob eine Figur angehoben wurde oder nicht. 
 
 \begin{scriptsize}
-\begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {Funktion zum Kalibrieren des Schachbretts}]
+\begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption={Funktion zum Kalibrieren des Schachbretts}]
 def calibrateBoard(self):
     for r, row in enumerate(self.rows):
         row.on()
@@ -486,7 +489,7 @@ Partien später auf der Website zu analysieren.
 Dieses Format wird auch von der \verb|python-chess| Bibliothek unterstützt.
 
 \begin{scriptsize}
-\begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {Erstellen der PGN-Header}]
+\begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption={Erstellen der PGN-Header}, label={lst:pgnHeader}]
 # PGN Setup
 self.year = time.strftime("%Y")
 self.month = time.strftime("%m")
@@ -512,14 +515,14 @@ Website analysiert werden können. Die Datenübertragung mit Sockets ist dabei d
 vom Schachbrett zu übertragen.
 Die \verb|socket| Bibliothek von Python hat dabei alle benötigten Funktionen, um dies zu ermöglichen. Die im Anhang 
 befindliche Funktion
-\verb|postGame(self, boardTurn)| in MultiGame.py stellt nach Erkennung eines Schachmatt-Zustands 
-eine Verbindung zum Server her und übermittelt die \verb|.pgn|-Datei. Folgender Ausschnitt aus besagter Funktion zeigt 
-die einzelnen Schitte, welche getätigt werden.
+\verb|postGame(self, boardTurn)| in multigame.py [\ref{lst:multigame} | Z. 162-168] stellt nach Erkennung eines 
+Schachmatt-Zustands eine Verbindung zum Server her und übermittelt die \verb|.pgn|-Datei. Folgender Ausschnitt aus 
+besagter Funktion zeigt die einzelnen Schitte, welche getätigt werden.
 
 \newpage
 
 \begin{scriptsize}
-\begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {Funktion zum Übermitteln der PGN-Datei an den Server}]
+\begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption={Funktion zum Übermitteln der PGN-Datei an den Server}, label={lst:postGameSocket}]
 def postGame(self, boardTurn):
 ...
     self.clientSocket.connect(self.serverAddress)
@@ -533,11 +536,11 @@ def postGame(self, boardTurn):
 \end{scriptsize}
 
 Zu Beginn wird eine Verbindung zum Server hergestellt. \verb|self.serverAddress| ist ein Tupel bestehend aus der 
-IP-Adresse und dem Port des Servers. Sobald die Verbindung hergestellt ist, wird mit\\\verb|with open(self.filename, "rb") as file| die Datei im binären Lesemodus geöffnet. Das ist deshalb wichtig, weil 
-der Socket Bytes sendet. Textmodus \verb|r| alleine würde einen \verb|str| zurückgeben. Mit \verb|data = file.read()| 
-wird der Inhalt der Datei in die Variable \verb|data| geschrieben.\\\verb|self.clientSocket.sendall(data)| sendet nun 
-die Daten über die Socket-Verbindung an den Server. Am Ende wird die Verbindung mit\\\verb|self.clientSocket.close()| 
-wieder geschlossen.
+IP-Adresse und dem Port des Servers. Sobald die Verbindung hergestellt ist, wird mit\\\verb|with open(self.filename, "rb") as file| 
+die Datei im binären Lesemodus geöffnet. Das ist deshalb wichtig, weil der Socket Bytes sendet. Textmodus \verb|r| 
+alleine würde einen \verb|str| zurückgeben. Mit \verb|data = file.read()| wird der Inhalt der Datei in die Variable 
+\verb|data| geschrieben.\\\verb|self.clientSocket.sendall(data)| sendet nun die Daten über die Socket-Verbindung an 
+den Server. Am Ende wird die Verbindung mit\\\verb|self.clientSocket.close()| wieder geschlossen.
 
 
 
