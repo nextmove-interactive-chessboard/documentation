@@ -101,7 +101,7 @@ Umgebung erstellen und aktivieren: \\
 \newpage
 
 \subsection{Realisierung der Benutzeroberfläche}
-Die Benutzeroberfläche der Website wurde mit HTML, CSS und JavaScript gestaltet.
+Die Benutzeroberfläche der Website wurde mit HTML, CSS und JavaScript gestaltet, wobei HTML für die Struktur und den Inhalt der Webseiten, CSS für das Styling und Layout, und JavaScript für die Interaktivität und dynamische Funktionen verwendet werden.
 
 
 \subsubsection{Struktur}
@@ -126,14 +126,13 @@ Die Website besteht aus mehreren Seiten, wobei jede eine spezifische Funktion er
                 \item Ein Menü mit Links zu: Schachbrett.html, Benutzereingabe.html und Spielanalyse.html. Diese Links wurden mit Buttons realisiert. 
                 \item Ein Footer mit einem E-Mail-Kontakt-Link
             \end{itemize}
-        \begin{figure}
+        \begin{figure}[htbp]
             \centering
             \includegraphics[width=1\textwidth]{figures/index.png}
             \caption{Startseite der Website}
             \label{fig:index}
         \end{figure}
 
-        \newpage
         \item \textbf{Benutzereingabe.html:} Diese Seite ermöglicht es den Nutzern, ihre Informationen einzugeben, um ein neues Konto zu erstellen oder sich anzumelden. Sie enthält:
             \begin{itemize}
                 \item Ein Avatar-Div, das die Initialen des Benutzernamens anzeigt 
@@ -198,7 +197,7 @@ Die Website besteht aus mehreren Seiten, wobei jede eine spezifische Funktion er
 
         \begin{figure}
             \centering
-            \includegraphics[width=0.8\textwidth]{figures/Analyse.png}
+            \includegraphics[width=1\textwidth]{figures/Analyse.png}
             \caption{Spielanalyse}
             \label{fig:Analyse}
         \end{figure}
@@ -369,19 +368,19 @@ erstellt\_am TIMESTAMP DEFAULT CURRENT\_TIMESTAMP\\
 );}
 
 
-
+\newpage
 \subsection{Server-Konfiguration}
 
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.7\textwidth]{figures/Debian.png}
+    \includegraphics[width=1\textwidth]{figures/Debian.png}
     \caption{Debian-Server}
     \label{fig:debian}
 \end{figure}
 
 
-\subsubsection{installationen}
+\subsubsection{Installationen}
 \begin{itemize}
     \item flask
     \item flask-cors
@@ -392,9 +391,9 @@ erstellt\_am TIMESTAMP DEFAULT CURRENT\_TIMESTAMP\\
     \item mariadb
 \end{itemize}
 
-\subsubsection{files}
+\subsubsection{Files}
 \begin{itemize}
-    \item backend.py
+    \item backend.py: in \texttt{/home/chse/website/backend}
     \item nginxNextmove: in \texttt{/etc/nginx/sites-enabled/nginxNextmove}
     \item nextmove.service: in \texttt{/etc/systemd/system/nextmove.service}
 \end{itemize}
@@ -414,7 +413,6 @@ erstellt\_am TIMESTAMP DEFAULT CURRENT\_TIMESTAMP\\
 
 
 
-\newpage
 \subsection{Backend-Logik und Socket-Kommunikation}
 Das Backend ist der Teil im Hintergrund der Website, der die Logik und die Funktionalität bereitstellt. Es verarbeitet die Anfragen der Nutzer, kommuniziert mit der Datenbank und stellt die benötigten Informationen bereit. Das Backend ist entscheidend für die Funktionalität der Website und sorgt dafür, dass alles reibungslos funktioniert.
 
@@ -422,53 +420,87 @@ Die Implementierung des Backends erfolgt in Python.
 
 Die Codestruktur sieht wie folgt aus:
 \begin{itemize}
-    \item backend.py: Dies ist die Hauptdatei, die den Server startet und die Routen definiert.
-    \begin{scriptsize}
-    \begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {Backend-Implementierung}]
-        app = Flask(__name__)
-        CORS(app)  
+    \item backend.py: Dies ist die Hauptdatei, die den Server startet und die Routen definiert. 
+    \begin{itemize}
+        \item die Module \texttt{os, socket, logging, threading, mysql.connector, flask und flask\_cors} werden importiert
+        \item Es wird eine Flask-Anwendung mit CORS-Unterstützung erstellt, um Cross-Origin-Anfragen zu erlauben
+        \item Debug-Logging wird für die Fehlerverfolgung konfiguriert
+        \item Die Umgebungsvariablen für \texttt{Host, Benutzer, Passwort und Datenbankname} werden in der Datenbank-Konfiguration implementiert
+        \item Die Funktionen sind:
+        \begin{itemize}
+            \item /save\_game(POST): Diese Funktion nimmt die JSON-Daten (\texttt{user\_id, pgn, gegner, ergebnis}) entgegen, verbindet sich mit der Datenbank und fügt ein neues Spiel in die Tabelle \texttt{spiele} ein. Es wird entweder Erfolg oder Fehler zurückgegeben.
+            \item /get\_games/<int:user\_id>(GET): Diese Funktion holt alle Spiele für einen bestimmten Benutzer aus der Datenbank und gibt sie als JSON zurück. 
+            \item receive\_file(): Die Funktion startet eine TCP-Server auf IP 10.5.5.110, Port 5001 und wartet auf Verbindungen. Sie empfängt Daten und speichert sie in \texttt{received\_game.pgn}. Sie läuft in einer Endlosschleife. 
+            \item in der main-Funktion wird \texttt{receive\_file()} in einem separaten Thread (im Daemon-Modus) gestartet, damit er beim Beenden der App stoppt und die Flask-App wird auf IP 10.5.5.110 am Port 5000 gestartet. 
+            \item im Anhang befindet sich der Code unter \texttt{backend.py}.
+        \end{itemize}
+    \end{itemize}
 
-        db_config = {
-            "host": os.getenv("DB_HOST", "localhost"),
-            "user": os.getenv("DB_USER", "Christina"),
-            "password": os.getenv("DB_PASSWORD", "ChrissiNext"),
-            "database": os.getenv("DB_NAME", "NextMove"),
+    \item \_\_init\_\_.py: Flask sucht gezielt nach dieser Datei, um den root-Pfad zu finden. Sie kann jedoch leer bleiben.
+    \item receive.py: Der Python-Code für die Datenübertragung. Implementiert von Maximilian Koch. 
+    Der Code befindet sich im Anhang unter \texttt{receive.py}.
+    \item wsgi.py: Dieser Code lädt die Flask-App und startet sie mit \texttt{app-run()}, wenn sie direkt ausgeführt wird. Er dient als Wrapper, um die App über WSGI-Server zu deployen, anstatt direkt \texttt{backend.py} zu starten.
+    \begin{scriptsize}
+        \begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {wsgi.py}]
+            from backend import app
+
+            if __name__ == "__main__":
+                app.run()
+        \end{lstlisting}
+    \end{scriptsize}
+    \item nginxNextmove: Hier ist nginx konfiguriert. Der Server lauscht auf Port 80 (http) unter der IP 10.5.5.110. Anfragen an die Hauptseite (/) werden zu den richtigen Ordner auf der Festplatte geleitet (\texttt{/home/chse/website/frontend}), um dort die \texttt{index.html} anzuzeigen. Alle Anfragen, die mit \texttt{/api/} beginnen, werden an das Python-Flask weitergeltiet, das lokal auf Port 5000 läuft. 
+    \newpage
+    \begin{scriptsize}
+        \begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {nginxNextmove}]
+    server {
+        listen 80;
+        server_name 10.5.5.110;
+
+        root /home/chse/website/frontend;
+        index index.html;
+
+        location / {
+            try_files $uri $uri/ =404;
         }
 
-        @app.route('/save_game', methods=['POST'])
-        def save_game():
-            data = request.json  
-                        
-            query = "INSERT INTO spiele (user_id, gegner_name, ergebnis, pgn_daten) VALUES (%s, %s, %s, %s)"
-            cursor.execute(query, (user_id, gegner, ergebnis, pgn))
-            
-            conn.commit()
-
-    
-        @app.route('/get_games/<int:user_id>', methods=['GET'])
-        def get_games(user_id):
-            cursor = conn.cursor(dictionary=True)
-            query = "SELECT * FROM spiele WHERE user_id = %s"
-            cursor.execute(query, (user_id,))
-            games = cursor.fetchall()
-    \end{lstlisting}
+        location /api/ {
+            proxy_pass http://127.0.0.1:5000/;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+        }
+    }
+        \end{lstlisting}
     \end{scriptsize}
-
-    \item wsgi.py: Diese Datei dient als Einstiegspunkt für den WSGI-Server, der die Anwendung bereitstellt.
-    
+    \item nextmove.service: Diese Datei stellt sicher, dass UWSGI und Flask die Daten für die Datenbank finden. 
     \begin{scriptsize}
-    \begin{lstlisting} [style=Python, language=Python, captionpos=b, stepnumber=5, caption = {WSGI-Server-Einstiegspunkt}]
-        from backend import app
+        \begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {nextmove.service}]
+    [Unit]
+    Description=uWSGI instance to serve the Flask nextmove backend
+    After=network.target
 
-        if __name__ == "__main__":
-            app.run()
-    \end{lstlisting}
+    [Service]
+    User=chse
+    Group=www-data
+    WorkingDirectory=/home/chse/website/backend
+
+    Environment="DB_HOST=localhost"
+    Environment="DB_USER=Christina"
+    Environment="DB_PASSWORD=ChrissiNext"
+    Environment="DB_NAME=NextMove"
+    # Der Pfad zum Venv-Bin-Ordner
+    Environment="PATH=/home/chse/venv/bin"
+
+    ExecStart=/home/chse/venv/bin/uwsgi --http 0.0.0.0:5000 --chdir 
+    /home/chse/website/backend --module wsgi:app --master --processes 
+    1 --threads 2 --vacuum
+
+    Restart=always
+
+    [Install]
+    WantedBy=multi-user.target
+        \end{lstlisting}
     \end{scriptsize}
 \end{itemize}
-
-
-
-
 
 
 
