@@ -50,15 +50,17 @@ while True:
 
 Dieser Code funktioniert so, dass die beiden Reihen der Matrix abwechselnd mit Strom versorgt werden. 
 Wenn eine Reihe mit Strom versorgt wird, und ein Sensor in dieser Reihe einen Magnet erkennt, dann wird 
-dies von diesem Sensor als LOW Signal ausgegeben. Hierfür wurde noch die RPi.GPIO \cite{RPi.GPIO} Bibliothek verwendet.\\
-Doch da diese Bibliothek seit dem 02.06.2022 nicht mehr aktualisiert wurde und auch kein SPI beziehungsweise I2C 
-unterstützt, wird stattdessen ab sofort die gpiozero \cite{gpiozero} Bibliothek verwendet. 
+dies von diesem Sensor als LOW Signal ausgegeben.
 
 Ein Beispiel: Die erste Reihe wird mit Strom versorgt und der Code \glqq hört\grqq{}, ob er auf der linken 
 oder rechte Reihe (Pin 23 oder 24) ein LOW Signal erhält. Wird der Sensor auf das Feld A1 (Pin 23), mithilfe 
 eines Magneten, auf LOW gesetzt, wird dies erkannt und \glqq A1 erkannt\grqq{} wird ausgegeben. 
 Dasselbe passiert, wenn der Sensor auf dam Feld A2 (Pin 24) aufgrund eines Magneten auf LOW gesetzt wird, 
 nur dass hier \glqq A2 erkannt\grqq{} ausgegeben wird.
+
+Hierfür wurde noch die RPi.GPIO \cite{RPi.GPIO} Bibliothek verwendet. Doch da diese Bibliothek seit dem 02.06.2022 
+nicht mehr aktualisiert wurde und auch kein SPI beziehungsweise I2C unterstützt, wird stattdessen ab sofort die 
+gpiozero \cite{gpiozero} Bibliothek verwendet. 
 
 Dieses Prinzip kann dann nicht nur für die 2 × 2 Matrix, sondern auch für die finale 8 × 8 Matrix angewendet werden. 
 Der Raspberry Pi schaltet dann nicht mehr nur zwischen zwei Reihen, sondern zwischen acht Reihen um. 
@@ -87,7 +89,6 @@ praktisch.
 	\label{fig:ky040}
 \end{figure}
 
-\newpage
 
 \subsubsection{Funktionsweise eines Rotary encoders}
 Die Art, wie solch ein Inkrementalgeber funktioniert, ist für viele auf den ersten Blick vielleicht nicht 
@@ -121,7 +122,7 @@ den Uhrzeigersinn festgestellt.
 \subsubsection{Code für KY-040}
 Der erste code sollte die Funktionalität sicherstellen und eine Vertrautheit mit dem Bauteil und dessen Handling 
 ermöglichen. Auf der Dokumentationsseite von gpiozero findet sich unter Kapitel 2.21 \glqq Rotary encoder\grqq{} 
-\cite{gpiozero}ein einfaches Beispiel mit einer LED. Auf Basis dieses Beispiels und dem weiteren Lesen der 
+\cite{gpiozero} ein einfaches Beispiel mit einer LED. Auf Basis dieses Beispiels und dem weiteren Lesen der 
 Dokumentation von gpiozero, kann ein einfaches Skript erstellt werden.\\
 
 \begin{scriptsize}
@@ -161,12 +162,12 @@ if __name__ == "__main__":
 \end{lstlisting}
 \end{scriptsize}
 
-Dieses Skript initialisiert unter self.encoder den drehbaren Teil des Encoders. Pin 13 und Pin 19 entsprechen dabei den 
-verwendeten Pins für die jeweiligen Signale A und B. Bei dem KY-040 werden diese Kontake nicht als \glqq A\grqq{} und 
-\glqq B\grqq{} bezeichnet, sondern als \glqq CLK\grqq{} und \glqq DT\grqq{}. Die Funktion bleibt allerdings die 
-gleiche. Wird der Encoder gedreht, so wird die Funktion \verb|.when_rotated| aufgerufen. Diese gibt integerzahlen 
-zurück. Diese werden dann in der Funktion \verb|handle_rotate| über dem print-Statement in der Konsole des Raspberry 
-Pi's ausgegeben.\\
+Dieses Skript initialisiert unter \verb|self.encoder| den drehbaren Teil des Encoders. Pin 13 und Pin 19 entsprechen 
+dabei den verwendeten Pins für die jeweiligen Signale A und B. Bei dem Bauteil KY-040 werden diese Kontake nicht als 
+\glqq A\grqq{} und \glqq B\grqq{} bezeichnet, sondern als \glqq CLK\grqq{} und \glqq DT\grqq{}. Die Funktion bleibt 
+allerdings die gleiche. Wird der Encoder gedreht, so wird die Funktion \verb|.when_rotated| aufgerufen. Diese gibt 
+integerzahlen zurück. Diese werden dann in der Funktion \verb|handle_rotate| über dem print-Statement in der Konsole 
+des Raspberry Pi's ausgegeben.\\
 
 Der Button des Encoders befindet sich auf Pin 16 und ist softwareseitig mit einem Pull-Up Widerstand konfiguriert. 
 Die Option \glqq bounce\char`_time\grqq{} sorgt dafür, dass die Signale des Encoders entprellt werden, damit es nicht 
@@ -257,9 +258,9 @@ hier natürlich noch die Funktionalität des Logins bzw. der Registrierung imple
 Wechsel zum Spielbildschirm erst dann passiert, wenn der Login bzw. die Registrierung erfolgreich ist.
 
 \subsection{Einbindung des Spielererkennung}
-Die erste Idee, welche zur Spielererkennung aufkommt, ist die Einbindung eines Fingerabdrucksensors. Allerdings 
+Die erste Idee, welche zur Spielererkennung aufkam, war die Einbindung eines Fingerabdrucksensors. Allerdings 
 stellt sich aufgrund von Zeitmangel heraus, dass die Einbindung eines solchen Sensors aufgrund der fehlenden 
-Erfahrung mit solch einem Bauteil als zu riskant angesehen wird. Deshalb wird sich für die Einbindung 
+Erfahrung mit solch einem Bauteil als zu riskant angesehen wurde. Deshalb wird sich für die Einbindung 
 eines RFID-Lesegeräts inklusive NFC-Chips entschieden, da die Einbindung eines solchen Bauteils als deutlich 
 einfacher angesehen werden kann.
 
@@ -285,7 +286,10 @@ MIFARE-Karten.
 \newpage
 
 Nach Erhalt des Moduls musste allerdings festgestellt werden, dass das Bauteil defekt 
-geliefert wurde und deshalb nicht verwendet werden kann.
+geliefert wurde und deshalb nicht verwendet werden kann. Das fiel vor allem dann auf, als weder der Versuch mit Python 
+noch der mit C++ zur erfolgreichen Ausgabe eines Signals hatte.
+
+CODE FÜR RFID DIGGAH
 
 
 \subsubsection{RFID-Modul Alternative}
@@ -540,8 +544,10 @@ IP-Adresse und dem Port des Servers. Sobald die Verbindung hergestellt ist, wird
 die Datei im binären Lesemodus geöffnet. Das ist deshalb wichtig, weil der Socket Bytes sendet. Textmodus \verb|r| 
 alleine würde einen \verb|str| zurückgeben. Mit \verb|data = file.read()| wird der Inhalt der Datei in die Variable 
 \verb|data| geschrieben.\\\verb|self.clientSocket.sendall(data)| sendet nun die Daten über die Socket-Verbindung an 
-den Server. Am Ende wird die Verbindung mit\\\verb|self.clientSocket.close()| wieder geschlossen.
+den Server. Am Ende wird die Verbindung mit\\\verb|self.clientSocket.close()| wieder geschlossen. Im Anschluss wird 
+die \verb|.pgn|-Datei gelöscht.
 
-
-
-
+Sollte es vorkommen, dass die Verbinung zum Server nicht hergestellt werden kann — zum Beispiel, wenn das Schachbrett 
+keine Internetverbindung zum Server herstellen kann — so wird nach Beendigung der Partie das aufgenommene Spiel vom 
+internen Speicher des Rapsberry Pi gelöscht. So wird verhindert, dass sich zu viele \verb|.pgn|-Dateien ansammeln.
+Das geschieht in der Funktion \verb|run(self)| [\ref{lst:multigame} | Z. 287] als letztes Statement im \verb|try-except-finally|-Block.
