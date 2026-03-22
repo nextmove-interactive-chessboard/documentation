@@ -17,6 +17,31 @@ Für die Entwicklung des Webinterfaces wurden verschiedene Tools und Technologie
     \item HTML/CSS/JavaScript: Für die Gestaltung und Funktionalität des Frontends.
 \end{itemize}
 
+
+\subsubsection{venv-Modul}
+Auf dem Server wurde für beinahe alle Aktionen das venv-Modul verwendet. Mit diesem Modul können isolierte virtuelle Umgebungen erstellt werden. Dies ist auf dem Debian-Server besonders wichtig, da das System-Python stabil bleiben muss und nicht durch unterschiedliche Projekt-Abhängigkeiten gestört werden sollte. 
+Installation:\\
+\texttt{sudo apt update}\\
+\texttt{sudo apt install python3-venv}\\
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/venv.png}
+    \caption{venv-Installation}
+    \label{fig:venv}
+\end{figure}
+
+Umgebung erstellen und aktivieren: \\
+\texttt{python3 -m venv venv} \\
+\texttt{source venv/bin/activate}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/activate.png}
+    \caption{venv aktivieren}
+    \label{fig:activate}
+\end{figure}
+
+
+\newpage
 \subsubsection{Ordnerstruktur}
 \begin{itemize}
     \item /frontend: Dieser Ordner enthält alle Dateien, die man für die Gestaltung der Website braucht. Dazu gehören:
@@ -78,11 +103,23 @@ Für die Entwicklung des Webinterfaces wurden verschiedene Tools und Technologie
 \subsection{Realisierung der Benutzeroberfläche}
 Die Benutzeroberfläche der Website wurde mit HTML, CSS und JavaScript gestaltet.
 
+
+\subsubsection{Struktur}
+Die Website besteht aus mehreren Seiten, wobei jede eine spezifische Funktion erfüllt:
+\begin{itemize}
+    \item \textbf{index.html:} Die Startseite, die eine Übersicht über die Funktionen der Website bietet.
+    \item \textbf{Benutzereingabe.html:} Hier können Nutzer ihre Informationen eingeben, um ein neues Konto zu erstellen oder sich anzumelden.
+    \item \textbf{schachbrett.html:} Diese Seite zeigt das Schachbrett an, auf dem die Nutzer spielen können. Das Schachbrett wurde selbsständig gestaltet, um eine individuelle und ansprechende Benutzererfahrung zu bieten.
+    \item \textbf{Spielanalyse.html:} Hier können Nutzer bereits gespielte Spiele analysieren und ihre Züge überprüfen.
+    \item \textbf{weiterleitung.html:} Diese Seite dient als Weiterleitung nach bestimmten Aktionen, wie z.B. nach der Anmeldung oder nach dem Speichern eines Spiels.
+\end{itemize}
+
+
 \subsubsection{Technologien}
 \begin{itemize}
     \item Die wichtigsten HTML-Codes erklärt: 
     \begin{itemize}
-        \item index.html: Diese Seite definiert die Startseite der Website. Sie enthält:
+        \item \textbf{index.html:} Diese Seite definiert die Startseite der Website. Sie enthält:
             \begin{itemize}
                 \item Ein Logo-Bild
                 \item Den Titel und Untertitel der Website
@@ -97,7 +134,7 @@ Die Benutzeroberfläche der Website wurde mit HTML, CSS und JavaScript gestaltet
         \end{figure}
 
         \newpage
-        \item Benutzereingabe.html: Diese Seite ermöglicht es den Nutzern, ihre Informationen einzugeben, um ein neues Konto zu erstellen oder sich anzumelden. Sie enthält:
+        \item \textbf{Benutzereingabe.html:} Diese Seite ermöglicht es den Nutzern, ihre Informationen einzugeben, um ein neues Konto zu erstellen oder sich anzumelden. Sie enthält:
             \begin{itemize}
                 \item Ein Avatar-Div, das die Initialen des Benutzernamens anzeigt 
                 \item Ein Input-Feld für die Eingabe des Benutzernamens (maximal 24 Zeichen, ohne Autovervollständigung)
@@ -129,7 +166,7 @@ Die Benutzeroberfläche der Website wurde mit HTML, CSS und JavaScript gestaltet
         \end{figure}
 
         \newpage
-        \item schachbrett.html: Dieser Code zeichnet ein interaktives Schachbrett mit Canvas und erlaubt das Ziehen von Figuren per Klick. Dort gibt es:
+        \item \textbf{schachbrett.html:} Dieser Code zeichnet ein interaktives Schachbrett mit Canvas und erlaubt das Ziehen von Figuren per Klick. Dort gibt es:
             \begin{itemize}
                 \item Alle Schachfiguren als Bilder in einer \texttt{<div style>}-Funktion.
                 \item Ein Canvas-Element \texttt{<canvas>}, auf dem das Spielfeld gezeichnet wird. Es wird ein weißes Rechteck als Hintergrund gezeichnet, das durch Linien am Rand eingegrenzt wird. Weitere Linien teilen das Spielfeld in 8x8 Quadrate auf. Eine horizontale (a-h) und eine vertikale (1-8) Beschriftung wird hinzugefügt. Jedes zweite Feld wird nun eingefärbt, um das typische Schachbrettmuster zu erzeugen.
@@ -149,19 +186,19 @@ Die Benutzeroberfläche der Website wurde mit HTML, CSS und JavaScript gestaltet
 
 
         \newpage
-        \item Spielanalyse.html: Auf dieser Seite können Nutzer bereits gespielte Spiele analysieren und ihre Züge überprüfen. 
+        \item \textbf{Spielanalyse.html:} Auf dieser Seite können Nutzer bereits gespielte Spiele analysieren und ihre Züge überprüfen. 
             \begin{itemize}
-                \item Das Schachbrett wird genauso wie in schachbrett.html gezeichnet und die Schachfiguren werden gleich gezeichnet, allerdings können die Figuren nicht per Klick bewegt werden, sondern werden durch die Funktion \texttt{executeMove(moveNotation)}, die die Position der Figur entsprechend aktualisiert, bewegt.
+                \item Das Schachbrett wird genauso wie in schachbrett.html gezeichnet und die Schachfiguren werden gleich gezeichnet, allerdings können die Figuren nicht per Klick bewegt werden, sondern werden durch die Funktion \\ \texttt{executeMove(moveNotation)}, die die Position der Figur entsprechend aktualisiert, bewegt.
                 \item Es gibt wieder für jede Figur einen Status als Objekt (\texttt{x, y}), aber keine \texttt{selected}-Flags, da es eine Spielanimation ist. 
                 \item Das \texttt{moves}-Array enthält die Notation für die Partie.
                 \item \texttt{executeMove(moveNotation)}: Diese Funktion entscheidet, ob es sich um eine weiße oder eine schwarze Figur handelt, indem der Modulo Null entspricht oder nicht \texttt{\% = 0} oder \texttt{\% != 0}. Die Funktion unterscheidet auch Bauerzug oder Figurzug (mit der Schachnorm für Bauern z.B. e4 und für einen Figurzug z.B. Nf3). Danach wird die passende Figur entsprechend der Notation im PGN-File gewählt und \texttt{animateMovement(piece, fromX, fromY, toX, toY)} aufgerufen, um die Bewegung zu animieren.
-                \item \texttt{animateMovement(piece, fromX, fromY, toX, toY)}: Diese Funktion animiert die Kurvenbewegung (400ms per \texttt{requestAnimationFrame}) und bei Ende erhöht der \texttt{currentMoveIndex}, setzt den \texttt{moveCounter} und ruft gegebenenfalls den nächsten Zug (500ms Timeout) auf, um die Partie automatisch durchlaufen zu lassen.
+                \item \texttt{animateMovement(piece, fromX, fromY, toX, toY)}: Diese Funktion animiert die Kurvenbewegung (400ms per \\ \texttt{requestAnimationFrame}) und bei Ende erhöht der \\ \texttt{currentMoveIndex}, setzt den \texttt{moveCounter} und ruft gegebenenfalls den nächsten Zug (500ms Timeout) auf, um die Partie automatisch durchlaufen zu lassen.
                 \item Es gibt einen Button \texttt{startAutoPlay()}, der startet oder weiter zählt, einen Button \texttt{pauseAutoPlay()}, der stoppt, einen \texttt{resetGame()}-Button, der die Figuren in die Startpositon zurücksetzt und den \texttt{moveCounter} wieder auf Null setzt. 
             \end{itemize}
 
         \begin{figure}
             \centering
-            \includegraphics[width=1\textwidth]{figures/Analyse.png}
+            \includegraphics[width=0.8\textwidth]{figures/Analyse.png}
             \caption{Spielanalyse}
             \label{fig:Analyse}
         \end{figure}
@@ -170,20 +207,11 @@ Die Benutzeroberfläche der Website wurde mit HTML, CSS und JavaScript gestaltet
 \end{itemize}
 
 
-\subsubsection{Struktur}
-Die Website besteht aus mehreren Seiten, wobei jede eine spezifische Funktion erfüllt:
-\begin{itemize}
-    \item index.html: Die Startseite, die eine Übersicht über die Funktionen der Website bietet.
-    \item Benutzereingabe.html: Hier können Nutzer ihre Informationen eingeben, um ein neues Konto zu erstellen oder sich anzumelden.
-    \item schachbrett.html: Diese Seite zeigt das Schachbrett an, auf dem die Nutzer spielen können. Das Schachbrett wurde selbsständig gestaltet, um eine individuelle und ansprechende Benutzererfahrung zu bieten.
-    \item Spielanalyse.html: Hier können Nutzer bereits gespielte Spiele analysieren und ihre Züge überprüfen.
-    \item weiterleitung.html: Diese Seite dient als Weiterleitung nach bestimmten Aktionen, wie z.B. nach der Anmeldung oder nach dem Speichern eines Spiels.
-\end{itemize}
-
+\newpage
 \subsubsection{Der Fluss der Daten}
 Die Daten fließen zwischen dem Frontend und dem Backend über API-Aufrufe.
 Ein Beispiel: \\
-\texttt{Wenn der Nutzer auf schachbrett.html einen Zug macht, registriert ein JavaScript-Event-Listener diese Aktion und bereitet die Daten für den POST-Request an den /save\_game-Endpunkt vor. Der Server empfängt diese Daten, verarbeitet sie und speichert sie in der Datenbank. Sobald die Daten erfolgreich gespeichert wurden, sendet der Server eine Bestätigung zurück an das Frontend, das dann die Benutzeroberfläche entsprechend aktualisiert, um den neuen Spielstand anzuzeigen.}
+\texttt{Wenn der Nutzer auf schachbrett.html einen Zug macht, registriert ein JavaScript-Event-Listener diese Aktion und bereitet die Daten für den POST-Request an den /save\_game-Endpunkt vor. Der Server empfängt diese Daten, verarbeitet sie und speichert sie in der Datenbank. Sobald die Daten erfolgreich gespeichert wurden, \\ sendet der Server eine Bestätigung zurück an das Frontend, das dann die Benutzeroberfläche entsprechend aktualisiert, um den neuen Spielstand anzuzeigen.}
 
 \subsection{Bereitstellungsprozess}
 \subsubsection{Der Ursprung}
@@ -254,7 +282,6 @@ angelegt wurde, müssen noch die Ordnerrechte eingeschränkt werden, damit die s
 \texttt{chmod 600 \string~\string/.ssh/id\_ed25519} \\
 \texttt{chmod 644 \string~\string/.ssh/id\_ed25519.pub}\\
 
-\newpage
 \subsubsection{Deployment}
 Nun kann das Repository mit dem ssh-Link geklont werden. Dieser liegt in GitHub unter \texttt{Code $\rightarrow$ SSH}. \\
 
@@ -265,19 +292,95 @@ Nun kann das Repository mit dem ssh-Link geklont werden. Dieser liegt in GitHub 
     \label{fig:gitcloneRichtig}
 \end{figure}
 
+
+
+
 \subsection{Datenbank-Design und Implementierung}
+\subsubsection{Installation der Datenbank}
+Für die Datenbank-Installation werden zunächst der \texttt{MariaDB-Connector-J} und der \texttt{MariaDB-Connector/C} benötigt. \\
+Den \texttt{MariaDB-Connector-J} klont man von GitHub:
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\textwidth]{figures/connectorJclone.png}
+    \caption{Klonen des J-Connectors}
+    \label{fig:jclone}
+\end{figure}
+
+Der \texttt{MariaDB-Connector/C} wird mit \\
+\texttt{sudo apt install libmariadb3 libmariadb-dev} \\
+installiert.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/cconnector.png}
+    \caption{Installation des C/Connectors}
+    \label{fig:cclone}
+\end{figure}
+
+\newpage
+Letztendlich kann MariaDB richtig installiert werden. \\
+\texttt{pip install mariadb}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/mariadbinstall.png}
+    \caption{Installation von MariaDB}
+    \label{fig:mariadbinstall}
+\end{figure}
+
+\subsubsection{Anmelden bei der Datenbank}
+\texttt{sudo mariadb -u root -p}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/datenbank.png}
+    \caption{Anmeldung bei MariaDB mit dem root-user}
+    \label{fig:datenbank}
+\end{figure}
+
+Um nun sich nicht jedes Mal mit dem root-user anmelden zu müssen, wird ein Standardbenutzer erstellt: \\
+\texttt{CREATE USER 'Christina'@'localhost' IDENTIFIED BY 'ChrissiNext';} \\
+Der User heißt jetzt \textit{"Christina} und das Passwort lautet \textit{"ChrissiNext}.
+
+Nun müssen Rechte an den Benutzer gegeben werden: \\
+\texttt{GRANT ALL PRIVILEGED ON NextMove.* TO 'Christina'@'localhost';}
+
+Schlussendlich kann man sich mit \texttt{mariadb -u Christina -p} und dem Passwort \texttt{ChrissiNext} am User anmelden. 
+
+
+\subsubsection{Database erstellen}
+Wenn ein Standardbenutzer angelegt wurde, kann schon mit der Konfiguration der Datenbank begonnen werden: \\
+\texttt{CREATE DATABASE IF NOT EXISTS NextMove;}
+
+Diese kann man anschauen mit \texttt{show databases;} 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.4\textwidth]{figures/databases.png}
+    \caption{Aufzählung der Databases}
+    \label{fig:databases}
+\end{figure}
+
+
+Zuallerletzt muss noch eine Tabelle erstellt werden: \\
+\texttt{CREATE TABLE spiele( \\
+id NT AUTO\_INCREMENT PRIMARY KEY, \\
+user\_id INT NOT NULL, \\
+gegner\_name VARCHAR(255), \\
+ergebnis VARCHAR(50), \\
+pgn\_daten TEXT, \\
+erstellt\_am TIMESTAMP DEFAULT CURRENT\_TIMESTAMP\\
+);}
+
+
 
 \subsection{Server-Konfiguration}
-
-\subsection{Backend-Logik und Socket-Kommunikation}
-
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/Debian.png}
+    \caption{Debian-Server}
+    \label{fig:debian}
+\end{figure}
 
 
 \newpage
-\subsubsection{Frontend}
-Zum Frontend der Website gehören alle Elemente, die der Nutzer direkt sieht und mit denen er interagiert. Dazu gehören alle visuelle Elemente.
-
-\subsubsection{Backend}
+\subsection{Backend-Logik und Socket-Kommunikation}
 Das Backend ist der Teil im Hintergrund der Website, der die Logik und die Funktionalität bereitstellt. Es verarbeitet die Anfragen der Nutzer, kommuniziert mit der Datenbank und stellt die benötigten Informationen bereit. Das Backend ist entscheidend für die Funktionalität der Website und sorgt dafür, dass alles reibungslos funktioniert.
 
 Die Implementierung des Backends erfolgt in Python. 
@@ -328,16 +431,9 @@ Die Codestruktur sieht wie folgt aus:
     \end{scriptsize}
 \end{itemize}
 
-\subsection{Datenbank}
-Die Datenbank dient als Speicher für alle relevanten Informationen, die vom System verarbeitet werden. Dazu gehören Informationen über die Nutzer, die gespielten Spiele, die Ergebnisse und andere relevante Daten. Die Datenbank ermöglicht es dem Server, schnell auf Anfragen zu reagieren und die benötigten Informationen bereitzustellen.
 
-\subsection{Server}
-Der Server dient als zentrale Steuereinheit, die die Kommunikation zwischen der Website und der Datenbank koordiniert. Er verarbeitet die Anfragen der Nutzer und stellt die entsprechenden Daten aus der Datenbank bereit.
-Verwendet wird hier ein Linux Debian Server der Schule. 
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[angle=90, width=0.8\textwidth]{figures/Debian.PNG}
-    \caption{Debian-Server.}
-    \label{fig:Debian}
-\end{figure}
+
+
+
+
