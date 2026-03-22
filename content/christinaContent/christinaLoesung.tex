@@ -418,6 +418,7 @@ Das Backend ist der Teil im Hintergrund der Website, der die Logik und die Funkt
 
 Die Implementierung des Backends erfolgt in Python. 
 
+\subsubsection{Struktur des Backends}
 Die Codestruktur sieht wie folgt aus:
 \begin{itemize}
     \item backend.py: Dies ist die Hauptdatei, die den Server startet und die Routen definiert. 
@@ -454,7 +455,7 @@ Die Codestruktur sieht wie folgt aus:
         \begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {nginxNextmove}]
     server {
         listen 80;
-        server_name 10.5.5.110;
+        server_name nextmove.htlec.org 10.5.5.110;
 
         root /home/chse/website/frontend;
         index index.html;
@@ -471,7 +472,12 @@ Die Codestruktur sieht wie folgt aus:
     }
         \end{lstlisting}
     \end{scriptsize}
-    \item nextmove.service: Diese Datei stellt sicher, dass UWSGI und Flask die Daten für die Datenbank finden. 
+    \item nextmove.service: Diese Datei stellt sicher, dass UWSGI und Flask die Daten für die Datenbank finden. Das Einloggen startet mit \texttt{After=network.target} automatisch und mit \texttt{Restart=always} wird der Backend-Server sofort neu gestartet, falls er abstürzt. Unter \texttt{Environment} werden die Zugangsdaten für die Datenbank direkt an die App übergeben und der Befehl \texttt{ExecStart} nutzt \texttt{uwsgi}, um die Flask-App auf Port 5000 bereitzustellen. Über den Pfad \texttt{/home/chse/venv/bin} wird sichergestellt, dass die Python-Bibliotheken aus der venv-Umgebung genutzt werden. Dieser Code ist das 'Gegenstück' zu der nginxNextmove-Datei: 
+    \begin{itemize}
+        \item nginxNextmove nimmt Anfragen aus dem Internet an
+        \item Wenn die Anfrage an \texttt{/api/} geht, leitet nginxNextmove sie an 127.0.0.1:5000 weiter.
+        \item nextmove.service sorgt dafür, dass auf Port 5000 die Flask-App via uWSGI durchgehend bereit steht. 
+    \end{itemize}
     \begin{scriptsize}
         \begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {nextmove.service}]
     [Unit]
@@ -502,5 +508,33 @@ Die Codestruktur sieht wie folgt aus:
     \end{scriptsize}
 \end{itemize}
 
+\subsubsection{Überprüfung der Funktionalität}
+Es können fast alle Teile dieses Webinterfaces überprüft werden.
+
+\begin{itemize}
+    \item Die \texttt{nextmove.service}-Datei wird mit \texttt{sudo systemctl status nextmove} überprüft. Ob alles richtig konfiguriert ist, erkennt man durch die Antwort \texttt{Active: active (running)}. Man kann auch erkennen, dass die Service-Datei auf Port 5000 hört. \\
+    $\rightarrow$ \texttt{51393 /home/chse/venv/bin/python3 /home/chse/venv/bin/uwsgi --http 0.0.0.0:5000 --chdir /hom>}
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.8\textwidth]{figures/statusnextmove.png}
+        \caption{Status der nextmove.service-Datei}
+        \label{fig:statusnextmove}
+    \end{figure}
+    \item Die \texttt{nginxNextmove}-Datei wird mit \texttt{sudo systemctl status nginx} überprüft. 
+    \item Mit dem Befehl \texttt{curl -I http://localhost} wird getestet, ob der Server sich selbst antwortet. Wenn ein \texttt{HTTP/1.1 200 OK} zurück kommt, funktioniert Nginx und die Datei \texttt{index.html} wird gefunden. 
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.8\textwidth]{figures/curl.png}
+        \caption{'Curl-Test'}
+        \label{fig:curl}
+    \end{figure}
+    \item Mit \texttt{sudo -u www-data stat /home/chse/website/frontend/index.html} kann überprüft werden, ob der Nginx-user (\texttt{www-data}) die Datei sehen darf. Der Befehl simuliert den Zugriff von Nginx.
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.8\textwidth]{figures/wwwData.png}
+        \caption{User-Berechtigungs-Test}
+        \label{fig:wwwData}
+    \end{figure}
+\end{itemize}
 
 
