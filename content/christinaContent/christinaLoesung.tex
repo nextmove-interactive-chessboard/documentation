@@ -371,12 +371,47 @@ erstellt\_am TIMESTAMP DEFAULT CURRENT\_TIMESTAMP\\
 
 
 \subsection{Server-Konfiguration}
+
+
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.8\textwidth]{figures/Debian.png}
+    \includegraphics[width=0.7\textwidth]{figures/Debian.png}
     \caption{Debian-Server}
     \label{fig:debian}
 \end{figure}
+
+
+\subsubsection{installationen}
+\begin{itemize}
+    \item flask
+    \item flask-cors
+    \item nginx
+    \item git
+    \item mysql-connector-python
+    \item bcrypt
+    \item mariadb
+\end{itemize}
+
+\subsubsection{files}
+\begin{itemize}
+    \item backend.py
+    \item nginxNextmove: in \texttt{/etc/nginx/sites-enabled/nginxNextmove}
+    \item nextmove.service: in \texttt{/etc/systemd/system/nextmove.service}
+\end{itemize}
+
+\subsubsection{Befehle}
+\begin{itemize}
+    \item Ordnerstruktur nachschauen: \texttt{ls -R /home/chse/website}
+    \item Speicherbedarf eines Ordners anschauen: \texttt{du -sh /home/chse/website}
+    \item Gewichte der Ordner und files anschauen: \texttt{du -sh /home/chse/website/*}
+    \item wobei du = disk usage, -s = summary und -h = human readable (in lesbaren Einheiten wie MB oder GB angeben)
+    \item anschauen, wie viel Speicherplatz noch frei ist: \texttt{df -h}
+    \item schauen, ob nginx Leserechte hat: \\ \texttt{ls -ld /home/chse/website/frontend} $\rightarrow$ Wenn \texttt{drwxr-xr-x} da steht, hat nginx Leserechte
+    \item den Daemon neu laden: \texttt{sudo systemctl daemon-reload}
+    \item den service neu starten: \texttt{sudo systemctl restart nextmove}
+    \item den Status prüfen: \texttt{sudo systemctl status nextmove} $\rightarrow$ wenn \texttt{active (running)} da steht, läuft das backend stabil im Hintergrund
+\end{itemize}
+
 
 
 \newpage
