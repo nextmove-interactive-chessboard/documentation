@@ -2,6 +2,20 @@
 
 \graphicspath{{figures/}}
 \renewcommand{\myauthor}{Maximilian Koch}
+\lstset{ % General setup for the package
+    language=Python,
+    style=Python,
+    numbers=left,
+     numberstyle=\tiny,
+    frame=tblr,
+    tabsize=4,
+    columns=fixed,
+    showstringspaces=true,
+    showtabs=false,
+    keepspaces,
+    captionpos=b,
+}
+
 
 \subsection{Steuerung einer 2x2 Matrix}
 Es wurde nicht direkt damit begonnen, die komplette Steuerung der finalen 8x8 Matrix zu programmieren, 
@@ -10,7 +24,7 @@ erweitern. Außerdem hat Christoph noch die Aufgabe, die größere 8x8 Matrix zu
 infolgedessen zu bestellen. So bleibt zunächst nur die Möglichkeit, mit der 2x2 Matrix zu arbeiten.\\
 
 \begin{scriptsize}
-\begin{lstlisting}[style=Python, language=Python, captionpos=b, caption={Erstes Beispiel für die Steuerung einer 2x2 Matrix}, label={lst:2x2matrix}]
+\begin{lstlisting}[caption={Erstes Beispiel für die Steuerung einer 2x2 Matrix}, label={lst:2x2matrix}]
 pins = {
     "upPower": 17,
     "lowPower": 27,
@@ -154,7 +168,7 @@ class Encoder:
     def handle_button(self):
         print("Button released")
 
-	
+
 if __name__ == "__main__":
     encoder = Encoder()
     encoder.done.wait()
