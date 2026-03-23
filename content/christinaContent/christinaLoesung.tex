@@ -449,8 +449,8 @@ Die Codestruktur sieht wie folgt aus:
                 app.run()
         \end{lstlisting}
     \end{scriptsize}
-    \item nginxNextmove: Hier ist nginx konfiguriert. Der Server lauscht auf Port 80 (http) unter der IP 10.5.5.110. Anfragen an die Hauptseite (/) werden zu den richtigen Ordner auf der Festplatte geleitet (\texttt{/home/chse/website/frontend}), um dort die \texttt{index.html} anzuzeigen. Alle Anfragen, die mit \texttt{/api/} beginnen, werden an das Python-Flask weitergeltiet, das lokal auf Port 5000 läuft. 
-    \newpage
+    \item nginxNextmove: Hier ist nginx konfiguriert. Der Server lauscht auf Port 80 (http) unter der IP 10.5.5.110. Anfragen an die Hauptseite (/) werden zu den richtigen Ordner auf der Festplatte geleitet (\texttt{/home/chse/website/frontend}), um dort die \texttt{index.html} anzuzeigen. Alle Anfragen, die mit \texttt{/api/} beginnen, werden an das Python-Flask weitergeleitet. 
+
     \begin{scriptsize}
         \begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {nginxNextmove}]
     server {
