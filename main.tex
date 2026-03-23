@@ -121,31 +121,33 @@
 
 
 %% HIER DIE EIGENEN KAPITEL EINFÜGEN
-\input{content/einleitung}  
+\input{content/einleitung}
 \newpage
-\input{content/Loesungsidee}% Einfach auskommentieren für die tatsächliche Arbeit
+
+
+\input{content/Loesungsidee}
 \newpage
+
+
 \input{content/Loesung}
 \newpage
-\newpage
 
-%%\input{content/latex_beispiele} 
-%% \input{content/mathematik}
-%%\appendix  %% closes main document, appendix follows until end; only available in book-classes
 
-%%addpart*{Appendix}             %% adding Appendix to tableofcontents
-
-%%\chapter{Appendix}
-\renewcommand{\myauthor}{Maximilian Koch\\Christoph Schwaninger\\Christina Seidner}  %% Autoren. Bitte mit \\ Trennen wenn mehrere
 \input{content/danksagung}
+\newpage
 
 \listoftables
-\listoffigures
+\addcontentsline{toc}{chapter}{Tabellenverzeichnis}
 \newpage
+\listoffigures
+\addcontentsline{toc}{chapter}{Abbildungsverzeichnis}
+\newpage
+\lstlistoflistings
+\addcontentsline{toc}{chapter}{Listingsverzeichnis}
+
 \input{content/Anhang}
 \newpage
 \renewcommand{\myauthor}{Maximilian Koch\\Christoph Schwaninger\\Christina Seidner}
-\lstlistoflistings
 \nocite{*} %Es werden auch nicht referenzierte Literaturstellen aufgelistet
 \bibliography{references}
 
