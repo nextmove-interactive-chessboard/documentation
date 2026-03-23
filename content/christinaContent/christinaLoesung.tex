@@ -371,6 +371,8 @@ erstellt\_am TIMESTAMP DEFAULT CURRENT\_TIMESTAMP\\
 \newpage
 \subsection{Server-Konfiguration}
 
+Auf den Server kommt man im Schulnetz mit \texttt{ssh chse@10.5.5.110} mit dem Passwort \texttt{Nextmove1}. 
+
 
 \begin{figure}[htbp]
     \centering
@@ -438,8 +440,6 @@ Die Codestruktur sieht wie folgt aus:
     \end{itemize}
 
     \item \_\_init\_\_.py: Flask sucht gezielt nach dieser Datei, um den root-Pfad zu finden. Sie kann jedoch leer bleiben.
-    \item receive.py: Der Python-Code für die Datenübertragung. Implementiert von Maximilian Koch. 
-    Der Code befindet sich im Anhang unter \texttt{receive.py}.
     \item wsgi.py: Dieser Code lädt die Flask-App und startet sie mit \texttt{app-run()}, wenn sie direkt ausgeführt wird. Er dient als Wrapper, um die App über WSGI-Server zu deployen, anstatt direkt \texttt{backend.py} zu starten.
     \begin{scriptsize}
         \begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {wsgi.py}]
@@ -481,29 +481,28 @@ Die Codestruktur sieht wie folgt aus:
     \begin{scriptsize}
         \begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {nextmove.service}]
     [Unit]
-    Description=uWSGI instance to serve the Flask nextmove backend
-    After=network.target
+Description=A uWSGI instance to serve the Flask nextmove backend
+After=network.target
 
-    [Service]
-    User=chse
-    Group=www-data
-    WorkingDirectory=/home/chse/website/backend
+[Service]
+User=chse
+Group=www-data
+WorkingDirectory=/home/chse/website/backend
 
-    Environment="DB_HOST=localhost"
-    Environment="DB_USER=Christina"
-    Environment="DB_PASSWORD=ChrissiNext"
-    Environment="DB_NAME=NextMove"
-    # Der Pfad zum Venv-Bin-Ordner
-    Environment="PATH=/home/chse/venv/bin"
+# Deine Datenbank-Geheimnisse m  ssen hier auch rein!
+Environment="DB_HOST=localhost"
+Environment="DB_USER=Christina"
+Environment="DB_PASSWORD=ChrissiNext"
+Environment="DB_NAME=NextMove"
+Environment="PATH=/home/chse/venv/bin"
 
-    ExecStart=/home/chse/venv/bin/uwsgi --http 0.0.0.0:5000 --chdir 
-    /home/chse/website/backend --module wsgi:app --master --processes 
-    1 --threads 2 --vacuum
+# Hier ist der komplette Befehl ohne K  rzungen:
+ExecStart=/home/chse/venv/bin/uwsgi --http 0.0.0.0:5000 --chdir /home/chse/website/backend --module wsgi:app --master ->
 
-    Restart=always
+Restart=always
 
-    [Install]
-    WantedBy=multi-user.target
+[Install]
+WantedBy=multi-user.target
         \end{lstlisting}
     \end{scriptsize}
 \end{itemize}
