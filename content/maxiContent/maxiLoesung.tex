@@ -90,7 +90,7 @@ Zur Auswahl des passenden Eingabegeräts, kommen einige Varianten auf:
 	\item Über einen Rotary encoder, wie er zum Beispiel in Autos verbaut ist
 \end{itemize}
 
-Die schlussendliche Wahl fällt dann auf den Rotary Encoder, da er eine gute Mischung aus Modernität und Funktionalität 
+Die schlussendliche Wahl fiel dann auf den Rotary Encoder, da er eine gute Mischung aus Modernität und Funktionalität 
 bietet. Bei dem Modell, welches im Schachbrett verbaut wird, handelt es sich um den KY-040. Dieser ist der mit unter 
 am weitesten verbreitete seiner Art und die Einbindung mit dem Raspberry Pi 5 ist dank der gpiozero Bibliothek auch 
 praktisch.
@@ -180,7 +180,7 @@ dabei den verwendeten Pins für die jeweiligen Signale A und B. Bei dem Bauteil 
 \glqq A\grqq{} und \glqq B\grqq{} bezeichnet, sondern als \glqq CLK\grqq{} und \glqq DT\grqq{}. Die Funktion bleibt 
 allerdings die gleiche. Wird der Encoder gedreht, so wird die Funktion \verb|.when_rotated| aufgerufen. Diese gibt 
 integerzahlen zurück. Diese werden dann in der Funktion \verb|handle_rotate| über dem print-Statement in der Konsole 
-des Raspberry Pi's ausgegeben.\\
+des Raspberry Pi ausgegeben.\\
 
 Der Button des Encoders befindet sich auf Pin 16 und ist softwareseitig mit einem Pull-Up Widerstand konfiguriert. 
 Die Option \glqq bounce\char`_time\grqq{} sorgt dafür, dass die Signale des Encoders entprellt werden, damit es nicht 
@@ -198,7 +198,7 @@ aufgerufene Funktion \verb|handle_button| die Ausgabe \glqq Button released\grqq
 \newpage
 Die Ausgabe zeigt, dass der Encoder korrekt funktioniert. Dreht man ihn gegen den Uhrzeigersinn, so werden 
 die Zahlen kleiner. Wird er in die entgegengesetzte Richtung gedreht, werden die Zahlen größer.
-Am Ende wird nur der Button geklickt. Dieser Output wird mit \glqq Button released\grqq{} angezeigt. 
+Am Ende wird nur der Button gedrückt gehalten. Dieser Output wird mit \glqq Button released\grqq{} angezeigt. 
 Es ist zu beachten, dass die Ausgabe der Schritte in diesem Beispiel nur von 0 bis 100 geht, da im Code
 die Option \glqq max\char`_steps\grqq{} auf 100 gesetzt wurde. Ohne diese Option würde die Ausgabe von 
 - inf bis +inf gehen, da sich der Encoder unendlich drehen lässt. Welche Option hier objektiv besser ist, hängt von 
@@ -209,7 +209,7 @@ Ein benutzerfreundliches Menü, welches zu Beginn des einschaltens erscheint, is
 Spielerlebnis. Eine erste Überlegung, wie die Struktur dieses Spielmenüs aussehen soll, ist wie folgt 
 aufgebaut:
 Wird das Schachbrett gestartet, wird auf einem Display, welches sich auf dem Schachbrett befindet, 
-angezeigt, dass sich der Benutzer zwischen \glqq Offlinespiel\grqq{} oder \glqq Onlinespiel\grqq{} 
+angezeigt, dass sich der Benutzer zwischen \glqq Einzelspiel\grqq{} oder \glqq Mehrspieler\grqq{} 
 entscheiden kann.
 
 
