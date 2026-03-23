@@ -516,21 +516,6 @@ class MultiGame:
                 self.boardScanCycle()
                 time.sleep(0.01)
             self.returnToMenu()
-        
-        except KeyboardInterrupt:
-            try:
-                self.clientSocket.connect(self.serverAddress)
-
-                with open(self.filename, "rb") as file:
-                    data = file.read()
-                    self.clientSocket.sendall(data)
-
-                self.clientSocket.close()
-            except:
-                pass
-
-            self.pixels.fill(self.colorOff)
-            self.pixels.show()
 
         finally:
             self.returnToMenu()
@@ -858,11 +843,6 @@ class COMGame:
 
                 time.sleep(0.01)
 
-        except KeyboardInterrupt:
-            self.pixels.fill(self.colorOff)
-            self.pixels.show()
-            self.engine.quit()
-
         finally:
             self.pixels.fill(self.colorOff)
             self.pixels.show()
@@ -972,5 +952,123 @@ class Login():
             else:
                 draw.text((x, y), str(digit), fill="white")
 
+\end{lstlisting}
+\end{scriptsize}
+
+\subsection{8x8.py}
+\begin{scriptsize}
+\begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption={8x8.py}, label={lst:8x8}]
+import time
+import board
+import neopixel
+from gpiozero import DigitalOutputDevice, DigitalInputDevice
+
+# Pin fuer NeoPixels D18 == GPIO18
+pixel_pin = board.D18
+num_pixels = 64
+
+# LED-Strip initialize
+pixels = neopixel.NeoPixel(pixel_pin, num_pixels, brightness=0.2, auto_write=False)
+
+# Matrix Pins (BCM)
+row_pins_bcm = [4, 17, 27, 22, 0, 5, 6, 26]    # Werden geschalten
+col_pins_bcm = [14, 15, 23, 24, 20, 21, 7, 1]   # Verarbeiten Signale
+tiles = ["H", "G", "F", "E", "D", "C", "B", "A"]
+Zeilenzahl = 0
+
+squares = {
+  "A8": 0,  "B8": 1,  "C8": 2,  "D8": 3,  "E8": 4,  "F8": 5,  "G8": 6,  "H8": 7,
+  "A7": 15, "B7": 14, "C7": 13, "D7": 12, "E7": 11, "F7": 10, "G7": 9,  "H7": 8,
+  "A6": 16, "B6": 17, "C6": 18, "D6": 19, "E6": 20, "F6": 21, "G6": 22, "H6": 23,
+  "A5": 31, "B5": 30, "C5": 29, "D5": 28, "E5": 27, "F5": 26, "G5": 25, "H5": 24,
+  "A4": 32, "B4": 33, "C4": 34, "D4": 35, "E4": 36, "F4": 37, "G4": 38, "H4": 39,
+  "A3": 47, "B3": 46, "C3": 45, "D3": 44, "E3": 43, "F3": 42, "G3": 41, "H3": 40,
+  "A2": 48, "B2": 49, "C2": 50, "D2": 51, "E2": 52, "F2": 53, "G2": 54, "H2": 55,
+  "A1": 63, "B1": 62, "C1": 61, "D1": 60, "E1": 59, "F1": 58, "G1": 57, "H1": 56
+}
+
+Figures = {
+  "A1": "R", "B1": "N", "C1": "B", "D1": "Q", "E1": "K", "F1": "B", "G1": "N", "H1": "R",
+  "A2": "a2", "B2": "B2", "C2": "C2", "D2": "D2", "E2": "E2", "F2": "F2", "G2": "G2", "H2": "H2", #Weiss
+
+  "A7": "A7", "B7": "B7", "C7": "C7", "D7": "D7", "E7": "E7", "F7": "F7", "G7": "G7", "H7": "H7",
+  "A8": "R", "B8": "N", "C8": "B", "D8": "Q", "E8": "K", "F8": "B", "G8": "N", "H8": "R" #Schwarz
+}
+
+
+# Setup Rows
+rows = []
+for pin in row_pins_bcm:
+    row = DigitalOutputDevice(pin, active_high=True, initial_value=False)
+    rows.append(row)
+
+# Setup Cols
+cols = []
+for pin in col_pins_bcm:
+    # pull_up=True means internal pull-up resistor enabled
+    col = DigitalInputDevice(pin, pull_up=True)
+    cols.append(col)
+
+
+def first_scan(Zeilenzahl, pixels):
+    for r, row_device in enumerate(rows):
+        row_device.on()
+
+        # MOSFET-Ladezeit / Entprellzeit
+        time.sleep(0.002)
+        Zeilenzahl = Zeilenzahl + 1
+
+        print(r, row_device)
+
+        for c, col_device in enumerate(cols):
+            if col_device.value:
+                print(f"Sensor auf {tiles[c]}{Zeilenzahl} erkannt")
+                ZNeu = tiles[c]+str(Zeilenzahl)
+                print(tiles[c])
+                print(Zeilenzahl)
+
+                pixels[squares[ZNeu]] = (255, 255, 255)
+                pixels.show()
+                time.sleep(0.3)
+
+        row_device.off()
+        pixels.fill((0, 0, 0))
+        pixels.show()
+
+
+def scan_matrix(Zeilenzahl, pixels):
+    Zeilenzahl = 0
+    for r, row_device in enumerate(rows):
+        row_device.on()
+
+        # MOSFET-Ladezeit / Entprellzeit
+        time.sleep(0.002)
+        Zeilenzahl = Zeilenzahl + 1
+
+        for c, col_device in enumerate(cols):
+            if col_device.value:
+                ZNeu = tiles[c]+str(Zeilenzahl)
+                print(ZNeu)
+
+                pixels[squares[ZNeu]] = (255, 255, 255)
+                pixels.show()
+        row_device.off()
+
+
+first_scan(Zeilenzahl, pixels)
+
+try:
+    while True:
+        scan_matrix(Zeilenzahl, pixels)
+        time.sleep(0.5)
+except KeyboardInterrupt:
+    print("\nProgramm beendet")
+finally:
+    for r in rows:
+        r.close()
+    for c in cols:
+        c.close()
+pixels.fill((0,0,0))
+pixels.show()
 \end{lstlisting}
 \end{scriptsize}
