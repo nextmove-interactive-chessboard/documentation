@@ -18,8 +18,10 @@
 \subsection{oopmenu.py}
 \begin{scriptsize}
 \begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {oopmenu.py}, label={lst:oopmenu}]
+#!/usr/bin/env python3
 import time
 import threading
+from enum import IntEnum
 
 import board
 import neopixel
@@ -29,14 +31,24 @@ from luma.core.interface.serial import i2c
 from gpiozero import RotaryEncoder, Button, DigitalOutputDevice, DigitalInputDevice
 
 from login import Login
-from ComGame import COMGame
-from MultiGame import MultiGame
+from comgame import COMGame
+from multigame import MultiGame
 
 
+class MenuState(IntEnum):
+    splash = 0
+    loginDefault = 1
+    loginAccount = 2
+    registerAccount = 3
+    mainMenu = 4
+    diffSelect = 5
+    gameScreen = 6
+
+ 
 class Menu:
     def __init__(self):
         self.comDiff = 1
-        self.menuState = 0
+        self.menuState = MenuState.splash
         self.selectedIndex = 0
         self.splashStart = time.monotonic()
 
@@ -96,61 +108,48 @@ class Menu:
 
     def handle_rotate(self):
         match self.menuState:
-            case 0:  # Splash Screen
-                pass
-            case 1:  # Login screen
-                if self.encoder.steps % 2 == 0:
-                    self.selectedIndex = 0  # Login
-                elif self.encoder.steps % 2 == 1:
-                    self.selectedIndex = 1  # Register
-            case 2:  # Login to account
+            case MenuState.loginDefault:
+                self.selectedIndex = self.encoder.steps % 2
+            case MenuState.loginAccount:
                 self.login.handle_rotate(self.encoder.steps)
-            case 3:  # Register an account
+            case MenuState.registerAccount:
                 self.login.handle_rotate(self.encoder.steps)
-            case 4:  # Main menu
-                if self.encoder.steps % 2 == 0:
-                    self.selectedIndex = 0  # Singleplayer
-                elif self.encoder.steps % 2 == 1:
-                    self.selectedIndex = 1  # Multiplayer
-            case 5:  # COM difficulty selection
-                if self.encoder.steps % 3 == 0:
-                    self.comDiff = 1  # Easy
-                elif self.encoder.steps % 3 == 1:
-                    self.comDiff = 2  # Medium
-                elif self.encoder.steps % 3 == 2:
-                    self.comDiff = 3  # Hard
-            case 6:  # Game Screen
+            case MenuState.mainMenu:
+                self.selectedIndex = self.encoder.steps % 2
+            case MenuState.diffSelect:
+                self.comDiff = self.encoder.steps % 3 + 1
+            case _:
                 pass
 
     def handle_button(self):
         if not Button.was_held:
             match self.menuState:
-                case 0:  # Splash Screen
-                    pass
-                case 1:  # Login screen
+                case MenuState.loginDefault:
                     if self.selectedIndex == 0:
-                        self.login.reset_state(self.encoder.steps)
-                        self.menuState = 2  # Go to login to account screen
+                        self.login.reset_state(self.encoder.steps)#
+                        # Go to login to account screen
+                        self.menuState = MenuState.loginAccount
                     elif self.selectedIndex == 1:
                         self.login.reset_state(self.encoder.steps)
-                        self.menuState = 3  # Go to register screen
-                case 2:  # Login to account
+                        # Go to register screen
+                        self.menuState = MenuState.registerAccount
+                case MenuState.loginAccount:
                     if self.login.handle_button():
                         if self.login.verify_password():
                             time.sleep(1)
-                            self.menuState = 4  # Go to main menu
+                            self.menuState = MenuState.mainMenu
                         else:
                             self.login.reset_state(self.encoder.steps)
-                case 3:  # Register an account
+                case MenuState.registerAccount:
                     if self.login.handle_button():
                         self.login.save_password()
                         time.sleep(1)
-                        self.menuState = 4  # Go to main menu
-                case 4:  # Main menu
+                        self.menuState = MenuState.mainMenu
+                case MenuState.mainMenu:
                     if self.selectedIndex == 0:
-                        self.menuState = 5  # Go to COM Difficulty Selection
+                        self.menuState = MenuState.diffSelect
                     elif self.selectedIndex == 1:
-                        self.menuState = 6  # Start Multiplayer Game
+                        self.menuState = MenuState.gameScreen
                         userCode = "".join(map(str, self.login.digits))
                         self.MultiGame = MultiGame(
                                                    encoder=self.encoder,
@@ -163,9 +162,9 @@ class Menu:
                                                    userCode=userCode)
                         self.draw_menu()
                         self.MultiGame.run()
-                        self.menuState = 4
+                        self.menuState = MenuState.mainMenu
                         self.selectedIndex = 0
-                case 5:  # COM Difficulty Selection
+                case MenuState.diffSelect:
                     self.ComGame = COMGame(
                                            comDiff=self.comDiff,
                                            encoder=self.encoder,
@@ -175,76 +174,76 @@ class Menu:
                                            tiles=self.tiles,
                                            squares=self.squares,
                                            pixels=self.pixels)
-                    self.menuState = 6
+                    self.menuState = MenuState.gameScreen
                     self.draw_menu()
                     self.ComGame.run()
-                    self.menuState = 4
+                    self.menuState = MenuState.mainMenu
                     self.selectedIndex = 0
-        Button.was_held = False  # Reset state after button press
+                case _:
+                    pass
+        Button.was_held = False
 
     def stop_script(self):
         Button.was_held = True
         if Button.was_held and self.menuState in [1, 2, 3]:
-            self.menuState = 1  # Return to login screen
+            self.menuState = MenuState.loginDefault
         else:
-            self.menuState = 4  # Return to Main Menu
+            self.menuState = MenuState.mainMenu
             self.selectedIndex = 0
             time.sleep(0.5)  # Debounce delay
 
     def draw_menu(self):
         with canvas(self.device) as draw:
             match self.menuState:
-                case 0:  # Splash Screen
-                    draw.text((35, 25), "Nextmove", fill="white")
-                    draw.rectangle(self.device.bounding_box,
-                                    outline="white")
-                    if time.monotonic() - self.splashStart >= 2:
-                        self.menuState = 1  # Go to login screen
-                case 1:  # Login screen
+                case MenuState.loginDefault:
                     options = ["Login", "Register"]
                     draw.text((40, 0), "-- Login --", fill="white")
                     for i, option in enumerate(options):
                         if i == self.selectedIndex:
                             draw.text((20, 15 + i * 15),
-                                        "> " + option,
-                                        fill="white")
+                                      "> " + option,
+                                      fill="white")
                         else:
                             draw.text((20, 15 + i * 15),
-                                        option,
-                                        fill="white")
-                case 2:  # Login to account
+                                      option,
+                                      fill="white")
+                case MenuState.loginAccount:
                     self.login.draw_login(draw)
-                case 3:  # Register an account
+                case MenuState.registerAccount:
                     self.login.draw_register(draw)
-                case 4:  # Main menu
+                case MenuState.mainMenu:
                     options = ["Einzelspieler", "Mehrspieler"]
                     draw.text((40, 0), "-- Home --", fill="white")
                     for i, option in enumerate(options):
                         if i == self.selectedIndex:
-                            draw.text(
-                                (20, 20 + i * 15),
-                                "> " + option,
-                                fill="white")
+                            draw.text((20, 20 + i * 15),
+                                      "> " + option,
+                                      fill="white")
                         else:
-                            draw.text(
-                                (20, 20 + i * 15),
-                                option,
-                                fill="white")
-                case 5:  # COM Difficulty Selection
+                            draw.text((20, 20 + i * 15),
+                                      option,
+                                      fill="white")
+                case MenuState.diffSelect:
                     options = ["Leicht", "Mittel", "Schwer"]
                     draw.text((8, 0), "-- COM Schwierigkeit --",
-                                fill="white")
+                              fill="white")
                     for i, option in enumerate(options):
                         if i == self.comDiff - 1:
                             draw.text((20, 15 + i * 15),
-                                        "> " + option,
-                                        fill="white")
+                                      "> " + option,
+                                      fill="white")
                         else:
                             draw.text((20, 15 + i * 15),
-                                        option,
-                                        fill="white")
-                case 6:  # Game Screen
+                                      option,
+                                      fill="white")
+                case MenuState.gameScreen:
                     draw.text((29, 0), "-- Game On --", fill="white")
+                case _:
+                    draw.text((35, 25), "Nextmove", fill="white")
+                    draw.rectangle(self.device.bounding_box,
+                                   outline="white")
+                    if time.monotonic() - self.splashStart >= 2:
+                        self.menuState = MenuState.loginDefault
 
 
 if __name__ == "__main__":
