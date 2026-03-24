@@ -100,7 +100,7 @@ Umgebung erstellen und aktivieren: \\
 
 \newpage
 
-\subsection{Realisierung der Benutzeroberfläche}
+\subsection{Realisierung der Benutzeroberfläche}\cite{W3Schools}
 Die Benutzeroberfläche der Website wurde mit HTML, CSS und JavaScript gestaltet, wobei HTML für die Struktur und den Inhalt der Webseiten, CSS für das Styling und Layout, und JavaScript für die Interaktivität und dynamische Funktionen verwendet werden.
 
 
@@ -119,7 +119,7 @@ Die Website besteht aus mehreren Seiten, wobei jede eine spezifische Funktion er
 \begin{itemize}
     \item Die wichtigsten HTML-Codes erklärt: 
     \begin{itemize}
-        \item \textbf{index.html:} Diese Seite definiert die Startseite der Website. Sie enthält:
+        \item \textbf{index.html:} [\ref{lst:index}Diese Seite definiert die Startseite der Website. Sie enthält:
             \begin{itemize}
                 \item Ein Logo-Bild
                 \item Den Titel und Untertitel der Website
@@ -296,7 +296,7 @@ Nun kann das Repository mit dem ssh-Link geklont werden. Dieser liegt in GitHub 
 
 \subsection{Datenbank-Design und Implementierung}
 \subsubsection{Installation der Datenbank}
-Für die Datenbank-Installation werden zunächst der \texttt{MariaDB-Connector-J} und der \texttt{MariaDB-Connector/C} benötigt. \\
+Für die Datenbank-Installation werden zunächst der \texttt{MariaDB-Connector-J} und der \texttt{MariaDB-Connector/C} benötigt \cite{MariaDB}. \\
 Den \texttt{MariaDB-Connector-J} klont man von GitHub:
 \begin{figure}[htbp]
     \centering
@@ -423,7 +423,7 @@ Die Implementierung des Backends erfolgt in Python.
 \subsubsection{Struktur des Backends}
 Die Codestruktur sieht wie folgt aus:
 \begin{itemize}
-    \item backend.py: Dies ist die Hauptdatei, die den Server startet und die Routen definiert. 
+    \item backend.py: [\ref{lst:backend} Dies ist die Hauptdatei, die den Server startet und die Routen definiert. 
     \begin{itemize}
         \item die Module \texttt{os, socket, logging, threading, mysql.connector, flask und flask\_cors} werden importiert
         \item Es wird eine Flask-Anwendung mit CORS-Unterstützung erstellt, um Cross-Origin-Anfragen zu erlauben
@@ -449,7 +449,7 @@ Die Codestruktur sieht wie folgt aus:
                 app.run()
         \end{lstlisting}
     \end{scriptsize}
-    \item nginxNextmove: Hier ist nginx konfiguriert. Der Server lauscht auf Port 80 (http) unter der IP 10.5.5.110. Anfragen an die Hauptseite (/) werden zu den richtigen Ordner auf der Festplatte geleitet (\texttt{/home/chse/website/frontend}), um dort die \texttt{index.html} anzuzeigen. Alle Anfragen, die mit \texttt{/api/} beginnen, werden an das Python-Flask weitergeleitet. 
+    \item nginxNextmove: Hier ist nginx konfiguriert. Der Server lauscht auf Port 80 (http) unter der IP 10.5.5.110. Anfragen an die Hauptseite (/) werden zu den richtigen Ordner auf der Festplatte geleitet (\texttt{/home/chse/website/frontend}), um dort die \texttt{index.html} anzuzeigen \cite{NginxGuide}. Alle Anfragen, die mit \texttt{/api/} beginnen, werden an das Python-Flask weitergeleitet. 
 
     \begin{scriptsize}
         \begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {nginxNextmove}]
@@ -472,7 +472,7 @@ Die Codestruktur sieht wie folgt aus:
     }
         \end{lstlisting}
     \end{scriptsize}
-    \item nextmove.service: Diese Datei stellt sicher, dass UWSGI und Flask die Daten für die Datenbank finden. Das Einloggen startet mit \texttt{After=network.target} automatisch und mit \texttt{Restart=always} wird der Backend-Server sofort neu gestartet, falls er abstürzt. Unter \texttt{Environment} werden die Zugangsdaten für die Datenbank direkt an die App übergeben und der Befehl \texttt{ExecStart} nutzt \texttt{uwsgi}, um die Flask-App auf Port 5000 bereitzustellen. Über den Pfad \texttt{/home/chse/venv/bin} wird sichergestellt, dass die Python-Bibliotheken aus der venv-Umgebung genutzt werden. Dieser Code ist das 'Gegenstück' zu der nginxNextmove-Datei: 
+    \item nextmove.service: Diese Datei stellt sicher, dass UWSGI und Flask die Daten für die Datenbank finden \cite{uWSGI}. Das Einloggen startet mit \texttt{After=network.target} automatisch und mit \texttt{Restart=always} wird der Backend-Server sofort neu gestartet, falls er abstürzt. Unter \texttt{Environment} werden die Zugangsdaten für die Datenbank direkt an die App übergeben und der Befehl \texttt{ExecStart} nutzt \texttt{uwsgi}, um die Flask-App auf Port 5000 bereitzustellen. Über den Pfad \texttt{/home/chse/venv/bin} wird sichergestellt, dass die Python-Bibliotheken aus der venv-Umgebung genutzt werden. Dieser Code ist das 'Gegenstück' zu der nginxNextmove-Datei: 
     \begin{itemize}
         \item nginxNextmove nimmt Anfragen aus dem Internet an
         \item Wenn die Anfrage an \texttt{/api/} geht, leitet nginxNextmove sie an 127.0.0.1:5000 weiter.
