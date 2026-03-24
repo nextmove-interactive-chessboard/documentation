@@ -357,7 +357,7 @@ Registrierungsoptionen als ersten Schritt zeigt.
 Ein Problem, welches noch immer auftritt, ist, dass die Auswahl zwischen den Computerschwierigkeitsstufen noch nicht 
 optimal funktioniert. Bis jetzt sieht das Kriterium, wie der Code den aktuell ausgewählten Schwierigkeitsgrad erkennt, 
 so aus, dass nur die Zahlen 1, 2 und 3 als gültige Werte für die Variable \verb|comDiff| erkannt werden. 
-Diese Herangehensweise ist nicht optimal, viel zu ungenau und kann deshalb in dieser Art nicht verwendet werden.
+Diese Herangehensweise ist nicht optimal, viel zu ungenau und kann deshalb in dieser Art nicht verwendet werden.\\
 
 \begin{scriptsize}
 \begin{lstlisting}[captionpos=b, caption = {Problematischer Code für die Auswahl der Computerschwierigkeitsstufe}]
@@ -375,7 +375,7 @@ Die Lösung für dieses Problem ist es, die Auswahl der Schwierigkeitsstufe ähn
 und Mehrspieler zu gestalten. Hier kommt der Modulo Operator von Python zum Einsatz, welcher den Rest einer Division 
 zurückgibt. In diesem Fall wird die Anzahl der Schritte des Encoders aber nicht durch 2, sondern durch 3 geteilt, da 
 es drei Schwierigkeitsstufen gibt. Die Ausgabe des Modulo Operators kann dann nur die Werte 0, 1 und 2 annehmen, welche 
-dann jeweils einer Schwierigkeitsstufe zugeordnet werden können.
+dann jeweils einer Schwierigkeitsstufe zugeordnet werden können.\\
 
 \begin{scriptsize}
 \begin{lstlisting}[captionpos=b, caption = {Verbesserter Code für die Auswahl der Computerschwierigkeitsstufe}]
@@ -413,7 +413,7 @@ jeweils für das Schalten und Lesen der Sensoren auf den Feldern zuständig sind
 Direkt nach der Auswahl der Schwierigkeitsstufe über das Menü wird die Stockfish Engine mit der entsprechenden 
 Schwierigkeitsstufe konfiguriert. \verb|self.engine.configure| ist die Funktion, welche die Konfiguration der Engine 
 ermöglicht. Hier wird die Option \verb|Skill Level| verwendet, welche die Schwierigkeit der Engine einstellt. 
-Die Werte für diese Option reichen von 0 bis 20, wobei 0 die einfachste und 20 die schwierigste Einstellung ist.
+Die Werte für diese Option reichen von 0 bis 20, wobei 0 die einfachste und 20 die schwierigste Einstellung ist.\\
 
 \begin{scriptsize}
 \begin{lstlisting}[captionpos=b, caption = {Anfängliche Verarbeitung der Auswahl der Computerschwierigkeitsstufe}]
@@ -436,7 +436,7 @@ menschliche Fehler spielen, wenn das Level niedrig ist.
 Nachdem dies erledigt ist, werden die Pins für die Matrix konfiguriert. Es werden acht Pins für die Reihen als 
 \verb|DigitalOutputDevices| verwendet. Diese Pins sind für das Schalten der Reihen zuständig. Die restlichen acht 
 Pins sind für die Spalten als \verb|DigitalInputDevices| geschalten. Sie dienen dem Lesen der Sensoren. Wird an einem 
-Sensor ein Magnet erkannt, so wird von diesem Pin ein LOW Signal ausgegeben.
+Sensor ein Magnet erkannt, so wird von diesem Pin ein LOW Signal ausgegeben.\\
 
 \begin{scriptsize}
 \begin{lstlisting}[captionpos=b, caption = {Setzen von Schalte- und Lesepins für die Matrix}]
@@ -462,7 +462,7 @@ aktuellen Zustand des Schachbretts einmal komplett einzulesen und als Grundlage 
 Sie schaltet eine Reihe nach der anderen ein und überprüft dabei eine Spalte nach der anderen, ob ein LOW Signal 
 ausgegeben wird. Wenn dies der Fall ist, dann werden die entsprechenden Felder in das Dictionary \verb|previousSensor| 
 geschrieben, welches vorher in der \verb|__init()__| Funktion erstellt wurde. Dieses Dictionary wird später dazu 
-verwendet, um zu überprüfen, ob eine Figur angehoben wurde oder nicht. 
+verwendet, um zu überprüfen, ob eine Figur angehoben wurde oder nicht.\\
 
 \begin{scriptsize}
 \begin{lstlisting}[captionpos=b, caption={Funktion zum Kalibrieren des Schachbretts}]
@@ -482,7 +482,7 @@ def calibrateBoard(self):
 \end{lstlisting}
 \end{scriptsize}
 
-Ein kleiner Ausschnitt aus dem dadurch erstellten Dictionary sieht wie folgt aus:
+Ein kleiner Ausschnitt aus dem dadurch erstellten Dictionary sieht wie folgt aus:\\
 
 \begin{scriptsize}
 \begin{lstlisting}[captionpos=b, caption={Ausschnitt aus dem Dictionary}]
@@ -508,7 +508,7 @@ hat. Die Züge an sich werden in verkürzter algebraischer Notation aufgezeichne
 verwendet. \cite{PortableGameNotation} Mit der standartisierten Aufzeichnung von Schachpartien im \verb|.pgn|-Format wird es ermöglicht, die 
 Partien später auf der Website zu analysieren.
 
-Dieses Format wird auch von der \verb|python-chess| Bibliothek unterstützt.
+Dieses Format wird auch von der \verb|python-chess| Bibliothek unterstützt.\\
 
 \begin{scriptsize}
 \begin{lstlisting}[captionpos=b, caption={Erstellen der PGN-Header}, label={lst:pgnHeader}]
@@ -539,9 +539,7 @@ Die \verb|socket| Bibliothek von Python hat dabei alle benötigten Funktionen, u
 befindliche Funktion
 \verb|postGame(self, boardTurn)| in multigame.py [\ref{lst:multigame} | Z. 162-168] stellt nach Erkennung eines 
 Schachmatt-Zustands eine Verbindung zum Server her und übermittelt die \verb|.pgn|-Datei. Folgender Ausschnitt aus 
-besagter Funktion zeigt die einzelnen Schitte, welche getätigt werden.
-
-\newpage
+besagter Funktion zeigt die einzelnen Schitte, welche getätigt werden.\\
 
 \begin{scriptsize}
 \begin{lstlisting}[captionpos=b, caption={Funktion zum Übermitteln der PGN-Datei an den Server}, label={lst:postGameSocket}]
