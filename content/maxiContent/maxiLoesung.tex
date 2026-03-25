@@ -205,7 +205,7 @@ die Option \glqq max\char`_steps\grqq{} auf 100 gesetzt wurde. Ohne diese Option
 der individuellen Verwendung ab und kann nicht pauschal beantwortet werden.
 
 \subsection{Entwicklung eines Menüs}
-Ein benutzerfreundliches Menü, welches zu Beginn des einschaltens erscheint, ist essenziell für ein gutes 
+Ein benutzerfreundliches Menü, welches zu Beginn des Einschaltens erscheint, ist essenziell für ein gutes 
 Spielerlebnis. Eine erste Überlegung, wie die Struktur dieses Spielmenüs aussehen soll, ist wie folgt 
 aufgebaut:
 Wird das Schachbrett gestartet, wird auf einem Display, welches sich auf dem Schachbrett befindet, 
@@ -213,7 +213,7 @@ angezeigt, dass sich der Benutzer zwischen \glqq Einzelspiel\grqq{} oder \glqq M
 entscheiden kann.
 
 
-\subsubsection{Das Einzelspiel}
+\subsubsection{Das Einzelspiel}\label{sec:DasEinzelspiel}
 Wird ersteres gewählt, so erscheint ein Untermenü. Hier kann man die Schwierigkeitsstufe des Schachcomputers einstellen. 
 Die Wahl besteht zwischen drei Stufen: Leicht, Mittel und Schwer. Die Stufen unterscheiden sich davon, wie lange sich 
 der Schachcomputer Zeit lässt, um einen optimalen Zug zu berechnen. Je länger er sich Zeit lässt, desto stärker ist er, 
@@ -225,7 +225,7 @@ wieder automatisch zum Hauptmenü zurück, damit der Nutzer die Möglichkeit hat
 \subsubsection{Der Mehrspieler}
 Wird sich anstelle des Einzelspiels für den Mehrspieler entschieden, erscheint ein Untermenü, in dem der 
 Benutzer aufgefordert wird, sich entweder einzulogen oder einen neuen Account zu registrieren. Ersteres 
-geht davon aus, dass der Benutzer schon über ein Bentzerkonto verfügt und deshalb nur noch den NFC-Chip 
+geht davon aus, dass der Benutzer schon über ein Benutzerkonto verfügt und deshalb nur noch den NFC-Chip 
 an das Lesegerät auf dem Schachbrett legen soll, damit der Spieler in der Datenbank verglichen werden kann. 
 Kann kein bereits bestehender Nutzer dem NFC-Chip zugeordnet werden, so wird der Nutzer infolgedessen 
 aufgefordert, sich zu registrieren. Beim Registrieren wird ein neuer Eintrag in der Datenbank erstellt, 
@@ -498,7 +498,7 @@ elif self.comDiff == 3:
 
 Anstelle von \verb|Skill Level| wäre es stattdessen möglich, die Suchtiefe der Engine mit der Option 
 \verb|depth={belieb. Zahl}| und der Rechenzeit\\ \verb|time={belieb. Zahl}| wie in der ersten Version unter 
-Kapitel 3.2.3.1  QUERVEREWIS einzustellen. Das macht Stockfish zwar schwächer, weil er weniger in die Zukunft rechnet, 
+Kapitel \ref{sec:DasEinzelspiel} einzustellen. Das macht Stockfish zwar schwächer, weil er weniger in die Zukunft rechnet, 
 doch übersieht dadurch aber auch oft keine offensichtlichen Fehler. Deshalb kann er trotz wenig Zeit und Tiefe, 
 selbst auf leichtester Stufe zu schwer wirken. Die Einstellung über \verb|Skill Level| lässt Stockfish absichtlich 
 menschliche Fehler spielen, wenn das Level niedrig ist.
@@ -531,7 +531,7 @@ Die erste Funktion in der Klasse \verb|COMGame| ist die Funktion \verb|calibrate
 aktuellen Zustand des Schachbretts einmal komplett einzulesen und als Grundlage für spätere Überprüfungen zu verwenden. 
 Sie schaltet eine Reihe nach der anderen ein und überprüft dabei eine Spalte nach der anderen, ob ein LOW Signal 
 ausgegeben wird. Wenn dies der Fall ist, dann werden die entsprechenden Felder in das Dictionary \verb|previousSensor| 
-geschrieben, welches vorher in der \verb|__init()__| Funktion erstellt wurde. Dieses Dictionary wird später dazu 
+geschrieben, welches vorher in der \verb|__init__()| Funktion erstellt wurde. Dieses Dictionary wird später dazu 
 verwendet, um zu überprüfen, ob eine Figur angehoben wurde oder nicht.\\
 
 \begin{scriptsize}
@@ -633,7 +633,7 @@ alleine würde einen \verb|str| zurückgeben. Mit \verb|data = file.read()| wird
 den Server. Am Ende wird die Verbindung mit\\\verb|self.clientSocket.close()| wieder geschlossen. Im Anschluss wird 
 die \verb|.pgn|-Datei gelöscht.
 
-Sollte es vorkommen, dass die Verbinung zum Server nicht hergestellt werden kann — zum Beispiel, wenn das Schachbrett 
+Sollte es vorkommen, dass die Verbindung zum Server nicht hergestellt werden kann — zum Beispiel, wenn das Schachbrett 
 keine Internetverbindung zum Server herstellen kann — so wird nach Beendigung der Partie das aufgenommene Spiel vom 
-internen Speicher des Rapsberry Pi gelöscht. So wird verhindert, dass sich zu viele \verb|.pgn|-Dateien ansammeln.
+internen Speicher des Raspberry Pi gelöscht. So wird verhindert, dass sich zu viele \verb|.pgn|-Dateien ansammeln.
 Das geschieht in der Funktion \verb|run(self)| [\ref{lst:multigame} | Z. 287] als letztes Statement im \verb|try-except-finally|-Block.
