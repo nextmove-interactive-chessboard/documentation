@@ -1,6 +1,6 @@
 \renewcommand{\myauthor}{Christina Seidner}
 
-Da ein Ziel dieser Diplomarbeit die Möglichkeit, bereits gespielte Spiele zu analysieren, ist, braucht es ein Webinterface. Dieses besteht aus drei Komponenten: Website (Frontend), Server (Backend) und Datenbank. Alle drei sind eng miteinander verbunden und arbeiten zusammen, um eine reibungslose Benutzererfahrung zu gewährleisten.
+Da ein Ziel dieser Diplomarbeit die Möglichkeit ist, bereits gespielte Spiele zu analysieren, wird ein Webinterface benötigt. Dieses besteht aus drei Komponenten: Website (Frontend), Server (Backend) und Datenbank. Alle drei sind eng miteinander verbunden und arbeiten zusammen, um eine reibungslose Benutzererfahrung zu gewährleisten.
 
 \subsection{Entwicklungsumgebung und Software-Architektur}
 Die Website ist die Benutzeroberfläche, über die die Nutzer mit dem System interagieren. Sie bietet Funktionen wie die Anzeige von bereits gespielten Spielen, die Erstellung von neuen Nutzern und das Spielen neuer Spiele. 
@@ -151,9 +151,9 @@ Die Website besteht aus mehreren Seiten, wobei jede eine spezifische Funktion er
                     \item \texttt{initialsFrom(name)}: Gibt den ersten Buchstaben des Namens als Initiale zurück (oder '-' bei leerem Namen).
                     \item \texttt{updateAvatar(name)}: Aktualisiert das Avatar-Div mit den Initialen.
                     \item \texttt{showToast(msg)}: Zeigt eine Toast-Nachricht für 1,5 Sekunden an.
-                    \item \texttt{saveName()}: Diese Funktion entfernt alle unsicheren oder unerwünschten Inhalte, der eingegebene Name wird in \texttt{localStorage} gespeichert, das Avatar wird aktualisiert, eine Erfolgsmeldung wird angezeigt und der Nutzer wird zur Weiterleitung weitergeleitet. Danach sendet sie eine POST-Anfrage an \texttt{http://chse:5000/register} mit dem Benutzernamen als JSON.
+                    \item \texttt{saveName()}: Diese Funktion entfernt alle unsicheren oder unerwünschten Inhalte, der eingegebene Name wird in \texttt{localStorage} gespeichert, das Avatar wird aktualisiert, eine Erfolgsmeldung wird angezeigt und der Nutzer wird zur Weiterleitung weitergeleitet. Danach sendet sie eine POST-Anfrage an \texttt{http://username:5000/register} mit dem Benutzernamen als JSON.
                     \item \texttt{register\_user()} ruft die Funktion \texttt{saveName()} auf, um die Funktionalität zu trennen.
-                    \item Ein Even-Listener für die Eingabe mittels Enter-Taste, der die Funktion \texttt{saveName()} ausführt.
+                    \item Ein Event-Listener für die Eingabe mittels Enter-Taste, der die Funktion \texttt{saveName()} ausführt.
                 \end{itemize}
             \end{itemize}
 
@@ -335,13 +335,13 @@ Letztendlich kann MariaDB richtig installiert werden. \\
 \end{figure}
 
 Um nun sich nicht jedes Mal mit dem root-user anmelden zu müssen, wird ein Standardbenutzer erstellt: \\
-\texttt{CREATE USER 'Christina'@'localhost' IDENTIFIED BY 'ChrissiNext';} \\
-Der User heißt jetzt \textit{"Christina} und das Passwort lautet \textit{"ChrissiNext}.
+\texttt{CREATE USER 'username'@'localhost' IDENTIFIED BY 'BeispielPasswort';} \\
+Der User heißt jetzt \textit{"username} und das Passwort lautet \textit{"BeispielPasswort}. Diese Daten sind hierbei nur Beispiele und werden nicht wirklich verwendet.
 
 Nun müssen Rechte an den Benutzer gegeben werden: \\
-\texttt{GRANT ALL PRIVILEGED ON NextMove.* TO 'Christina'@'localhost';}
+\texttt{GRANT ALL PRIVILEGES ON NextMove.* TO 'username'@'localhost';}
 
-Schlussendlich kann man sich mit \texttt{mariadb -u Christina -p} und dem Passwort \texttt{ChrissiNext} am User anmelden. 
+Schlussendlich kann man sich mit \texttt{mariadb -u username -p} und dem vergebenen Passwort am User anmelden. 
 
 
 \subsubsection{Database erstellen}
@@ -359,7 +359,7 @@ Diese kann man anschauen mit \texttt{show databases;}
 
 Zuallerletzt muss noch eine Tabelle erstellt werden: \\
 \texttt{CREATE TABLE spiele( \\
-id NT AUTO\_INCREMENT PRIMARY KEY, \\
+id INT AUTO\_INCREMENT PRIMARY KEY, \\
 user\_id INT NOT NULL, \\
 gegner\_name VARCHAR(255), \\
 ergebnis VARCHAR(50), \\
@@ -371,7 +371,7 @@ erstellt\_am TIMESTAMP DEFAULT CURRENT\_TIMESTAMP\\
 \newpage
 \subsection{Server-Konfiguration}
 
-Auf den Server kommt man im Schulnetz mit \texttt{ssh chse@10.5.5.110} mit dem Passwort \texttt{Nextmove1}. 
+Auf den Server kommt man im Schulnetz mit \texttt{ssh username@10.10.10.100} mit dem Passwort \texttt{BeispielPasswort}. Benutzername, Passwort und IP-Adresse sind hierbei nur Beispiele und werden nicht wirklich verwendet.  
 
 
 \begin{figure}[htbp]
@@ -395,19 +395,19 @@ Auf den Server kommt man im Schulnetz mit \texttt{ssh chse@10.5.5.110} mit dem P
 
 \subsubsection{Files}
 \begin{itemize}
-    \item backend.py: in \texttt{/home/chse/website/backend}
+    \item backend.py: in \texttt{/home/username/website/backend}
     \item nginxNextmove: in \texttt{/etc/nginx/sites-enabled/nginxNextmove}
     \item nextmove.service: in \texttt{/etc/systemd/system/nextmove.service}
 \end{itemize}
 
 \subsubsection{Befehle}
 \begin{itemize}
-    \item Ordnerstruktur nachschauen: \texttt{ls -R /home/chse/website}
-    \item Speicherbedarf eines Ordners anschauen: \texttt{du -sh /home/chse/website}
-    \item Gewichte der Ordner und files anschauen: \texttt{du -sh /home/chse/website/*}
+    \item Ordnerstruktur nachschauen: \texttt{ls -R /home/username/website}
+    \item Speicherbedarf eines Ordners anschauen: \texttt{du -sh /home/username/website}
+    \item Gewichte der Ordner und files anschauen: \texttt{du -sh /home/username/website/*}
     \item wobei du = disk usage, -s = summary und -h = human readable (in lesbaren Einheiten wie MB oder GB angeben)
     \item anschauen, wie viel Speicherplatz noch frei ist: \texttt{df -h}
-    \item schauen, ob nginx Leserechte hat: \\ \texttt{ls -ld /home/chse/website/frontend} $\rightarrow$ Wenn \texttt{drwxr-xr-x} da steht, hat nginx Leserechte
+    \item schauen, ob nginx Leserechte hat: \\ \texttt{ls -ld /home/username/website/frontend} $\rightarrow$ Wenn \texttt{drwxr-xr-x} da steht, hat nginx Leserechte
     \item den Daemon neu laden: \texttt{sudo systemctl daemon-reload}
     \item den service neu starten: \texttt{sudo systemctl restart nextmove}
     \item den Status prüfen: \texttt{sudo systemctl status nextmove} $\rightarrow$ wenn \texttt{active (running)} da steht, läuft das backend stabil im Hintergrund
@@ -433,8 +433,8 @@ Die Codestruktur sieht wie folgt aus:
         \begin{itemize}
             \item /save\_game(POST): Diese Funktion nimmt die JSON-Daten (\texttt{user\_id, pgn, gegner, ergebnis}) entgegen, verbindet sich mit der Datenbank und fügt ein neues Spiel in die Tabelle \texttt{spiele} ein. Es wird entweder Erfolg oder Fehler zurückgegeben.
             \item /get\_games/<int:user\_id>(GET): Diese Funktion holt alle Spiele für einen bestimmten Benutzer aus der Datenbank und gibt sie als JSON zurück. 
-            \item receive\_file(): Die Funktion startet eine TCP-Server auf IP 10.5.5.110, Port 5001 und wartet auf Verbindungen. Sie empfängt Daten und speichert sie in \texttt{received\_game.pgn}. Sie läuft in einer Endlosschleife. 
-            \item in der main-Funktion wird \texttt{receive\_file()} in einem separaten Thread (im Daemon-Modus) gestartet, damit er beim Beenden der App stoppt und die Flask-App wird auf IP 10.5.5.110 am Port 5000 gestartet. 
+            \item receive\_file(): Die Funktion startet eine TCP-Server auf IP 10.10.10.100, Port 5001 und wartet auf Verbindungen. Sie empfängt Daten und speichert sie in \texttt{received\_game.pgn}. Sie läuft in einer Endlosschleife. 
+            \item in der main-Funktion wird \texttt{receive\_file()} in einem separaten Thread (im Daemon-Modus) gestartet, damit er beim Beenden der App stoppt und die Flask-App wird auf IP 10.10.10.100 am Port 5000 gestartet. 
             \item im Anhang befindet sich der Code unter \texttt{backend.py}.
         \end{itemize}
     \end{itemize}
@@ -449,15 +449,15 @@ Die Codestruktur sieht wie folgt aus:
                 app.run()
         \end{lstlisting}
     \end{scriptsize}
-    \item nginxNextmove: Hier ist nginx konfiguriert. Der Server lauscht auf Port 80 (http) unter der IP 10.5.5.110. Anfragen an die Hauptseite (/) werden zu den richtigen Ordner auf der Festplatte geleitet (\texttt{/home/chse/website/frontend}), um dort die \texttt{index.html} anzuzeigen \cite{NginxGuide}. Alle Anfragen, die mit \texttt{/api/} beginnen, werden an das Python-Flask weitergeleitet. 
+    \item nginxNextmove: Hier ist nginx konfiguriert. Der Server lauscht auf Port 80 (http) unter der IP 10.10.10.100. Anfragen an die Hauptseite (/) werden zu den richtigen Ordner auf der Festplatte geleitet (\texttt{/home/username/website/frontend}), um dort die \texttt{index.html} anzuzeigen \cite{NginxGuide}. Alle Anfragen, die mit \texttt{/api/} beginnen, werden an das Python-Flask weitergeleitet. 
 
     \begin{scriptsize}
         \begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {nginxNextmove}]
     server {
         listen 80;
-        server_name nextmove.htlec.org 10.5.5.110;
+        server_name nextmove.htlec.org 10.10.10.100;
 
-        root /home/chse/website/frontend;
+        root /home/username/website/frontend;
         index index.html;
 
         location / {
@@ -472,7 +472,7 @@ Die Codestruktur sieht wie folgt aus:
     }
         \end{lstlisting}
     \end{scriptsize}
-    \item nextmove.service: Diese Datei stellt sicher, dass UWSGI und Flask die Daten für die Datenbank finden \cite{uWSGI}. Das Einloggen startet mit \texttt{After=network.target} automatisch und mit \texttt{Restart=always} wird der Backend-Server sofort neu gestartet, falls er abstürzt. Unter \texttt{Environment} werden die Zugangsdaten für die Datenbank direkt an die App übergeben und der Befehl \texttt{ExecStart} nutzt \texttt{uwsgi}, um die Flask-App auf Port 5000 bereitzustellen. Über den Pfad \texttt{/home/chse/venv/bin} wird sichergestellt, dass die Python-Bibliotheken aus der venv-Umgebung genutzt werden. Dieser Code ist das 'Gegenstück' zu der nginxNextmove-Datei: 
+    \item nextmove.service: Diese Datei stellt sicher, dass UWSGI und Flask die Daten für die Datenbank finden \cite{uWSGI}. Das Einloggen startet mit \texttt{After=network.target} automatisch und mit \texttt{Restart=always} wird der Backend-Server sofort neu gestartet, falls er abstürzt. Unter \texttt{Environment} werden die Zugangsdaten für die Datenbank direkt an die App übergeben und der Befehl \texttt{ExecStart} nutzt \texttt{uwsgi}, um die Flask-App auf Port 5000 bereitzustellen. Über den Pfad \texttt{/home/username/venv/bin} wird sichergestellt, dass die Python-Bibliotheken aus der venv-Umgebung genutzt werden. Dieser Code ist das 'Gegenstück' zu der nginxNextmove-Datei: 
     \begin{itemize}
         \item nginxNextmove nimmt Anfragen aus dem Internet an
         \item Wenn die Anfrage an \texttt{/api/} geht, leitet nginxNextmove sie an 127.0.0.1:5000 weiter.
@@ -485,19 +485,19 @@ Description=A uWSGI instance to serve the Flask nextmove backend
 After=network.target
 
 [Service]
-User=chse
+User=username
 Group=www-data
-WorkingDirectory=/home/chse/website/backend
+WorkingDirectory=/home/username/website/backend
 
 # Deine Datenbank-Geheimnisse m  ssen hier auch rein!
 Environment="DB_HOST=localhost"
-Environment="DB_USER=Christina"
-Environment="DB_PASSWORD=ChrissiNext"
+Environment="DB_USER=username"
+Environment="DB_PASSWORD=BeispielPasswort"
 Environment="DB_NAME=NextMove"
-Environment="PATH=/home/chse/venv/bin"
+Environment="PATH=/home/username/venv/bin"
 
 # Hier ist der komplette Befehl ohne K  rzungen:
-ExecStart=/home/chse/venv/bin/uwsgi --http 0.0.0.0:5000 --chdir /home/chse/website/backend --module wsgi:app --master ->
+ExecStart=/home/username/venv/bin/uwsgi --http 0.0.0.0:5000 --chdir /home/username/website/backend --module wsgi:app --master ->
 
 Restart=always
 
@@ -512,7 +512,7 @@ Es können fast alle Teile dieses Webinterfaces überprüft werden.
 
 \begin{itemize}
     \item Die \texttt{nextmove.service}-Datei wird mit \texttt{sudo systemctl status nextmove} überprüft. Ob alles richtig konfiguriert ist, erkennt man durch die Antwort \texttt{Active: active (running)}. Man kann auch erkennen, dass die Service-Datei auf Port 5000 hört. \\
-    $\rightarrow$ \texttt{51393 /home/chse/venv/bin/python3 /home/chse/venv/bin/uwsgi --http 0.0.0.0:5000 --chdir /hom>}
+    $\rightarrow$ \texttt{51393 /home/username/venv/bin/python3 /home/username/venv/bin/uwsgi --http 0.0.0.0:5000 --chdir /hom>}
     \begin{figure}[htbp]
         \centering
         \includegraphics[width=0.8\textwidth]{figures/statusnextmove.png}
@@ -527,7 +527,7 @@ Es können fast alle Teile dieses Webinterfaces überprüft werden.
         \caption{'Curl-Test'}
         \label{fig:curl}
     \end{figure}
-    \item Mit \texttt{sudo -u www-data stat /home/chse/website/frontend/index.html} kann überprüft werden, ob der Nginx-user (\texttt{www-data}) die Datei sehen darf. Der Befehl simuliert den Zugriff von Nginx.
+    \item Mit \texttt{sudo -u www-data stat /home/username/website/frontend/index.html} kann überprüft werden, ob der Nginx-user (\texttt{www-data}) die Datei sehen darf. Der Befehl simuliert den Zugriff von Nginx.
     \begin{figure}[htbp]
         \centering
         \includegraphics[width=0.8\textwidth]{figures/wwwData.png}
