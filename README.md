@@ -1,45 +1,74 @@
-## Latex Template für Diplomarbeiten an der HTL Anichstraße
+# Nextmove | interactive chessboard
 
-### Überblick über die Dateien und Verzeichnisse
-```
-├── content
-│   ├── abstract.tex            Hier kommen das deutsche und englische Abstract rein
-│   ├── einleitung.tex          Grundsätzliches zur gesamten Arbeit, auch indiv. Aufteilung der Arbeiten
-│   └── latex_beispiele.tex     Grundsätzliche Latex-Funktionalität wird hier gezeigt 
-├── figures
-│   ├── bsp.png
-│   ├── htl-logo2.png
-│   └── htl-logo.png
-├── main.tex                    Hier läuft alles zusammen. Dort ist auch Thema, Betreuer, Abteilung, Jahr usw. einzutragen
-├── references.bib              Alle Zitate befinden sich hier. In latex_beispiele wird gezeigt wie man diese einbindet
-├── sourcecode
-│   └── First.java
-├── template
-│   ├── affirmation.tex         Eidesstattliche Erklärung
-│   ├── listing_format.tex      Wie soll der Quellcode formatiert werden? Anwendung dazu in content/latex_beispiele
-│   ├── lock_flag.tex           Falls ein Sperrvermerk gemacht werden soll, dieses file einblenden bzw. ausblenden (in main.tex)
-│   ├── main_settings.tex       Grundsätzliches zum Basislayout. Hier sollte man wenig ändern müssen
-│   ├── mycommands.tex          Bestimmte Befehle werden hier überschrieben für einheitliches Layout. Hier sollte man wenig ändern müssen
-│   ├── pdf_settings.tex        Parameter für die PDF-Generierung. Hier sollte man wenig ändern müssen
-│   ├── preamble.tex            Hier kommen die ganzen imports hin
-│   ├── title_thesis_htlinn.tex Das Titelblatt, hier werden die Infos von main.tex eingebaut
-│   └── typographic_settings.texHier sollte man wenig ändern müssen
-```
-## Anpassungen
 
-### Einseitige Ansicht
+<details>
+    <summary><h2>Dokumentstruktur</h2></summary>
 
-In der Datei template/preamble.tex ist für die *documentclass* ganz oben ein Parameter *twoside = true* zu finden. Setzt man diesen auf *false* wechselt die Einrückung nicht bei jeder Seite sondern bleibt gleich  
+- Titelblatt
+- Kurzfassung
+- Inhaltsverzeichnis
+- Einleitung
+- Vertiefende Aufgabenstellung
+  - Hardware
+  - Software
+  - Webinterface
+- Lösungsidee
+  - Hardware
+  - Software
+  - Webinterface
+- Lösung
+  - Hardware
+  - Software
+  - Webinterface
+- Zusammenfassung
+- Danksagung
+- Tabellenverzeichnis
+- Abbildungsverzeichnis
+- Listings
+- Anhang
+- Literaturverzeichnis
+</details>
 
-### Ändern der Zitierweise
+<details>
+    <summary><h2>File Structure</h2></summary>
 
-Möchte man z.B. auf IEEE-Zitierung umstellen (d.h. eine Literaturstelle wird mit [1], [2], [3] referenziert) muss man in *main.tex* folgende Zeilen auskommentieren und die 2 unteren hinzufügen
-
-```latex
-%\usepackage{natbib} %
-%\bibliographystyle{agsm}
-\usepackage{cite}
-\bibliographystyle{IEEEtran}
-```
-
-Man muss allerdings vorher alle bereits von Latex erzeugten Dateien löschen.
+  ```
+  ├── content
+  │   ├── abstract.tex            Hier kommen das deutsche und englische Abstract rein
+  │   ├── einleitung.tex          Grundsätzliches zur gesamten Arbeit, auch indiv. Aufteilung der Arbeiten
+  │   ├── latex_beispiele.tex     Grundsätzliche Latex-Funktionalität wird hier gezeigt
+  │   ├── chrisContent
+  │   │   ├── chrisLoesungsidee.tex
+  │   │   ├── chrisLoesung.tex
+  │   │   └── hardwareChris.tex
+  │   ├── christinaContent
+  │   │   ├── christinaLoesungsidee.tex
+  │   │   ├── christinaLoesung.tex
+  │   │   └── codeChristina.tex
+  │   ├── maxiContent
+  │   │   ├── maxiLoesungsidee.tex
+  │   │   ├── maxiLoesung.tex
+  │   │   └── codeMaximilian.tex
+  │   └── danksagung.tex
+  ├── figures
+  │   ├── bsp.png
+  │   ├── htl-logo2.png
+  │   └── htl-logo.png
+  ├── main.tex                    Hier läuft alles zusammen. Dort ist auch Thema, Betreuer, Abteilung, Jahr usw. einzutragen
+  ├── summary.tex
+  ├── disclaimer.tex
+  ├── references.bib              Alle Zitate befinden sich hier. In latex_beispiele wird gezeigt wie man diese einbindet
+  ├── sourcecode
+  │   └── First.java
+  ├── template
+  │   ├── affirmation.tex         Eidesstattliche Erklärung
+  │   ├── listing_format.tex      Wie soll der Quellcode formatiert werden? Anwendung dazu in content/latex_beispiele
+  │   ├── lock_flag.tex           Falls ein Sperrvermerk gemacht werden soll, dieses file einblenden bzw. ausblenden (in main.tex)
+  │   ├── main_settings.tex       Grundsätzliches zum Basislayout. Hier sollte man wenig ändern müssen
+  │   ├── mycommands.tex          Bestimmte Befehle werden hier überschrieben für einheitliches Layout. Hier sollte man wenig ändern müssen
+  │   ├── pdf_settings.tex        Parameter für die PDF-Generierung. Hier sollte man wenig ändern müssen
+  │   ├── preamble.tex            Hier kommen die ganzen imports hin
+  │   ├── title_thesis_htlinn.tex Das Titelblatt, hier werden die Infos von main.tex eingebaut
+  │   └── typographic_settings.texHier sollte man wenig ändern müssen
+  ```
+</details>
