@@ -1,25 +1,38 @@
 \renewcommand{\myauthor}{Christina Seidner}
 
-Da ein Ziel dieser Diplomarbeit die Möglichkeit ist, bereits gespielte Spiele zu analysieren, wird ein Webinterface benötigt. Dieses besteht aus drei Komponenten: Website (Frontend), Server (Backend) und Datenbank. Alle drei sind eng miteinander verbunden und arbeiten zusammen, um eine reibungslose Benutzererfahrung zu gewährleisten.
+Da ein Ziel dieser Diplomarbeit die Möglichkeit ist, bereits gespielte Spiele zu analysieren, 
+wird ein Webinterface benötigt. Dieses besteht aus drei Komponenten: Website (Frontend), 
+Server (Backend) und Datenbank. Alle drei sind eng miteinander verbunden und arbeiten 
+zusammen, um eine reibungslose  Benutzerinnen- und Benutzererfahrung zu gewährleisten.
 
 \subsection{Entwicklungsumgebung und Software-Architektur}
-Die Website ist die Benutzeroberfläche, über die die Nutzer mit dem System interagieren. Sie bietet Funktionen wie die Anzeige von bereits gespielten Spielen, die Erstellung von neuen Nutzern und das Spielen neuer Spiele. 
+Die Website ist die Benutzeroberfläche, über die die Nutzerinnen und Nutzer mit dem 
+System interagieren. Sie bietet Funktionen wie die Anzeige von bereits gespielten Spielen, 
+die Erstellung von neuen Nutzerinnen und Nutzern und das Spielen neuer Spiele. 
 
 \subsubsection{Entwicklungs-Tools}
-Für die Entwicklung des Webinterfaces wurden verschiedene Tools und Technologien verwendet. Dazu gehören:
+Für die Entwicklung des Webinterfaces wurden verschiedene Tools und Technologien verwendet. 
+Dazu gehören:
 \begin{itemize}
-    \item Visual Studio Code: Dieser Code-Editor wurde für die Entwicklung des Backends und des Frontends verwendet. 
+    \item Visual Studio Code: Dieser Code-Editor wurde für die Entwicklung des Backends und 
+    des Frontends verwendet. 
     \item Nano: Wurde auf dem Server verwendet, um Dateien direkt zu bearbeiten.
-    \item Git: Wurde für die Versionskontrolle und Zusammenarbeit verwendet, um den Code effizient zu verwalten und Änderungen nachzuverfolgen.
+    \item Git: Wurde für die Versionskontrolle und Zusammenarbeit verwendet, um den Code 
+    effizient zu verwalten und Änderungen nachzuverfolgen.
     \item Python: Die Hauptprogrammiersprache für die Backend-Entwicklung.
-    \item Flask: Ein leichtgewichtiges Webframework für Python, das gut mit den anderen Komponenten zusammenarbeitet.
-    \item MariaDB: Ein relationales Datenbankmanagementsystem, das zur Speicherung der Spieldaten verwendet wird.
+    \item Flask: Ein leichtgewichtiges Webframework für Python, das gut mit den anderen 
+    Komponenten zusammenarbeitet.
+    \item MariaDB: Ein relationales Datenbankmanagementsystem, das zur Speicherung der 
+    Spieldaten verwendet wird.
     \item HTML/CSS/JavaScript: Für die Gestaltung und Funktionalität des Frontends.
 \end{itemize}
 
 
 \subsubsection{venv-Modul}
-Auf dem Server wurde für beinahe alle Aktionen das venv-Modul verwendet. Mit diesem Modul können isolierte virtuelle Umgebungen erstellt werden. Dies ist auf dem Debian-Server besonders wichtig, da das System-Python stabil bleiben muss und nicht durch unterschiedliche Projekt-Abhängigkeiten gestört werden sollte. 
+Auf dem Server wurde für beinahe alle Aktionen das venv-Modul verwendet. Mit diesem Modul 
+können isolierte virtuelle Umgebungen erstellt werden. Dies ist auf dem Debian-Server besonders 
+wichtig, da das System-Python stabil bleiben muss und nicht durch unterschiedliche 
+Projekt-Abhängigkeiten gestört werden sollte. 
 Installation:\\
 \texttt{sudo apt update \&\& supo apt upgrade -y}\\
 \texttt{sudo apt install python3-venv}\\
@@ -44,7 +57,8 @@ Umgebung erstellen und aktivieren: \\
 \newpage
 \subsubsection{Ordnerstruktur}
 \begin{itemize}
-    \item /frontend: Dieser Ordner enthält alle Dateien, die man für die Gestaltung der Website braucht. Dazu gehören:
+    \item /frontend: Dieser Ordner enthält alle Dateien, die man für die Gestaltung der 
+    Website braucht. Dazu gehören:
         \begin{itemize}
             \item HTML-Dateien 
                 \begin{itemize} 
@@ -73,7 +87,8 @@ Umgebung erstellen und aktivieren: \\
                 \end{itemize}
         \end{itemize} 
         
-    \item /backend: Dieser Ordner enthält alle Dateien, die im Hintergrund laufen. Das sind:
+    \item /backend: Dieser Ordner enthält alle Dateien, die im Hintergrund laufen. Das 
+    sind:
         \begin{itemize}
             \item Python-Dateien
                 \begin{itemize}
@@ -100,16 +115,23 @@ Umgebung erstellen und aktivieren: \\
 \newpage
 
 \subsection{Realisierung der Benutzeroberfläche}
-Die Benutzeroberfläche der Website wurde mit HTML, CSS und JavaScript gestaltet, wobei HTML für die Struktur und den Inhalt der Webseiten, CSS für das Styling und Layout, und JavaScript für die Interaktivität und dynamische Funktionen verwendet wird. \cite{W3Schools}
+Die Benutzeroberfläche der Website wurde mit HTML, CSS und JavaScript gestaltet, wobei HTML 
+für die Struktur und den Inhalt der Webseiten, CSS für das Styling und Layout, und JavaScript 
+für die Interaktivität und dynamische Funktionen verwendet wird. \cite{W3Schools}
 
 
 \subsubsection{Struktur}
 Die Website besteht aus mehreren Seiten, wobei jede eine spezifische Funktion erfüllt:
 \begin{itemize}
-    \item \textbf{index.html:} Die Startseite, die eine Übersicht über die Funktionen der Website bietet.
-    \item \textbf{Benutzereingabe.html:} Hier können Nutzer ihre Informationen eingeben, um ein neues Konto zu erstellen oder sich anzumelden.
-    \item \textbf{schachbrett.html:} Diese Seite zeigt das Schachbrett an, auf dem die Nutzer spielen können. Das Schachbrett wurde selbstständig gestaltet, um eine individuelle und ansprechende Benutzererfahrung zu bieten.
-    \item \textbf{Spielanalyse.html:} Hier können Nutzer bereits gespielte Spiele analysieren und ihre Züge überprüfen.
+    \item \textbf{index.html:} Die Startseite, die eine Übersicht über die Funktionen der 
+    Website bietet.
+    \item \textbf{Benutzereingabe.html:} Hier können Nutzerinnen und Nutzer ihre Informationen 
+    eingeben, um ein neues Konto zu erstellen oder sich anzumelden.
+    \item \textbf{schachbrett.html:} Diese Seite zeigt das Schachbrett an, auf dem die 
+    Nutzerinnen und Nutzer spielen können. Das Schachbrett wurde selbstständig gestaltet, 
+    um eine individuelle und ansprechende Benutzererfahrung zu bieten.
+    \item \textbf{Spielanalyse.html:} Hier können Nutzerinnen und Nutzer bereits gespielte 
+    Spiele analysieren und ihre Züge überprüfen.
 \end{itemize}
 
 
@@ -117,11 +139,13 @@ Die Website besteht aus mehreren Seiten, wobei jede eine spezifische Funktion er
 \begin{itemize}
     \item Die wichtigsten HTML-Codes erklärt: 
     \begin{itemize}
-        \item \textbf{index.html:} [\ref{lst:index}] Diese Seite definiert die Startseite der Website. Sie enthält:
+        \item \textbf{index.html:} [\ref{lst:index}] Diese Seite definiert die Startseite der 
+        Website. Sie enthält:
             \begin{itemize}
                 \item Ein Bild des Schachbretts
                 \item Den Titel und Untertitel der Website
-                \item Ein Menü mit Links zu: Schachbrett.html, Benutzereingabe.html und Spielanalyse.html. Diese Links wurden mit Buttons realisiert. 
+                \item Ein Menü mit Links zu: Schachbrett.html, Benutzereingabe.html und 
+                Spielanalyse.html. Diese Links wurden mit Buttons realisiert. 
                 \item Ein Footer mit einem E-Mail-Kontakt-Link
             \end{itemize}
         \begin{figure}[htbp]
@@ -131,27 +155,44 @@ Die Website besteht aus mehreren Seiten, wobei jede eine spezifische Funktion er
             \label{fig:index}
         \end{figure}
 
-        \item \textbf{Benutzereingabe.html:} Diese Seite ermöglicht es den Nutzern, ihre Informationen einzugeben, um ein neues Konto zu erstellen oder sich anzumelden. Sie enthält:
+        \item \textbf{Benutzereingabe.html:} Diese Seite ermöglicht es den Nutzerinnen und Nutzern, 
+        ihre Informationen einzugeben, um ein neues Konto zu erstellen oder sich anzumelden. 
+        Sie enthält:
             \begin{itemize}
                 \item Ein Avatar-Div, das den ersten Buchstaben des Benutzernamens anzeigt 
-                \item Ein Input-Feld für die Eingabe des Benutzernamens (maximal 24 Zeichen, ohne Autovervollständigung)
-                \item Einen Button \glqq{}OK\grqq{}, der die Funktion \texttt{register\_user()} aufruft. Diese ruft die Funktion \texttt{saveName()} auf. Dies ist für mögliche spätere Änderungen getrennt geschrieben, man könnte aber auch einfach sofort \texttt{saveName()} aufrufen.
+                \item Ein Input-Feld für die Eingabe des Benutzernamens (maximal 24 Zeichen, ohne 
+                Autovervollständigung)
+                \item Einen Button \glqq{}OK\grqq{}, der die Funktion \texttt{register\_user()} 
+                aufruft. Diese ruft die Funktion \texttt{saveName()} auf. Dies ist für mögliche 
+                spätere Änderungen getrennt geschrieben, man könnte aber auch einfach sofort 
+                \texttt{saveName()} aufrufen.
                 \item Ein Toast-Div für die Erfolgsmeldung
                 \item Einen Link zurück zur Startseite
             \end{itemize}
 
             Der JavaScript-Teil im Code enthält:
             \begin{itemize}
-                \item Konstanten und Variablen für localStorage und Referenzen zu DOM-Elementen (Input, Button, Avatar, Toast).
+                \item Konstanten und Variablen für localStorage und Referenzen zu DOM-Elementen 
+                (Input, Button, Avatar, Toast).
                 \item Funktionen:
                 \begin{itemize}
-                    \item \texttt{sanitize(name)}: Entfernt überflüssige Leerzeichen und trimmt den Namen.
-                    \item \texttt{initialsFrom(name)}: Gibt den ersten Buchstaben des Namens als Initiale zurück (oder \glqq{}-\grqq{} bei leerem Namen).
+                    \item \texttt{sanitize(name)}: Entfernt überflüssige Leerzeichen und trimmt den 
+                    Namen.
+                    \item \texttt{initialsFrom(name)}: Gibt den ersten Buchstaben des Namens als 
+                    Initiale zurück (oder \glqq{}-\grqq{} bei leerem Namen).
                     \item \texttt{updateAvatar(name)}: Aktualisiert das Avatar-Div mit den Initialen.
                     \item \texttt{showToast(msg)}: Zeigt eine Toast-Nachricht für 1,5 Sekunden an.
-                    \item \texttt{saveName()}: Diese Funktion entfernt alle unsicheren oder unerwünschten Inhalte, der eingegebene Name wird in \texttt{localStorage} gespeichert, das Avatar wird aktualisiert, eine Erfolgsmeldung wird angezeigt und der Nutzer wird zur Weiterleitung weitergeleitet. Danach sendet sie eine POST-Anfrage an \texttt{http://username:5000/register} mit dem Benutzernamen als JSON.
-                    \item \texttt{register\_user()} ruft die Funktion \texttt{saveName()} auf, um die Funktionalität zu trennen.
-                    \item Ein Event-Listener für die Eingabe mittels Enter-Taste, der die Funktion \texttt{saveName()} ausführt.
+                    \item \texttt{saveName()}: Diese Funktion entfernt alle unsicheren oder 
+                    unerwünschten Inhalte, der eingegebene Name wird in \texttt{localStorage} 
+                    gespeichert, das Avatar wird aktualisiert, eine Erfolgsmeldung wird angezeigt 
+                    und die Nutzerin oder der Nutzer wird zur Weiterleitung weitergeleitet. 
+                    Danach sendet sie eine POST-Anfrage an 
+                    \texttt{http://username:5000/register} mit dem Benutzernamen 
+                    als JSON.
+                    \item \texttt{register\_user()} ruft die Funktion \texttt{saveName()} auf, um 
+                    die Funktionalität zu trennen.
+                    \item Ein Event-Listener für die Eingabe mittels Enter-Taste, der die Funktion 
+                    \texttt{saveName()} ausführt.
                 \end{itemize}
             \end{itemize}
 
@@ -163,14 +204,28 @@ Die Website besteht aus mehreren Seiten, wobei jede eine spezifische Funktion er
         \end{figure}
 
         \newpage
-        \item \textbf{schachbrett.html:} Dieser Code zeichnet ein interaktives Schachbrett mit Canvas und erlaubt das Ziehen von Figuren per Klick. Dort gibt es:
+        \item \textbf{schachbrett.html:} Dieser Code zeichnet ein interaktives Schachbrett mit 
+        Canvas und erlaubt das Ziehen von Figuren per Klick. Dort gibt es:
             \begin{itemize}
                 \item Alle Schachfiguren als Bilder in einer \texttt{<div style>}-Funktion.
-                \item Ein Canvas-Element \texttt{<canvas>}, auf dem das Spielfeld gezeichnet wird. Es wird ein weißes Rechteck als Hintergrund gezeichnet, das durch Linien am Rand eingegrenzt wird. Weitere Linien teilen das Spielfeld in 8x8 Quadrate auf. Eine horizontale (a-h) und eine vertikale (1-8) Beschriftung wird hinzugefügt. Jedes zweite Feld wird nun eingefärbt, um das typische Schachbrettmuster zu erzeugen.
-                \item Die Funktion \texttt{drawBoardAndPieces()}: löscht das Canvas und zeichnet Raster und Beschriftung. Die Figuren werden entsprechend ihrer Position auf dem Spielfeld gezeichnet \\(\texttt{ctx.drawImage(document.getElementById('piece'))}).
-                \item Für jede Figur gibt es einen Status, der durch die x- und y-Koordinate und die selected-Flag definiert ist. Die Bauern sind in Arrays als \texttt{pawnsBlack} und \texttt{pawnsWhite} definiert.  
-                \item \texttt{canvas.addEventListener('click', function(event))}: Er bestimmt die Mauspostion auf dem Brett mit \texttt{col, row}. Wenn \texttt{selected = true}, also ein Klick auf eine Figur erfolgt ist, wird die Figur an die neue Position bewegt und \texttt{selected = false} gesetzt. Für Bauern ist die Prüfung im Loop (\texttt{for p= 0...7}) und für die anderen Figuren per \texttt{if-else} definiert. 
-                \item Es ist möglich, eine Figur anzuklicken, um sie auszuwählen, um dann auf ein anderes Feld zu klicken, damit sie wieder abgesetzt wird. 
+                \item Ein Canvas-Element \texttt{<canvas>}, auf dem das Spielfeld gezeichnet wird. 
+                Es wird ein weißes Rechteck als Hintergrund gezeichnet, das durch Linien am Rand 
+                eingegrenzt wird. Weitere Linien teilen das Spielfeld in 8x8 Quadrate auf. Eine 
+                horizontale (a-h) und eine vertikale (1-8) Beschriftung wird hinzugefügt. Jedes 
+                zweite Feld wird nun eingefärbt, um das typische Schachbrettmuster zu erzeugen.
+                \item Die Funktion \texttt{drawBoardAndPieces()}: löscht das Canvas und zeichnet 
+                Raster und Beschriftung. Die Figuren werden entsprechend ihrer Position auf dem 
+                Spielfeld gezeichnet \\(\texttt{ctx.drawImage(document.getElementById('piece'))}).
+                \item Für jede Figur gibt es einen Status, der durch die x- und y-Koordinate und 
+                die selected-Flag definiert ist. Die Bauern sind in Arrays als \texttt{pawnsBlack} 
+                und \texttt{pawnsWhite} definiert.  
+                \item \texttt{canvas.addEventListener('click', function(event))}: Er bestimmt die 
+                Mauspostion auf dem Brett mit \texttt{col, row}. Wenn \texttt{selected = true}, 
+                also ein Klick auf eine Figur erfolgt ist, wird die Figur an die neue Position 
+                bewegt und \texttt{selected = false} gesetzt. Für Bauern ist die Prüfung im Loop 
+                (\texttt{for p= 0...7}) und für die anderen Figuren per \texttt{if-else} definiert. 
+                \item Es ist möglich, eine Figur anzuklicken, um sie auszuwählen, um dann auf ein 
+                anderes Feld zu klicken, damit sie wieder abgesetzt wird. 
                 \item Einen Link zurück zur Startseite.
             \end{itemize}
 
@@ -183,14 +238,32 @@ Die Website besteht aus mehreren Seiten, wobei jede eine spezifische Funktion er
 
 
         \newpage
-        \item \textbf{Spielanalyse.html:} Auf dieser Seite können Nutzer bereits gespielte Spiele analysieren und ihre Züge überprüfen. 
+        \item \textbf{Spielanalyse.html:} Auf dieser Seite können Nutzerinnen und Nutzer
+         bereits gespielte Spiele analysieren und ihre Züge überprüfen. 
             \begin{itemize}
-                \item Das Schachbrett und die Schachfiguren werden genauso wie in schachbrett.html gezeichnet. Allerdings können die Figuren nicht per Klick bewegt werden, sondern werden durch die Funktion \texttt{executeMove(moveNotation)}, die die Position der Figur entsprechend aktualisiert, bewegt.
-                \item Es gibt wieder für jede Figur einen Status als Objekt (\texttt{x, y}), aber keine \texttt{selected}-Flags, da es eine Spielanimation ist. 
+                \item Das Schachbrett und die Schachfiguren werden genauso wie in schachbrett.html 
+                gezeichnet. Allerdings können die Figuren nicht per Klick bewegt werden, sondern 
+                werden durch die Funktion \texttt{executeMove(moveNotation)}, die die Position der 
+                Figur entsprechend aktualisiert, bewegt.
+                \item Es gibt wieder für jede Figur einen Status als Objekt (\texttt{x, y}), 
+                aber keine \texttt{selected}-Flags, da es eine Spielanimation ist. 
                 \item Das \texttt{moves}-Array enthält die Notation für die Partie.
-                \item \texttt{executeMove(moveNotation)}: Diese Funktion entscheidet, ob es sich um eine weiße oder eine schwarze Figur handelt, indem der Modulo Null (\texttt{\% = 0}) oder nicht Null (\texttt{\% != 0}) entspricht. Die Funktion unterscheidet auch Bauerzug oder Figurzug (mit der Schachnorm für Bauern z.B. e4 und für einen Figurzug z.B. Nf3). Danach wird die passende Figur entsprechend der Notation im PGN-File gewählt und \texttt{animateMovement(piece, fromX, fromY, toX, toY)} aufgerufen, um die Bewegung zu animieren.
-                \item \texttt{animateMovement(piece, fromX, fromY, toX, toY)}: Diese Funktion animiert die Figurenanimation (400ms per \\ \texttt{requestAnimationFrame}) und bei Ende erhöht der \\ \texttt{currentMoveIndex}, setzt den \texttt{moveCounter} und ruft gegebenenfalls den nächsten Zug (500ms Timeout) auf, um die Partie automatisch durchlaufen zu lassen.
-                \item Es gibt einen Button \texttt{startAutoPlay()}, der startet oder weiter zählt, einen Button \texttt{pauseAutoPlay()}, der stoppt, einen \texttt{resetGame()}-Button, der die Figuren in die Startpositon zurücksetzt und den \texttt{moveCounter} wieder auf Null setzt. 
+                \item \texttt{executeMove(moveNotation)}: Diese Funktion entscheidet, ob es sich 
+                um eine weiße oder eine schwarze Figur handelt, indem der Modulo Null 
+                (\texttt{\% = 0}) oder nicht Null (\texttt{\% != 0}) entspricht. Die Funktion 
+                unterscheidet auch Bauerzug oder Figurzug (mit der Schachnorm für Bauern z.B. e4 
+                und für einen Figurzug z.B. Nf3). Danach wird die passende Figur entsprechend der 
+                Notation im PGN-File gewählt und \texttt{animateMovement(piece, fromX, fromY, toX, 
+                toY)} aufgerufen, um die Bewegung zu animieren.
+                \item \texttt{animateMovement(piece, fromX, fromY, toX, toY)}: Diese Funktion 
+                animiert die Figurenanimation (400ms per \\ \texttt{requestAnimationFrame}) und 
+                bei Ende erhöht der \\ \texttt{currentMoveIndex}, setzt den \texttt{moveCounter} 
+                und ruft gegebenenfalls den nächsten Zug (500ms Timeout) auf, um die Partie 
+                automatisch durchlaufen zu lassen.
+                \item Es gibt einen Button \texttt{startAutoPlay()}, der startet oder weiter 
+                zählt, einen Button \texttt{pauseAutoPlay()}, der stoppt, einen 
+                \texttt{resetGame()}-Button, der die Figuren in die Startpositon zurücksetzt 
+                und den \texttt{moveCounter} wieder auf Null setzt. 
             \end{itemize}
 
         \begin{figure}
@@ -208,17 +281,27 @@ Die Website besteht aus mehreren Seiten, wobei jede eine spezifische Funktion er
 \subsubsection{Der Fluss der Daten}
 Die Daten fließen zwischen dem Frontend und dem Backend über API-Aufrufe.
 Ein Beispiel: \\
-\texttt{Wenn der Nutzer auf schachbrett.html einen Zug macht, registriert ein JavaScript-Event-Listener diese Aktion und bereitet die Daten für den POST-Request an den /save\_game-Endpunkt vor. Der Server empfängt diese Daten, verarbeitet sie und speichert sie in der Datenbank. Sobald die Daten erfolgreich gespeichert wurden, sendet der Server eine Bestätigung zurück an das Frontend, das dann die Benutzeroberfläche entsprechend aktualisiert, um den neuen Spielstand anzuzeigen.}
+\texttt{Wenn die Nutzerin oder der Nutzer auf schachbrett.html einen Zug macht, registriert 
+ein JavaScript-Event-Listener diese Aktion und bereitet die Daten für den POST-Request an den 
+/save\_game-Endpunkt vor. Der Server empfängt diese Daten, verarbeitet sie und speichert sie 
+in der Datenbank. Sobald die Daten erfolgreich gespeichert wurden, sendet der Server eine 
+Bestätigung zurück an das Frontend, das dann die Benutzeroberfläche entsprechend aktualisiert, 
+um den neuen Spielstand anzuzeigen.}
 
 \subsection{Bereitstellungsprozess}
 \subsubsection{Der Ursprung}
-Am Anfang wurde die Website lokal auf dem persönlichen Laptop entwickelt. Alle Funktionen wurden implementiert und getestet, um sicherzustellen, dass sie wie erwartet funktionieren. Der Laptop diente sozusagen als vorübergehender Server. Erst danach wurde die Website auf den Debian-Server der Schule übertragen. 
-Dafür wurden alle benötigten Dateien in das GitHub-Repository hochgeladen und von dort aus auf den Server geklont. 
+Am Anfang wurde die Website lokal auf dem persönlichen Laptop entwickelt. Alle Funktionen wurden 
+implementiert und getestet, um sicherzustellen, dass sie wie erwartet funktionieren. Der Laptop 
+diente sozusagen als vorübergehender Server. Erst danach wurde die Website auf den Debian-Server 
+der Schule übertragen. 
+Dafür wurden alle benötigten Dateien in das GitHub-Repository hochgeladen und von dort aus auf 
+den Server geklont. 
 Auf einem Windows-PC funktioniert das mit \\
 \texttt{git clone https://github.com/nextmove-interactive-chessboard/\\website.}
 
 \subsubsection{SSH-Key-Authentifizierung}
-Da der Server in Linux-Debian läuft, kann das GitHub-Repository nicht genauso geklont werden, da es aus Sicherheitgründen abgeschafft wurde.
+Da der Server in Linux-Debian läuft, kann das GitHub-Repository nicht genauso geklont werden, 
+da es aus Sicherheitgründen abgeschafft wurde.
 Wenn man es trotzdem versucht, bekommt man die Fehlermeldungen \\
 \texttt{remote: Password authentication is not supported.} \\
 \texttt{fatal: Authentication failed}
@@ -231,8 +314,10 @@ Wenn man es trotzdem versucht, bekommt man die Fehlermeldungen \\
     \label{fig:gitcloneFalsch}
 \end{figure}
 
-Daher muss mit dem Befehl \texttt{ssh-keygen -t ed25519 -C 'cseidner@tsn.at'} ein ssh-key-Paar angelegt werden, um Zugriff auf das Repository zu bekommen.
-Nur, wer den privaten Schlüssel besitzt, kann auf das Repository zugreifen. Dieser bleibt auf dem Server, während der öffentliche Schlüssel in GitHub hinterlegt wird.
+Daher muss mit dem Befehl \texttt{ssh-keygen -t ed25519 -C 'cseidner@tsn.at'} ein ssh-key-Paar 
+angelegt werden, um Zugriff auf das Repository zu bekommen.
+Nur, wer den privaten Schlüssel besitzt, kann auf das Repository zugreifen. Dieser bleibt auf 
+dem Server, während der öffentliche Schlüssel in GitHub hinterlegt wird.
 
 
 \begin{figure}[htbp]
@@ -272,13 +357,15 @@ Nachdem eine ssh-Konfiguration \texttt{nano \string~\string/.ssh/config} mit dem
 \texttt{IdentityFile \string~\string/.ssh/id\_ed25519} \\
 \texttt{ProxyCommand none} \\
 
-angelegt wurde, müssen noch die Ordnerrechte eingeschränkt werden, damit die ssh-Verbindung nicht alles blockiert: \\
+angelegt wurde, müssen noch die Ordnerrechte eingeschränkt werden, damit die ssh-Verbindung nicht 
+alles blockiert: \\
 \texttt{chmod 700 \string~\string/.ssh} \\
 \texttt{chmod 600 \string~\string/.ssh/id\_ed25519} \\
 \texttt{chmod 644 \string~\string/.ssh/id\_ed25519.pub}\\
 
 \subsubsection{Deployment}
-Nun kann das Repository mit dem ssh-Link geklont werden. Dieser liegt in GitHub unter \texttt{Code $\rightarrow$ SSH}. \\
+Nun kann das Repository mit dem ssh-Link geklont werden. Dieser liegt in GitHub unter 
+\texttt{Code $\rightarrow$ SSH}. \\
 
 \begin{figure}[htbp]
     \centering
@@ -292,7 +379,8 @@ Nun kann das Repository mit dem ssh-Link geklont werden. Dieser liegt in GitHub 
 
 \subsection{Datenbank-Design und Implementierung}
 \subsubsection{Installation der Datenbank}
-Für die Datenbank-Installation werden zunächst der \texttt{MariaDB-Connector-J} und der \texttt{MariaDB-Connector/C} benötigt \cite{MariaDB}. \\
+Für die Datenbank-Installation werden zunächst der \texttt{MariaDB-Connector-J} und der 
+\texttt{MariaDB-Connector/C} benötigt \cite{MariaDB}. \\
 Den \texttt{MariaDB-Connector-J} klont man von GitHub:
 \begin{figure}[htbp]
     \centering
@@ -330,18 +418,22 @@ Letztendlich kann MariaDB richtig installiert werden. \\
     \label{fig:datenbank}
 \end{figure}
 
-Um sich nun nicht jedes Mal mit dem root-user anmelden zu müssen, wird ein Standardbenutzer erstellt: \\
+Um sich nun nicht jedes Mal mit dem root-user anmelden zu müssen, wird ein Standardbenutzer 
+erstellt: \\
 \texttt{CREATE USER 'username'@'localhost' IDENTIFIED BY 'BeispielPasswort';} \\
-Der User heißt jetzt \textit{'username'} und das Passwort lautet \textit{'BeispielPasswort'}. Diese Daten sind hierbei nur Beispiele und werden nicht wirklich verwendet.
+Der User heißt jetzt \textit{'username'} und das Passwort lautet \textit{'BeispielPasswort'}. 
+Diese Daten sind hierbei nur Beispiele und werden nicht wirklich verwendet.
 
-Nun müssen Rechte an den Benutzer gegeben werden: \\
+Nun müssen Rechte an den erstellten Benutzer gegeben werden: \\
 \texttt{GRANT ALL PRIVILEGES ON NextMove.* TO 'username'@'localhost';}
 
-Schlussendlich kann man sich mit \texttt{mariadb -u username -p} und dem vergebenen Passwort am User anmelden. 
+Schlussendlich kann man sich mit \texttt{mariadb -u username -p} und dem vergebenen Passwort 
+am User anmelden. 
 
 
 \subsubsection{Database erstellen}
-Wenn ein Standardbenutzer angelegt wurde, kann schon mit der Konfiguration der Datenbank begonnen werden: \\
+Wenn ein Standardbenutzer angelegt wurde, kann schon mit der Konfiguration der Datenbank begonnen 
+werden: \\
 \texttt{CREATE DATABASE IF NOT EXISTS NextMove;}
 
 Diese kann man anschauen mit \texttt{show databases;} 
@@ -367,7 +459,9 @@ erstellt\_am TIMESTAMP DEFAULT CURRENT\_TIMESTAMP\\
 \newpage
 \subsection{Server-Konfiguration}
 
-Auf den Server kommt man im Schulnetz mit \texttt{ssh username@10.10.10.100} mit dem Passwort \texttt{BeispielPasswort}. Benutzername, Passwort und IP-Adresse sind hierbei nur Beispiele und werden nicht wirklich verwendet.  
+Auf den Server kommt man im Schulnetz mit \texttt{ssh username@10.10.10.100} mit dem Passwort 
+\texttt{BeispielPasswort}. Benutzername, Passwort und IP-Adresse sind hierbei nur Beispiele und 
+werden nicht wirklich verwendet.  
 
 
 \begin{figure}[htbp]
@@ -412,31 +506,49 @@ Auf den Server kommt man im Schulnetz mit \texttt{ssh username@10.10.10.100} mit
 
 
 \subsection{Backend-Logik und Socket-Kommunikation}
-Das Backend ist der Teil im Hintergrund der Website, der die Logik und die Funktionalität bereitstellt. Es verarbeitet die Anfragen der Nutzer, kommuniziert mit der Datenbank und stellt die benötigten Informationen bereit. Das Backend ist entscheidend für die Funktionalität der Website und sorgt dafür, dass alles reibungslos funktioniert.
+Das Backend ist der Teil im Hintergrund der Website, der die Logik und die Funktionalität 
+bereitstellt. Es verarbeitet die Anfragen der Nutzerinnen und Nutzer, kommuniziert mit der 
+Datenbank und stellt die benötigten Informationen bereit. Das Backend ist entscheidend für 
+die Funktionalität der Website und sorgt dafür, dass alles reibungslos funktioniert.
 
 Die Implementierung des Backends erfolgt in Python. 
 
 \subsubsection{Struktur des Backends}
 Die Codestruktur sieht wie folgt aus:
 \begin{itemize}
-    \item backend.py: [\ref{lst:backend}] Dies ist die Hauptdatei, die den Server startet und die Routen definiert. 
+    \item backend.py: [\ref{lst:backend}] Dies ist die Hauptdatei, die den Server startet und die 
+    Routen definiert. 
     \begin{itemize}
-        \item die Module \texttt{os, socket, logging, threading, mysql.connector, flask und flask\_cors} werden importiert
-        \item Es wird eine Flask-Anwendung mit CORS-Unterstützung erstellt, um Cross-Origin-Anfragen zu erlauben
+        \item die Module \texttt{os, socket, logging, threading, mysql.connector, flask und 
+        flask\_cors} werden importiert
+        \item Es wird eine Flask-Anwendung mit CORS-Unterstützung erstellt, um 
+        Cross-Origin-Anfragen zu erlauben
         \item Debug-Logging wird für die Fehlerverfolgung konfiguriert
-        \item Die Umgebungsvariablen für \texttt{Host, Benutzer, Passwort und Datenbankname} werden in der Datenbank-Konfiguration implementiert
+        \item Die Umgebungsvariablen für \texttt{Host, Benutzer, Passwort und Datenbankname} 
+        werden in der Datenbank-Konfiguration implementiert
         \item Die Funktionen sind:
         \begin{itemize}
-            \item \texttt{/save\_game(POST)}: Diese Funktion nimmt die JSON-Daten (\texttt{user\_id, pgn, gegner, ergebnis}) entgegen, verbindet sich mit der Datenbank und fügt ein neues Spiel in die Tabelle \texttt{spiele} ein. Es wird entweder Erfolg oder Fehler zurückgegeben.
-            \item \texttt{/get\_games/<int:user\_id>(GET):} Diese Funktion holt alle Spiele für einen bestimmten Benutzer aus der Datenbank und gibt sie als JSON zurück. 
-            \item \texttt{receive\_file():} Die Funktion startet einen TCP-Server auf IP 10.10.10.100, Port 5001 und wartet auf Verbindungen. Sie empfängt Daten und speichert sie in \texttt{received\_game.pgn}. Sie läuft in einer Endlosschleife. 
-            \item in der main-Funktion wird \texttt{receive\_file()} in einem separaten Thread (im Daemon-Modus) gestartet, damit er beim Beenden der App stoppt und die Flask-App wird auf IP 10.10.10.100 am Port 5001 gestartet. 
+            \item \texttt{/save\_game(POST)}: Diese Funktion nimmt die JSON-Daten 
+            (\texttt{user\_id, pgn, gegner, ergebnis}) entgegen, verbindet sich mit der 
+            Datenbank und fügt ein neues Spiel in die Tabelle \texttt{spiele} ein. Es wird 
+            entweder Erfolg oder Fehler zurückgegeben.
+            \item \texttt{/get\_games/<int:user\_id>(GET):} Diese Funktion holt alle Spiele 
+            für eine bestimmte Person aus der Datenbank und gibt sie als JSON zurück. 
+            \item \texttt{receive\_file():} Die Funktion startet einen TCP-Server auf 
+            IP 10.10.10.100, Port 5001 und wartet auf Verbindungen. Sie empfängt Daten und 
+            speichert sie in \texttt{received\_game.pgn}. Sie läuft in einer Endlosschleife. 
+            \item in der main-Funktion wird \texttt{receive\_file()} in einem separaten Thread 
+            (im Daemon-Modus) gestartet, damit er beim Beenden der App stoppt und die Flask-App 
+            wird auf IP 10.10.10.100 am Port 5001 gestartet. 
             \item im Anhang befindet sich der Code unter \texttt{backend.py}.
         \end{itemize}
     \end{itemize}
 
-    \item \_\_init\_\_.py: Flask sucht gezielt nach dieser Datei, um den root-Pfad zu finden. Sie kann jedoch leer bleiben. Diese ist auch in diesem Projekt leer.
-    \item wsgi.py: Dieser Code lädt die Flask-App und startet sie mit \texttt{app-run()}, wenn sie direkt ausgeführt wird. Er dient als Wrapper, um die App über WSGI-Server zu deployen, anstatt direkt \texttt{backend.py} zu starten.
+    \item \_\_init\_\_.py: Flask sucht gezielt nach dieser Datei, um den root-Pfad zu finden. 
+    Sie kann jedoch leer bleiben. Diese ist auch in diesem Projekt leer.
+    \item wsgi.py: Dieser Code lädt die Flask-App und startet sie mit \texttt{app-run()}, 
+    wenn sie direkt ausgeführt wird. Er dient als Wrapper, um die App über WSGI-Server zu 
+    deployen, anstatt direkt \texttt{backend.py} zu starten.
     \begin{scriptsize}
         \begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {wsgi.py}]
             from backend import app
@@ -445,7 +557,11 @@ Die Codestruktur sieht wie folgt aus:
                 app.run()
         \end{lstlisting}
     \end{scriptsize}
-    \item nginxNextmove: Hier ist nginx konfiguriert. Der Server lauscht auf Port 80 (http) unter der IP 10.10.10.100. Anfragen an die Hauptseite (/) werden zu den richtigen Ordner auf der Festplatte geleitet (\texttt{/home/username/website/frontend}), um dort die \texttt{index.html} anzuzeigen \cite{NginxGuide}. Alle Anfragen, die mit \texttt{/api/} beginnen, werden an das Python-Flask weitergeleitet. 
+    \item nginxNextmove: Hier ist nginx konfiguriert. Der Server lauscht auf Port 80 (http) 
+    unter der IP 10.10.10.100. Anfragen an die Hauptseite (/) werden zu den richtigen Ordner 
+    auf der Festplatte geleitet (\texttt{/home/username/website/frontend}), um dort die 
+    \texttt{index.html} anzuzeigen \cite{NginxGuide}. Alle Anfragen, die mit \texttt{/api/} 
+    beginnen, werden an das Python-Flask weitergeleitet. 
 
     \begin{scriptsize}
         \begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {nginxNextmove}]
@@ -468,15 +584,24 @@ Die Codestruktur sieht wie folgt aus:
     }
         \end{lstlisting}
     \end{scriptsize}
-    \item nextmove.service: Diese Datei stellt sicher, dass uWSGI und Flask die Daten für die Datenbank finden \cite{uWSGI}. Das Einloggen startet mit \texttt{After=network.target} automatisch und mit \texttt{Restart=always} wird der Backend-Server sofort neu gestartet, falls er abstürzt. Unter \\\texttt{Environment} werden die Zugangsdaten für die Datenbank direkt an die App übergeben und der Befehl \texttt{ExecStart} nutzt \texttt{uWSGI}, um die Flask-App auf Port 80 bereitzustellen. Über den Pfad \\\texttt{/home/username/venv/bin} wird sichergestellt, dass die Python-Bibliotheken aus der venv-Umgebung genutzt werden. Dieser Code ist das \glqq{}Gegenstück\grqq{} zu der nginxNextmove-Datei: 
+    \item nextmove.service: Diese Datei stellt sicher, dass uWSGI und Flask die Daten für die 
+    Datenbank finden \cite{uWSGI}. Das Einloggen startet mit \texttt{After=network.target} 
+    automatisch und mit \texttt{Restart=always} wird der Backend-Server sofort neu gestartet, 
+    falls er abstürzt. Unter \\\texttt{Environment} werden die Zugangsdaten für die Datenbank 
+    direkt an die App übergeben und der Befehl \texttt{ExecStart} nutzt \texttt{uWSGI}, um die 
+    Flask-App auf Port 80 bereitzustellen. Über den Pfad \\\texttt{/home/username/venv/bin} 
+    wird sichergestellt, dass die Python-Bibliotheken aus der venv-Umgebung genutzt werden. 
+    Dieser Code ist das \glqq{}Gegenstück\grqq{} zu der nginxNextmove-Datei: 
     \begin{itemize}
         \item nginxNextmove nimmt Anfragen aus dem Internet an
-        \item Wenn die Anfrage an \texttt{/api/} geht, leitet nginxNextmove sie an 127.0.0.1:80 weiter.
-        \item nextmove.service sorgt dafür, dass auf Port 80 die Flask-App via uWSGI durchgehend bereit steht. 
+        \item Wenn die Anfrage an \texttt{/api/} geht, leitet nginxNextmove sie an 127.0.0.1:80 
+        weiter.
+        \item nextmove.service sorgt dafür, dass auf Port 80 die Flask-App via uWSGI durchgehend 
+        bereit steht. 
     \end{itemize}
     \begin{scriptsize}
         \begin{lstlisting}[style=Python, language=Python, captionpos=b, stepnumber=5, caption = {nextmove.service}]
-    [Unit]
+[Unit]
 Description=A uWSGI instance to serve the Flask nextmove backend
 After=network.target
 
@@ -509,7 +634,10 @@ WantedBy=multi-user.target
 Es können fast alle Teile dieses Webinterfaces überprüft werden.
 
 \begin{itemize}
-    \item Die \texttt{nextmove.service}-Datei wird mit \texttt{sudo systemctl status nextmove} überprüft. Ob alles richtig konfiguriert ist, erkennt man durch die Antwort \texttt{Active: active (running)}. Man kann auch erkennen, dass die Service-Datei auf Port 80 hört. \\
+    \item Die \texttt{nextmove.service}-Datei wird mit \texttt{sudo systemctl status nextmove} 
+    überprüft. Ob alles richtig konfiguriert ist, erkennt man durch die Antwort 
+    \texttt{Active: active (running)}. Man kann auch erkennen, dass die Service-Datei auf Port 80 
+    hört. \\
     $\rightarrow$ \texttt{51393 /home/username/venv/bin/python3 \\/home/username/venv/bin/uwsgi --http 0.0.0.0:80 --chdir /hom>}
     \begin{figure}[htbp]
         \centering
@@ -518,7 +646,9 @@ Es können fast alle Teile dieses Webinterfaces überprüft werden.
         \label{fig:statusnextmove}
     \end{figure}
     \item Die \texttt{nginxNextmove}-Datei wird mit \texttt{sudo systemctl status nginx} überprüft. 
-    \item Mit dem Befehl \texttt{curl -I http://localhost} wird getestet, ob der Server sich selbst antwortet. Wenn ein \texttt{HTTP/1.1 200 OK} zurück kommt, funktioniert Nginx und die Datei \texttt{index.html} wird gefunden. 
+    \item Mit dem Befehl \texttt{curl -I http://localhost} wird getestet, ob der Server sich 
+    selbst antwortet. Wenn ein \texttt{HTTP/1.1 200 OK} zurück kommt, funktioniert Nginx und die 
+    Datei \texttt{index.html} wird gefunden. 
     \begin{figure}[htbp]
         \centering
         \includegraphics[width=0.8\textwidth]{figures/curl.png}
