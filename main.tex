@@ -24,6 +24,8 @@
 \newcommand{\mykeywords}{KEYWORDS}  %% also used for PDF metadata (hyperref)
 
 
+
+
 %% header settings
 \usepackage{lastpage}
 
@@ -92,6 +94,10 @@
 
 %% Choose your desired title page:
 \input{\mytitlepage}            %% include title page
+\newpage
+\thispagestyle{empty}
+\mbox{}
+\newpage
 
 %\input{template/lock_flag} % Wenn kein Sperrvermerk gemacht werden soll, dann diesen Import einfach auskommentieren
 
@@ -99,6 +105,8 @@
 % \input{thanks}                %% this is a suggestion: you have to create this file on demand
 % \input{foreword}              %% this is a suggestion: you have to create this file on demand
 
+
+\input{disclaimer.tex}
 
 %% include the abstract without chapter number but include it on table of contents:
 %%\let\cleardoublepage\clearpage
