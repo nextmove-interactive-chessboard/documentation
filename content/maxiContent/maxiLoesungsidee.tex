@@ -1,8 +1,8 @@
 \section{Software}
 
-\subsection{Steuerung einer 2x2 Matrix}
-Aufgabe ist es, eine von Christoph Schwaninger vorbereitete 2x2 Matrix für Testzwecke so zu entwickeln, dass 
-zuverlässig unabhängig voneinander platzierte Magnete auf den Sensoren erkannt werden und eine entsprechende Nachricht 
+\subsection{Auslesen einer entwickelten Hardware}
+Aufgabe ist es, eine von Christoph Schwaninger vorbereitete Hardware zur Figurenerkennung für die Spiellogik zu entwickeln, dass 
+zuverlässig unabhängig voneinander platzierte Figuren auf den Sensoren erkannt werden und eine entsprechende Nachricht 
 in der Konsole ausgegeben wird.
 
 \subsection{Rotary Encoder als Eingabegerät}
@@ -11,18 +11,18 @@ gleichfalls zu erkennen und in der Konsole auszugeben. Außerdem soll erklärt w
 funktioniert.
 
 \subsection{Entwicklung eines Menüs}
-Es soll ein intuitives Menü entwickelt werden, welches nach einschalten des Schabretts erscheint. Das Menü soll 
-anschließend mit dem Rotary Encoder so verbunden werden, dass man es Problemlos navigieren kann.
+Es soll ein intuitives Menü entwickelt werden, welches nach Einschalten des Schachbretts erscheint. Das Menü soll 
+anschließend so mit dem Rotary Encoder verbunden werden, dass man problemlos navigieren kann.
 
 \subsection{Einbindung der Spielererkennung}
-Aufgabe ist es, die Spielererkennung über einen RFID Sensor zu implementieren. Es soll eine Nachricht in der Konsole 
-ausgegeben werden, wenn ein NFC-Tag erkannt wird.
+Aufgabe ist es, die Spielererkennung über einen RFID-Sensor zu implementieren. Für Testzwecke soll zunächst
+eine Nachricht in der Konsole ausgegeben werden, wenn ein NFC-Tag erkannt wird.
 
 \subsubsection{Spiellogik}
-Die Spiellogik soll in zwei Teile geteilt werden: Zum einen die Logik für das Einzelspiel gegen einen Schachcomputer. 
-Als Schachprogramm soll Stockfish verwendet werden. Zum anderen die Logik für den Mehrspielermodus gegen einen menschlichen Gegner, 
-einen "Gegenüber". Bei letzterem Modus soll das Spiel konstant aufgezeichnet und in eine PGN-Datei gespeichert werden.
+Die Spiellogik soll in zwei Teile geteilt werden: Einerseits die Logik für das Einzelspiel gegen einen Schachcomputer, 
+für den Stockfish verwendet werden soll. Andererseits die Logik für den Mehrspielermodus gegen eine andere Person. 
+Bei Letzterem soll das Spiel aufgezeichnet und in eine PGN-Datei gespeichert werden.
 
 \subsection{Die Datenübertragung}
-Nach beendigung eines Mehrspiels soll die PGN-Datei an einen Server, welcher vorher von Christina Seidner vorbereitet 
-wurde, übertragen werden.
+Nach Beendigung einer Partie im Multiplayer soll die PGN-Datei an einen Server, welcher vorher von Christina Seidner 
+vorbereitet wurde, übertragen werden.

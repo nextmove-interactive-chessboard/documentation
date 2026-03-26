@@ -1,11 +1,20 @@
 
 \chapter{Einleitung}
 
-Schach ist ein traditionsreiches Brettspiel, welches logisches Denken und Konzentration fördert. Durch den zunehmenden Einsatz digitaler Medien werden klassische Spiele jedoch immer häufiger durch rein elektronische Lösungen ersetzt. Aus diesem Grund entstand die Idee, ein herkömmliches Schachbrett mit moderner Technik zu erweitern und dadurch ein interaktives Spielerlebnis zu schaffen.
+Schach ist ein traditionsreiches Brettspiel, welches logisches Denken und Konzentration fördert. Durch den zunehmenden 
+Einsatz digitaler Medien werden klassische Spiele jedoch immer häufiger durch rein elektronische Lösungen ersetzt. Aus 
+diesem Grund entstand die Idee, ein herkömmliches Schachbrett mit moderner Technik zu erweitern und dadurch ein 
+interaktives Spielerlebnis zu schaffen.
 
-Diese Diplomarbeit befasst sich mit der Entwicklung eines interaktiven, smarten Schachbretts, das klassische Spielmechanismen mit moderner Technik verbindet. Durch die Kombination aus Sensorik, lokaler und externer Datenverarbeitung mittels passender Software soll ein System entstehen, das Spielzüge automatisch erkennt, den Spieler aktiv unterstützt und nach der Partie zeigt, welche Züge besser geeignet gewesen wären. Dadurch wird das Schachspiel sowohl für Anfänger als auch für erfahrene Spieler attraktiver gestaltet.
+Diese Diplomarbeit befasst sich mit der Entwicklung eines interaktiven, smarten Schachbretts, das klassische 
+Spielmechanismen mit moderner Technik verbindet. Durch die Kombination aus Sensorik, lokaler und externer 
+Datenverarbeitung mittels passender Software soll ein System entstehen, das Spielzüge automatisch erkennt und den Spieler 
+aktiv unterstützt. Dadurch wird das Schachspiel sowohl für Anfänger als auch für erfahrene Spieler attraktiver gestaltet.
 
-Die Aufgabenstellung umfasst die Planung und Umsetzung der elektronischen und softwaretechnischen Komponenten sowie deren Integration in ein funktionales Gesamtsystem. Das Projekt verbindet technische Fachbereiche wie die Entwicklung und Programmierung der benötigten Hardware und Informationsaustausch mit einem speziellen Server auf dem der Nutzer seine Partien analysieren kann.
+Die Aufgabenstellung umfasst die Planung und Umsetzung der elektronischen und softwaretechnischen Komponenten sowie 
+deren Integration in ein funktionales Gesamtsystem. Das Projekt verbindet technische Fachbereiche wie die Entwicklung 
+und Programmierung der benötigten Hardware und Informationsaustausch mit einem speziellen Server auf dem der Nutzer 
+seine Partien analysieren kann.
 
 \section{Vertiefende Aufgabenstellung}
 
@@ -17,11 +26,11 @@ Auswahl aller Hardware-Komponenten, welche für die Umsetzung des intelligenten 
 
 \subsubsection{Schaltungsentwicklung}
 
-Entwicklung einer Verschaltungslogik welche die Ansteuerung und Informationsausgabe der Felder effizient ermöglicht.
+Entwicklung einer Verschaltungslogik, welche die Ansteuerung und Informationsausgabe der Felder effizient ermöglicht.
 
 \subsubsection{Platinendesign}
 
-Die Zuvor entwickelte Verschaltung der Komponenten für einen Platinenfertiger nach Anforderung erstellen.
+Die zuvor entwickelte Verschaltung der Komponenten für einen Platinenhersteller nach Anforderung erstellen.
 
 \subsubsection{Gehäusefertigung}
 
@@ -34,61 +43,33 @@ Auswahl und Verkabelung eines Stromversorgungssystem, welche den Anforderung all
 
 \subsection{Koch Maximilian}
 
-\subsubsection{Steuerung einer 2x2 Matrix}
-Bei näherung eines Magneten an einen Sensor, wird dessen dasein vom Controller erkannt.
-
-\subsubsection{Rotary Encoder als Eingabegerät}
-Anhand einer vorher selbstgebauten Platine die Position von Magneten in einer Matrix feststellen.
+\subsubsection{Signalverarbeitung der Spielfelder}
+Anhand einer vorher selbstgebauten Platine die Position von Spielfiguren feststellen.
 
 \subsubsection{Entwicklung eines Menüs}
-Entwicklung eines Menüs auf dem OLED-Bildschirm des Schachbretts. Eine Auswahl zwischen Spieler gegen Spieler oder Spieler gegen Computer erstellen.
+Entwicklung eines Interface, in welchem der Nutzer navigieren kann.
 
 \subsubsection{Einbindung der Spielererkennung}
-Durch das Auslesen des eingebauten RFID Sensors die Unterscheidung verschiedener Spieler sicherstellen.
-
+Eine Möglichkeit für den Nutzer, sich zu authentifizieren.
 
 \subsubsection{Die Spiellogik}
-Erstellen einer Spiellogik, mit der man sowohl gegen einen Schachcomputer als auch gegen einen menschlichen Gegner 
+Erstellen einer Spiellogik, mit der man sowohl gegen einen Schachcomputer als auch gegen eine andere Person 
 spielen kann.
 
 \subsubsection{Die Datenübertragung}
-Über Sockets eine Verbindung zu einem Server herstellen, um die gespielte Partie zu übertragen.
+Eine Verbindung zu einem Server herstellen, um die gespielte Partie zu übertragen.
 
 
 \subsection{Seidner Christina}
 
 \subsubsection{Frontend}
-Das Frontend der Website umfasst alle visuellen Elemente, die der Nutzer direkt sieht und mit denen er interagiert. Es ist entscheidend für die Benutzererfahrung und sorgt dafür, dass die Nutzer die Funktionen der Website einfach und intuitiv nutzen können.
+Ein ansprechendes Frontend, welches es dem Nutzer ermöglicht, sich intuitiv zurechtzufinden.
 
 \subsubsection{Backend}
-Das Backend umfasst alle Funktionen und Logiken, die im Hintergrund der Website ablaufen. Es verarbeitet die Anfragen der Nutzer, kommuniziert mit der Datenbank und stellt die benötigten Informationen bereit. Das Backend ist entscheidend für die Funktionalität der Website und sorgt dafür, dass alles reibungslos funktioniert.
+Erstellen eines Backends, welches für die Datenverarbeitung zwischen gespeicherten und neuen Daten sorgt.
 
 \subsubsection{Datenbank}
-Die Datenbank dient als Speicher für alle relevanten Informationen, die vom System verarbeitet werden. Dazu gehören Informationen über die Nutzer, die gespielten Spiele, die Ergebnisse und andere relevante Daten. Die Datenbank ermöglicht es dem Server, schnell auf Anfragen zu reagieren und die benötigten Informationen bereitzustellen.
+Implementieren einer Datenbank, welche alle relevanten Daten speichert.
 
 \subsubsection{Infrastruktur}
-Die Infrastruktur umfasst alle technischen Ressourcen und Dienste, die benötigt werden, um die Website bereitzustellen und zu betreiben. Dazu gehören Server, Hosting-Dienste, Sicherheitsmaßnahmen und andere relevante Komponenten, die sicherstellen, dass die Website zuverlässig und sicher funktioniert.
-
-\newpage
-
-\section{Dokumentation der Arbeit}
-
-Es werden die Projektergebnisse dokumentiert
-
-\begin{itemize}
-	\item Grundkonzept
-	\item Theoretische Grundlagen
-	\item Praktische Umsetzung
-	\item Lösungsweg
-	\item Alternativer Lösungsweg
-	\item Ergebnisse inkl. Interpretation
-\end{itemize}
-
-Weitere Anregungen:
-
-\begin{itemize}
-	\item Fertigungsunterlagen
-	\item Testfälle (Messergebnisse…)
-	\item Benutzerdokumentation
-	\item Verwendete Technologien und Entwicklungswerkzeuge
-\end{itemize}
+Konfiguration eines Servers, welcher einen externen Zugriff ermöglicht.
