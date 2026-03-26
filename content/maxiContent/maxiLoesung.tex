@@ -209,7 +209,7 @@ Ein benutzerfreundliches Menü, welches zu Beginn des Einschaltens erscheint, is
 Spielerlebnis. Eine erste Überlegung, wie die Struktur dieses Spielmenüs aussehen soll, ist wie folgt 
 aufgebaut:
 Wird das Schachbrett gestartet, wird auf einem Display, welches sich auf dem Schachbrett befindet, 
-angezeigt, dass sich der Benutzer zwischen \glqq Einzelspiel\grqq{} oder \glqq Mehrspieler\grqq{} 
+angezeigt, dass sich die Benutzerin oder der Benutzer zwischen \glqq Einzelspiel\grqq{} oder \glqq Mehrspieler\grqq{} 
 entscheiden kann.
 
 
@@ -218,26 +218,27 @@ Wird ersteres gewählt, so erscheint ein Untermenü. Hier kann man die Schwierig
 Die Wahl besteht zwischen drei Stufen: Leicht, Mittel und Schwer. Die Stufen unterscheiden sich davon, wie lange sich 
 der Schachcomputer Zeit lässt, um einen optimalen Zug zu berechnen. Je länger er sich Zeit lässt, desto stärker ist er, 
 da er mehr Züge in die Zukunft berechnen kann. Nachdem eine Schwierigkeitsstufe gewählt wurde, geht nun das Spiel los 
-und der Nutzer kann spielen. Die Partie wird nicht aufgezeichnet und nach Beendigung des Spiels kehrt die Software 
-wieder automatisch zum Hauptmenü zurück, damit der Nutzer die Möglichkeit hat, eine neue Partie zu starten.
+und die Nutzerin oder der Nutzer kann spielen. Die Partie wird nicht aufgezeichnet und nach Beendigung des Spiels kehrt 
+die Software wieder automatisch zum Hauptmenü zurück, damit die Benutzerin oder der Benutzer die Möglichkeit hat, eine 
+neue Partie zu starten.
 
 
 \subsubsection{Der Mehrspielermodus}
-Wird sich anstelle des Einzelspiels für den Mehrspieler entschieden, erscheint ein Untermenü, in dem der 
-Benutzer aufgefordert wird, sich entweder einzuloggen oder einen neuen Account zu registrieren. Ersteres 
-geht davon aus, dass der Benutzer schon über ein Benutzerkonto verfügt und deshalb nur noch den NFC-Chip 
-an das Lesegerät auf dem Schachbrett legen soll, damit der Spieler in der Datenbank verglichen werden kann. 
-Kann kein bereits bestehender Nutzer dem NFC-Chip zugeordnet werden, so wird der Nutzer infolgedessen 
-aufgefordert, sich zu registrieren. Beim Registrieren wird ein neuer Eintrag in der Datenbank erstellt, 
-und der Benutzer kann fortfahren.\\
+Wird sich anstelle des Einzelspiels für den Mehrspieler entschieden, erscheint ein Untermenü, in dem die Benutzerin oder 
+der Benutzer aufgefordert wird, sich entweder einzuloggen oder einen neuen Account zu registrieren. Ersteres 
+geht davon aus, dass die Person schon über ein Konto verfügt und deshalb nur noch den NFC-Chip an das Lesegerät auf dem 
+Schachbrett legen soll, damit die Spielerin oder der Spieler in der Datenbank verglichen werden kann. Kann keine bereits 
+bestehende Nutzerin oder Nutzer dem NFC-Chip zugeordnet werden, so wird die Spielerin oder der Spieler infolgedessen 
+aufgefordert, sich zu registrieren. Beim Registrieren wird ein neuer Eintrag in der Datenbank erstellt, und die 
+Benutzerin oder der Benutzer kann fortfahren.\\
 
-Es ist zu beachten, dass ein Benutzer nur in der Lage ist, seine Partie im Anschluss eines beendeten Spiels auf der 
-Internetseite zu analysieren, wenn er sich für den Mehrspielermodus entscheidet.
+Es ist zu beachten, dass die Person nur in der Lage ist, seine Partie im Anschluss eines beendeten Spiels auf der 
+Internetseite zu analysieren, wenn sie sich für den Mehrspielermodus entscheidet.
 
 
 \subsubsection{Verknüpfen von Menü und Encoder}
-Die Menüstruktur, welche zuvor beschrieben wurde, muss jetzt mit dem Encoder so verknüpft werden, dass der 
-Benutzer mit diesem durch die verschiedenen Optionen navigieren kann. Es muss also so programmiert werden, 
+Die Menüstruktur, welche zuvor beschrieben wurde, muss jetzt mit dem Encoder so verknüpft werden, dass die Benutzerin oder 
+der Benutzer mit diesem durch die verschiedenen Optionen navigieren kann. Es muss also so programmiert werden, 
 dass die Drehung des Encoders die Auswahl im Menü ändert und das Klicken des Buttons die Auswahl bestätigt.
 Die Hürde hierbei ist, dass sich die Menüstruktur in einem Baumdiagramm befindet, welches sich je nach 
 Auswahl verändert. Die Auswahlmöglichkeiten im Menü müssen infolgedessen immer an die aktuelle Position im 
@@ -261,7 +262,7 @@ Der Aufbau dieses Codes ist so gestaltet, dass das Wechseln in die verschiedenen
 	\item case 4: Game Screen
 \end{itemize}
 Gestartet wird mit einem Splash Screen, welcher den Namen des Schachbretts anzeigt. 
-Nach einer kurzen Zeitspanne wechselt das Menü automatisch zum Hauptmenü, in dem der Benutzer zwischen 
+Nach einer kurzen Zeitspanne wechselt das Menü automatisch zum Hauptmenü, in dem die Benutzerin der Benutzer zwischen 
 Einzelspieler und Mehrspieler wählen kann.
 
 Unter Case 2: \glqq Login Screen\grqq{} wird die Auswahl zwischen Login und Register getroffen. 
@@ -298,11 +299,11 @@ MIFARE-Karten.
 \end{figure}
 \newpage
 
-Nach Erhalt des Moduls musste allerdings festgestellt werden, dass das Bauteil defekt 
-geliefert wurde und deshalb nicht verwendet werden kann. Das fiel vor allem dann auf, als weder der Versuch mit Python 
-noch jener mit C++ zur erfolgreichen Ausgabe eines Signals hatte.\\
+Nach Erhalt des Moduls musste allerdings festgestellt werden, dass das Bauteil defekt geliefert wurde und deshalb nicht 
+verwendet werden kann. Das fiel vor allem dann auf, als weder der Versuch mit Python noch jener mit C++ zur 
+erfolgreichen Ausgabe eines Signals hatte.\\
 
-Als Test wurde das Codebeispiel von dem GitHub Account hoffie \ref{lst:utilExample} verwendet. Dieser sollte wiederholt 
+Als Test wurde das Codebeispiel von dem GitHub Account hoffie \ref{lst:utilExample} verwendet. Dieses sollte wiederholt 
 einen RFID-Tag lesen und dabei die UID des Tags anzeigen. Außerdem demonstriert er Lese- und Schreibzugriffe auf die 
 verschiedenen Speicherblöcke. Trotz richtigem Anschluss des Moduls und richtigem definieren der Pins innerhalb des 
 Skripts, wird kein Tag erkannt.
@@ -311,10 +312,10 @@ Skripts, wird kein Tag erkannt.
 \subsubsection{RFID-Modul Alternative}
 Nach der Feststellung, dass das RC-522 Modul defekt geliefert wurde, musste eine Alternative gefunden werden. Diese wird 
 in Form einer Idee gefunden, welche ein Fahrradschloss als Inspiration nutzt. Es handelt sich hierbei um eine 
-rein Softwareseitige Lösung. Der Benutzer soll einen vierstelligen Code mithilfe des Encoder auf dem eingebauten 
-Display eingeben können. Dieser Code soll dann mit dem in der Datenbank hinterlegten Code verglichen werden. 
-Stimmen die Codes überein, so wird der Benutzer eingeloggt und kann fortfahren. Stimmen die Codes nicht überein, 
-wird der Benutzer aufgefordert, es erneut zu versuchen.
+rein Softwareseitige Lösung. Die Benutzerin oder der Benutzer soll einen vierstelligen Code mithilfe des Encoder auf dem 
+eingebauten Display eingeben können. Dieser Code soll dann mit dem in der Datenbank hinterlegten Code verglichen werden. 
+Stimmen die Codes überein, so wird die Person eingeloggt und kann fortfahren. Stimmen die Codes nicht überein, wird die 
+Person aufgefordert, es erneut zu versuchen.
 
 
 \subsection{Die Restrukturierung}
@@ -335,12 +336,11 @@ Die Struktur sieht jetzt wie folgt aus:
 \end{itemize}
 
 Wird das Schachbrett gestartet, wird auf einem Display, welches sich auf dem Schachbrett befindet, 
-angezeigt, dass sich der Benutzer zwischen \glqq Login\glqq{} oder \glqq Registrieren\glqq{} entscheiden kann. 
-Ersteres geht davon aus, dass der Benutzer schon über ein Benutzerkonto verfügt und deshalb 
-nur noch seinen Zahlencode auf dem Schachbrett eingeben soll, damit dieser in der Datenbank 
-verglichen werden kann. Ist es nicht möglich, einen bereits bestehender Nutzer der Zahlenkombination zuzuordnen, so  
-wird der Benutzer aufgefordert, sich zu registrieren. Beim Registrieren entsteht ein neuer Eintrag in der Datenbank 
-und der Benutzer kann fortfahren.
+angezeigt, dass sich die Nutzerin oder der Nutzer zwischen \glqq Login\glqq{} oder \glqq Registrieren\glqq{} entscheiden 
+kann. Ersteres geht davon aus, dass die Person schon über ein Benutzerkonto verfügt und deshalb nur noch seinen 
+Zahlencode auf dem Schachbrett eingeben soll, damit dieser in der Datenbank verglichen werden kann. Ist es nicht möglich, 
+eine bereits bestehende Person der Zahlenkombination zuzuordnen, so wird die Benutzerin oder der Benutzer aufgefordert, 
+sich zu registrieren. Beim Registrieren entsteht ein neuer Eintrag in der Datenbank und die Person kann fortfahren.
 
 Das folgende Baumdiagramm zeigt den neuen Aufbau der Menüstruktur, welcher die Login- und 
 Registrierungsoptionen als ersten Schritt zeigt.
@@ -471,7 +471,7 @@ gegen einen lokal auf dem Schachbrett installierten Schachcomputer. Hierfür wir
 \verb|python-chess| verwendet, welche eine Vielzahl von Funktionen bietet, um nicht nur die Spiellogik eines 
 Schachspiels zu implementieren, sondern auch um den Schachcomputer zu konfigurieren und Züge zu berechnen. Es wird 
 sich dazu entschieden, die Stockfish Engine als Schachcomputer zu verwenden. Stockfish ist eine der stärksten und 
-beliebtesten Schach-Engines der Welt und bietet die Möglichkeit, die Schwierigkeit anzupassen.
+beliebtesten Schach-Engines der Welt und bietet zudem zusätzlich die Möglichkeit, die Schwierigkeit anzupassen.
 
 Außerdem wird für das Aufleuchten der LEDs, welche die angehobenen Figuren und die gültigen Züge anzeigen, die Python 
 Bibliothek \verb|neopixel| verwendet, welche die Ansteuerung der LEDs auf der Matrix mithilfe des SDA Pins 
@@ -575,8 +575,8 @@ Der Mehrspielmodus ermöglicht es, sein Spiel aufzuzeichnen. Das wird mithilfe v
 \verb|pgn| steht hierbei für\glqq Portable Game Notation\grqq{} und ist ein Standardformat für die Aufzeichnung von 
 Schachpartien. Die Erstveröffentlichung dieses Formats war im Jahr 1993 durch Steven J. Edwards, welcher es entwickelt 
 hat. Die Züge an sich werden in verkürzter algebraischer Notation aufgezeichnet und Figurenbezeichnungen auf Englisch 
-verwendet. \cite{PortableGameNotation} Mit der standardisierten Aufzeichnung von Schachpartien im \verb|.pgn|-Format wird es ermöglicht, die 
-Partien später auf der Website zu analysieren.
+verwendet. \cite{PortableGameNotation} Mit der standardisierten Aufzeichnung von Schachpartien im \verb|.pgn|-Format 
+wird es ermöglicht, die Partien später auf der Website zu analysieren.
 
 Dieses Format wird auch von der \verb|python-chess| Bibliothek unterstützt.\\
 
