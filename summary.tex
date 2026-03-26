@@ -1,1 +1,48 @@
-fd
+\chapter{Zusammenfassung}
+
+Diese Diplomarbeit befasste sich mit dem entwickeln eines interaktiven Schachbretts, dass mithilfe von Hall-Sensoren 
+die Position der Spielfiguren erkennt, eine Schachlogik mit eingebautem Schachcomputer bereitstellt und gespielte 
+Partien über ein Webinterface analysierbar macht. Die Diplomarbeit kann den Umständen entsprechend als ein großer 
+Erfolg angesehen werden.\\
+
+Ein Großteil der geplanten Funktionen konnten innerhalb des gegebenen Zeitrahmens beendet werden.
+
+\textbf{Hardwareteil:}
+\begin{itemize}
+	\item Realisierung einer 4-lagigen 8 × 8 Matrixplatine.
+	\item Ein passendes 3D-gedrucktes Gehäuse.
+	\item Eine adäquate Stromversorgung.
+\end{itemize}
+
+\textbf{Softwareteil:}
+\begin{itemize}
+    \item Zuverlässiges Auslesen der Sensormatrix mittels Raspberry Pi 5 und \verb|gpiozero|.
+    \item Ein vollständiges Menü, welches mit einem Rotary Encoder navigiert werden kann.
+    \item Übermittlung von \verb|.pgn|-Dateien via TCP-Socket nach Spielende.
+\end{itemize}
+
+\textbf{Webinterface:}
+\begin{itemize}
+    \item Ein Frontend, mittels HTML, CSS und JavaScript mit Loginpage, digitales Spielfeld und Spielanalyse.
+    \item Ein Backend, welches mittels Flask-Server mit dem Frontend und der MariaDB Datenbank kommuniziert.
+\end{itemize}
+
+Aufgrund von Zeitdruck konnten folgende Punkte nicht mehr vollständig fertiggestellt werden.
+
+\textbf{Hardwareteil:}
+\begin{itemize}
+    \item Ein Lüftungskonzept zum Schutz der Komponenten vor Überhitzung wurde zwar geplant, konnte jedoch nicht rechtzeitig umgesetzt werden.
+    \item Die Positionen einzelner Hardwarekomponenten innerhalb des Schachbretts wurden in der finalen Version nicht mehr angepasst.
+\end{itemize}
+
+\textbf{Softwareteil:}
+\begin{itemize}
+    \item Das geplante Verlassen während des Spiels mithilfe des Rotary Encoders konnte nicht realisiert werden. Der Grund dafür lag wahrscheinlich in der programmierung der Spiellogik, welche konstant in einem Thread lief.
+\end{itemize}
+
+\textbf{Webinterface:}
+\begin{itemize}
+    \item Die Anmeldung mit dem vierstelligen Code einer Benutzerin oder eines Benutzers im Loginfenster wurde noch nicht implementiert.
+    \item Das Importieren und im Anschluss darauf das Analysieren einer Schachpartie kann nur durchgeführt werden, wenn die \verb|.pgn|-Datei manuell im Sourcecode eingefügt wird.
+\end{itemize}
+
