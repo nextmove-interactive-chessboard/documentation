@@ -233,14 +233,14 @@ Dafür wird gesorgt, indem Diplomant Maximilian Koch ein entsprechendes Delay im
 
 \paragraph{Störsicherheit}
 
-Die Matrix sollte so konzipiert und umgesetzt werden, dass keine fehlerhaften Signale auf den Leitungen vorkommen. Diese Fälle wurden schon in den Punkten \ref{sec:Pull-Up_Widerstandsberechnung} und \ref{sec:schaltzeiten} gelöst, sodass diese nicht auftreten. Zum Schutz der GPIO Pins sind noch Gatewiderstände notwendig. Diese variieren je nach Gatekapazität von MOSFET zu MOSFET. Um das Gate auf LOW zu halten, wenn der GPIO Pin noch kein Signal sendet, wurde auch am Gate des Mosfets ein 100kOhm Gate Pulldown Widerstand eingebaut. Zuätzlich sollte die Matrix aber auch so umgesetzt werden, dass der Spieler auf dem Brett die Figuren bewegen kann, ohne darauf achten zu müssen, große Bewegungen um Felder zu machen, welche er nicht bespielen will.  
+Die Matrix sollte so konzipiert und umgesetzt werden, dass keine fehlerhaften Signale auf den Leitungen vorkommen. Diese Fälle wurden schon in den Punkten \ref{sec:Pull-Up_Widerstandsberechnung} und \ref{sec:schaltzeiten} gelöst, sodass diese nicht auftreten. Zum Schutz der GPIO Pins sind noch Gatewiderstände notwendig. Diese variieren je nach Gatekapazität des MOSFETs. Um das Gate auf LOW zu halten, wenn der GPIO Pin noch kein Signal sendet, wurde auch am Gate des Mosfets ein 100kOhm Gate Pulldown Widerstand eingebaut. Zuätzlich sollte die Matrix aber auch so umgesetzt werden, dass die Spielerinnen und Spieler auf dem Brett die Figuren bewegen können, ohne darauf achten zu müssen, große Bewegungen um Felder herum zu machen, welche nicht bespielt werden sollen.  
 
 \vfill
 \newpage
 
 \subsubsection{Prototypenaufbau}
 
-Bei der Erstellung des Prototypen in Form einer 2x2 Matrix wurden als MOSFETs 2 IRLZ44 N-Kanal verwendet, da diese bereits zur Verfügung standen. Diese sind jedoch nicht perfekt, da bei einer Gate-Spannung von 3,3\,V Der $R_{\mathrm{DSon}}$ noch nicht minimal klein ist \cite{infineon_irlz44n}. Allerdings ist es für die Testung ausreichend und durch den geringen Laststrom von maximal ca. 18\,mA ist Wärmeentstehung durch den Widerstand auch nicht problematisch.
+Bei der Erstellung des Prototypen in Form einer 2x2 Matrix wurden als MOSFETs 2 IRLZ44 N-Kanal verwendet, da diese bereits zur Verfügung standen. Diese sind jedoch nicht perfekt, da bei einer Gate-Spannung von 3,3\,V Der $R_{\mathrm{DSon}}$ noch nicht minimal klein ist \cite{infineon_irlz44n}. Allerdings ist es für die Testung ausreichend und durch den geringen Laststrom von maximal 18\,mA ist Wärmeentstehung durch den Widerstand auch nicht problematisch.
 
 
 \begin{table}[h]
@@ -337,7 +337,7 @@ Nachdem die Platine bestückt wurde, konnte diese erfolgreich von Maximilian Koc
 
 \subsection{Gehäusefertigung}
 
-Das Gehäuse vereint alle Komponenten des Schachbretts und ist jener Teil, der am sichtbarsten ist. Wichtig ist die präzise Positionierung der Hardware zur Figurenerkennung unmittelbar unter der Spielfläche, um eine fehlerfreie Detektion zu gewährleisten. Zudem muss die Stromversorgung mechanisch sicher montiert werden, um Beschädigungen durch Erschütterungen zu vermeiden. Sämtliche Anschlüsse sind so in das Design integriert, dass sie für den Nutzer leicht zugänglich sind. Um die Betriebssicherheit der Komponenten zu garantieren, wurde an ein Belüftungskonzept gedacht.
+Das Gehäuse vereint alle Komponenten des Schachbretts und ist jener Teil, der am sichtbarsten ist. Wichtig ist die präzise Positionierung der Hardware zur Figurenerkennung unmittelbar unter der Spielfläche, um eine fehlerfreie Detektion zu gewährleisten. Zudem muss die Stromversorgung mechanisch sicher montiert werden, um Beschädigungen durch Erschütterungen zu vermeiden. Sämtliche Anschlüsse sind so in das Design integriert, dass sie für die nutzende Person leicht zugänglich sind. Um die Betriebssicherheit der Komponenten zu garantieren, wurde an ein Belüftungskonzept gedacht.
 \newline
 \newline
 Bei der Konstruktion und Fertigung wurden folgende Punkte berücksichtigt:
@@ -347,7 +347,7 @@ Bei der Konstruktion und Fertigung wurden folgende Punkte berücksichtigt:
     \item Feste Fixierung der weiteren Hardware
     \item Lüftungskonzept um Komponenten vor überhitzen zu schützen
     \item Positionierung der Nutzerschnittstellen
-    \item Design für ein gutes Nutzererlebnis
+    \item Design für ein gutes Spielerlebnis
 \end{itemize}
 
 \subsubsection{Fertigungsverfahren und Gehäusestruktur}
@@ -387,7 +387,7 @@ Probleme, welche danach aufgefallen sind:
     \item \textbf{Toleranzanpassungen:} Aufgrund geringfügiger Maßungenauigkeiten traten verschiedene Passformprobleme auf. Die Deckplatte war nicht passgenau auf der Grundplatte.
     \item \textbf{Belüftung:} Dem Prototypen fehlte es an ausreichendem Luftstrom, was das Risiko einer Überhitzung erhöhte. 
     \item \textbf{Hardwareintegration:} Die Hardware ist in diesem Prototypen sehr unsicher gelegen, was oft zu Hardware Kontaktverlust führte. 
-    \item \textbf{Spieloberfläche:} Dem Spieler fehlt bei diesem Prototyp noch eine Oberfläche, auf dieser er seine Figuren abstellen kann. 
+    \item \textbf{Spieloberfläche:} Der Spielerin oder dem Spieler fehlt bei diesem Prototyp noch eine Oberfläche, auf dieser er seine Figuren abstellen kann. 
 \end{itemize}
 
 \subsubsection{Finale Version}
@@ -409,7 +409,7 @@ Deshalb wurden beim finalen Gehäuse nur noch folgende Punkte überarbeitet und 
 \end{figure}
 
 Unterschiede zur alten Deckplatte sind zum einen die überarbeiteten Toleranzen, damit die Deckplatte besser auf die Grundplatte passt. Ebenso wurde die Einbindung vom Display überarbeitet, sodass von diesem keine Ränder mehr zu sehen sind. 
-Der letzte Punkt, der gemacht wurde, ist ein Schlitz, um die Plexiglasplatte über dem Raster einzuführen, damit keine Übergänge und Unebenheiten auf dem Spielfeld zu sehen sind.
+Der letzte Punkt, der gemacht wurde, ist ein Schlitz, um die Plexiglasplatte über dem Raster einzuführen, damit der Nutzerin oder dem Nutzer eine Spielfläche zur Verfügung steht.
 
 
 \newpage
@@ -566,6 +566,6 @@ Die im Kondensator gespeicherte elektrische Energie $E$ ist proportional zum Qua
     E = \frac{1}{2} \cdot C \cdot U^2
 \]
 
-Aus diesem Grund wurde sich dazu entschieden die Kondensatoren vor den Step-Down-Convertern zu schalten.
+Aus diesem Grund wurde sich dazu entschieden die Kondensatoren vor den Step-Down-Convertern zu schalten. Wichtig ist noch zu beachten, dass für die Ladung ein USB-C Netzteil benötigt wird, welches 15V mit dem PD-Trigger Modul ausmachen kann.
 
 
