@@ -1,5 +1,7 @@
 # Nextmove | interactive chessboard
 
+### [View PDF in Browser](https://nextmove-interactive-chessboard.github.io/documentation/main.pdf)
+
 
 <details>
     <summary><h2>Dokumentstruktur</h2></summary>
