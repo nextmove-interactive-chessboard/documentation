@@ -119,7 +119,7 @@ Die Website besteht aus mehreren Seiten, wobei jede eine spezifische Funktion er
 \begin{itemize}
     \item Die wichtigsten HTML-Codes erklärt: 
     \begin{itemize}
-        \item \textbf{index.html:} [\ref{lst:index}Diese Seite definiert die Startseite der Website. Sie enthält:
+        \item \textbf{index.html:} \ref{lst:index}Diese Seite definiert die Startseite der Website. Sie enthält:
             \begin{itemize}
                 \item Ein Logo-Bild
                 \item Den Titel und Untertitel der Website
@@ -171,7 +171,7 @@ Die Website besteht aus mehreren Seiten, wobei jede eine spezifische Funktion er
                 \item Ein Canvas-Element \texttt{<canvas>}, auf dem das Spielfeld gezeichnet wird. Es wird ein weißes Rechteck als Hintergrund gezeichnet, das durch Linien am Rand eingegrenzt wird. Weitere Linien teilen das Spielfeld in 8x8 Quadrate auf. Eine horizontale (a-h) und eine vertikale (1-8) Beschriftung wird hinzugefügt. Jedes zweite Feld wird nun eingefärbt, um das typische Schachbrettmuster zu erzeugen.
                 \item Die Funktion \texttt{drawBoardAndPieces()}: löscht das Canvas und zeichnet Raster und Beschriftung. Die Figuren werden entsprechend ihrer Position auf dem Spielfeld gezeichnet (\texttt{ctx.drawImage(document.getElementById('piece'))}).
                 \item Für jede Figur gibt es einen Status, der durch die x- und y-Koordinate und die selected-Flag definiert ist. Die Bauern sind in Arrays als \texttt{pawnsBlack} und \texttt{pawnsWhite} definiert.  
-                \item \texttt{canvas.addEventListener("click", function(event))}: Er bestimmt die Mauspostion auf dem Brett mit \texttt{col, row}. Wenn \texttt{selected = true}, also ein Klick auf eine Figur erfolgt ist, wird die Figur an die neue Position bewegt und \texttt{selected = false} gesetzt. Für Bauern ist die Prüfung im Loop (\texttt{for p= 0...7}) und für die anderen Figuren per \texttt{if-else} definiert. 
+                \item \texttt{canvas.addEventListener('click', function(event))}: Er bestimmt die Mauspostion auf dem Brett mit \texttt{col, row}. Wenn \texttt{selected = true}, also ein Klick auf eine Figur erfolgt ist, wird die Figur an die neue Position bewegt und \texttt{selected = false} gesetzt. Für Bauern ist die Prüfung im Loop (\texttt{for p= 0...7}) und für die anderen Figuren per \texttt{if-else} definiert. 
                 \item Es ist möglich, eine Figur anzuklicken, um sie auszuwählen, um dann auf ein anderes Feld zu klicken, um sie wieder abzusetzen. 
                 \item Einen Link zurück zur Startseite.
             \end{itemize}
@@ -234,7 +234,7 @@ Wenn man es trotzdem versucht, bekommt man die Fehlermeldungen \\
 \end{figure}
 
 Daher muss mit dem Befehl \\
-\texttt{ssh-keygen -t ed25519 -C "cseidner@tsn.at"} \\
+\texttt{ssh-keygen -t ed25519 -C 'cseidner@tsn.at'} \\
 ein ssh-key-Paar angelegt werden, um Zugriff auf das Repository zu bekommen.
 Nur, wer den privaten Schlüssel besitzt, kann auf das Repository zugreifen. Dieser bleibt auf dem Server, während der öffentliche Schlüssel in GitHub hinterlegt wird.
 
@@ -336,7 +336,7 @@ Letztendlich kann MariaDB richtig installiert werden. \\
 
 Um nun sich nicht jedes Mal mit dem root-user anmelden zu müssen, wird ein Standardbenutzer erstellt: \\
 \texttt{CREATE USER 'username'@'localhost' IDENTIFIED BY 'BeispielPasswort';} \\
-Der User heißt jetzt \textit{"username} und das Passwort lautet \textit{"BeispielPasswort}. Diese Daten sind hierbei nur Beispiele und werden nicht wirklich verwendet.
+Der User heißt jetzt \textit{'username'} und das Passwort lautet \textit{'BeispielPasswort'}. Diese Daten sind hierbei nur Beispiele und werden nicht wirklich verwendet.
 
 Nun müssen Rechte an den Benutzer gegeben werden: \\
 \texttt{GRANT ALL PRIVILEGES ON NextMove.* TO 'username'@'localhost';}
@@ -423,7 +423,7 @@ Die Implementierung des Backends erfolgt in Python.
 \subsubsection{Struktur des Backends}
 Die Codestruktur sieht wie folgt aus:
 \begin{itemize}
-    \item backend.py: [\ref{lst:backend} Dies ist die Hauptdatei, die den Server startet und die Routen definiert. 
+    \item backend.py: \ref{lst:backend} Dies ist die Hauptdatei, die den Server startet und die Routen definiert. 
     \begin{itemize}
         \item die Module \texttt{os, socket, logging, threading, mysql.connector, flask und flask\_cors} werden importiert
         \item Es wird eine Flask-Anwendung mit CORS-Unterstützung erstellt, um Cross-Origin-Anfragen zu erlauben
